@@ -10,7 +10,8 @@ import (
 
 	"github.com/cristalhq/jwt/v3"
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	users_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/users"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -18,8 +19,8 @@ import (
 type Key string
 
 const (
-	tokenCookieName   string = "authTokenCookie"
-	refreshCookieName string = "refreshTokenCookie"
+	TokenCookieName   string = "authTokenCookie"
+	RefreshCookieName string = "refreshTokenCookie"
 	UserIdKey         Key    = "userAuthId"
 )
 
@@ -35,6 +36,9 @@ type Cache interface {
 	Get([]byte) ([]byte, error)
 	Set([]byte, []byte, int) error
 	Delete([]byte) bool
+}
+type UserServer interface {
+	UpdateToken(context.Context, *users_pb.TokenRequest, ...grpc.CallOption) (*users_pb.TokenReply, error)
 }
 type jwtMiddleware struct {
 	secret string
@@ -62,11 +66,12 @@ func NewJwtMiddleware(logger Logger, cache Cache, secret string) *jwtMiddleware 
 	}
 }
 
-func (j *jwtMiddleware) Middleware(roles ...string) gin.HandlerFunc {
+func (j *jwtMiddleware) Middleware(server UserServer, roles ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		headertoken, err := c.Cookie(tokenCookieName)
+		headertoken, err := c.Cookie(TokenCookieName)
 		if err != nil {
 			c.Error(status.Error(codes.Unauthenticated, "user has no token cookie"))
+			c.Abort()
 			return
 		}
 		key := []byte(j.secret)
@@ -74,37 +79,42 @@ func (j *jwtMiddleware) Middleware(roles ...string) gin.HandlerFunc {
 		if err != nil {
 			j.logger.Errorf("error creating verifier for key. key length = %d, error = %v", len(key), err)
 			c.Error(status.Errorf(codes.Unauthenticated, "error creating verifier for key"))
+			c.Abort()
 			return
 		}
 		j.logger.Info("parsing and verifying token...")
 		token, err := jwt.ParseAndVerifyString(headertoken, verifier)
 		if err != nil {
 			c.Error(status.Errorf(codes.Unauthenticated, err.Error()))
+			c.Abort()
 			return
 		}
 
 		var claims claims
 		if err := json.Unmarshal(token.RawClaims(), &claims); err != nil {
 			c.Error(status.Errorf(codes.Unauthenticated, err.Error()))
+			c.Abort()
 			return
 		}
 		if !claims.IsValidAt(time.Now()) {
-			refreshCookie, err := c.Cookie(refreshCookieName)
+			refreshCookie, err := c.Cookie(RefreshCookieName)
 			if err != nil {
-				c.SetCookie(tokenCookieName, "", -1, "/", "/", true, true)
-				c.SetCookie(refreshCookieName, "", -1, "/", "/", true, true)
+				c.SetCookie(TokenCookieName, "", -1, "/", "/", true, true)
+				c.SetCookie(RefreshCookieName, "", -1, "/", "/", true, true)
 				c.Error(status.Errorf(codes.Unauthenticated, err.Error()))
+				c.Abort()
 				return
 			}
-			token, refresh, err := j.UpdateRefreshToken(refreshCookie)
+			tokenReply, err := server.UpdateToken(c.Request.Context(), &users_pb.TokenRequest{Refreshtoken: refreshCookie})
 			if err != nil {
-				c.SetCookie(tokenCookieName, "", -1, "/", "/", true, true)
-				c.SetCookie(refreshCookieName, "", -1, "/", "/", true, true)
+				c.SetCookie(TokenCookieName, "", -1, "/", "/", true, true)
+				c.SetCookie(RefreshCookieName, "", -1, "/", "/", true, true)
 				c.Error(status.Errorf(codes.Unauthenticated, err.Error()))
+				c.Abort()
 				return
 			}
-			c.SetCookie(tokenCookieName, token, (int)((31*24*time.Hour)/time.Second), "/", "/", true, true)
-			c.SetCookie(refreshCookieName, refresh, (int)((31*24*time.Hour)/time.Second), "/", "/", true, true)
+			c.SetCookie(TokenCookieName, tokenReply.Token, (int)((31*24*time.Hour)/time.Second), "/", "/", true, true)
+			c.SetCookie(RefreshCookieName, tokenReply.Refreshtoken, (int)((31*24*time.Hour)/time.Second), "/", "/", true, true)
 		}
 		if len(roles) > 0 {
 			var errorRoles []string
@@ -115,60 +125,14 @@ func (j *jwtMiddleware) Middleware(roles ...string) gin.HandlerFunc {
 			}
 			if len(errorRoles) > 0 {
 				c.Error(status.Errorf(codes.PermissionDenied, strings.Join(errorRoles, ", ")))
+				c.Abort()
 				return
 			}
 		}
-
-		c.Request = c.Request.WithContext(context.WithValue(c.Request.Context(), UserIdKey, claims.ID))
+		j.logger.Infof("user %s token has been verified with %v rights", claims.Login, claims.Roles)
+		c.Set(string(UserIdKey), claims.ID)
 		c.Next()
 	}
-}
-func (j *jwtMiddleware) UpdateRefreshToken(refreshToken string) (string, string, error) {
-	defer j.cache.Delete([]byte(refreshToken))
-
-	userBytes, err := j.cache.Get([]byte(refreshToken))
-	if err != nil {
-		j.logger.Warn(err)
-		return "", "", status.Errorf(codes.NotFound, "refresh token not found")
-	}
-	var u UserTokenModel
-	err = json.Unmarshal(userBytes, &u)
-	if err != nil {
-		j.logger.Error(err)
-		return "", "", err
-	}
-	return j.GenerateAccessToken(&u)
-}
-func (j *jwtMiddleware) GenerateAccessToken(u *UserTokenModel) (string, string, error) {
-	signer, err := jwt.NewSignerHS(jwt.HS256, []byte(j.secret))
-	if err != nil {
-		j.logger.Warn(err)
-		return "", "", err
-	}
-	builder := jwt.NewBuilder(signer)
-
-	claims := claims{
-		RegisteredClaims: jwt.RegisteredClaims{
-			ID:        u.Id,
-			Audience:  u.Roles,
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 60)),
-		},
-		Roles: u.Roles,
-		Login: u.Login,
-		Email: u.Email,
-	}
-	token, err := builder.Build(claims)
-	if err != nil {
-		j.logger.Warn(err)
-		return "", "", err
-	}
-
-	j.logger.Info("creating refresh token...")
-	refreshTokenUuid := primitive.NewObjectID().Hex()
-	userBytes, _ := json.Marshal(u)
-	j.cache.Set([]byte(refreshTokenUuid), userBytes, int((7*24*time.Hour)/time.Second))
-
-	return token.String(), refreshTokenUuid, nil
 }
 func (j *jwtMiddleware) GetUserClaims(token string) (*UserTokenModel, error) {
 	verifier, err := jwt.NewVerifierHS(jwt.HS256, []byte(j.secret))

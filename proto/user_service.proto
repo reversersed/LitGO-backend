@@ -3,16 +3,34 @@ package users;
 option go_package = "pkg/proto/users;users_pb";
 
 service User {
-  rpc Login (LoginRequest) returns (LoginReply) {}
+  rpc Login (LoginRequest) returns (LoginResponse) {}
+  rpc UpdateToken (TokenRequest) returns (TokenReply) {}
+  rpc GetUserById (UserIdRequest) returns (UserModel) {}
 }
 
 message LoginRequest {
   string login = 1;
   string password = 2;
 }
-message LoginReply {
+message UserModel {
   string id = 1;
   string login = 2;
   string email = 3;
   repeated string roles = 4;
+}
+message LoginResponse {
+  string login = 1;
+  repeated string roles = 2;
+  string token = 3;
+  string refreshtoken = 4;
+}
+message TokenReply {
+  string token = 1;
+  string refreshtoken = 2;
+}
+message TokenRequest {
+  string refreshtoken = 1;
+}
+message UserIdRequest {
+  string id = 1;
 }

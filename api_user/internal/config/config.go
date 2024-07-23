@@ -5,24 +5,19 @@ import (
 	"sync"
 
 	"github.com/ilyakaznacheev/cleanenv"
+	"github.com/reversersed/go-grpc/tree/main/api_user/pkg/mongo"
 )
 
 type Config struct {
 	Server   *ServerConfig
-	Database *DatabaseConfig
+	Database *mongo.DatabaseConfig
 }
-type DatabaseConfig struct {
-	Host     string `env:"DB_HOST" env-required:"true"`
-	Port     int    `env:"DB_PORT" env-required:"true"`
-	User     string `env:"DB_NAME" env-required:"true"`
-	Password string `env:"DB_PASS" env-required:"true"`
-	Base     string `env:"DB_BASE" env-required:"true"`
-	AuthDb   string `env:"DB_AUTHDB" env-required:"true"`
-}
+
 type ServerConfig struct {
 	Host        string `env:"SERVER_HOST" env-required:"true"`
 	Port        int    `env:"SERVER_PORT" env-required:"true"`
 	Environment string `env:"ENVIRONMENT"`
+	JwtSecret   string `env:"JWT_SECRET" env-required:"true"`
 }
 
 var once sync.Once
@@ -32,7 +27,7 @@ func GetConfig() (*Config, error) {
 	var e error
 	once.Do(func() {
 		server := &ServerConfig{}
-		database := &DatabaseConfig{}
+		database := &mongo.DatabaseConfig{}
 
 		if err := cleanenv.ReadConfig("config/.env", server); err != nil {
 			desc, _ := cleanenv.GetDescription(config, nil)

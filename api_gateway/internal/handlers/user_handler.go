@@ -1,54 +1,74 @@
 package handlers
 
 import (
+	"net/http"
+	"time"
+
 	"github.com/gin-gonic/gin"
-	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/config"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/middleware"
 	users_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/users"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
-type jwtMiddleware interface {
-	Middleware(roles ...string) gin.HandlerFunc
-	GenerateAccessToken(u *middleware.UserTokenModel) (string, string, error)
-	GetUserClaims(token string) (*middleware.UserTokenModel, error)
-}
-type userHandler struct {
-	connection *grpc.ClientConn
-	client     users_pb.UserClient
-	jwt        jwtMiddleware
-	logger     Logger
-}
-
-func NewUserHandler(config *config.UrlConfig, logger Logger, jwtMiddleware jwtMiddleware) (*userHandler, error) {
-	con, err := grpc.NewClient(config.UserServiceUrl, grpc.WithTransportCredentials(insecure.NewCredentials()))
+// @Summary      Authenticates user
+// @Description  check if current user has legit token
+// @Tags         users
+// @Produce      json
+// @Success      200  {object}  handlers.UserAuthenticate.UserResponse "User successfully authorized"
+// @Failure      401  {object}  middleware.CustomError "User does not authorized"
+// @Failure      410 {object}  middleware.CustomError "Service does not responding (maybe crush)"
+// @Router       /users/auth [get]
+func (h *userHandler) UserAuthenticate(c *gin.Context) {
+	id, exist := c.Get(string(middleware.UserIdKey))
+	if !exist {
+		c.Error(status.Error(codes.Unauthenticated, "no user credentials found"))
+		return
+	}
+	reply, err := h.client.GetUserById(c.Request.Context(), &users_pb.UserIdRequest{Id: id.(string)})
 	if err != nil {
-		return nil, err
+		c.Error(err)
+		return
 	}
-	client := users_pb.NewUserClient(con)
+	type UserResponse struct {
+		Login string   `json:"login"`
+		Roles []string `json:"roles"`
+	}
+	c.JSON(http.StatusOK, UserResponse{
+		Login: reply.Login,
+		Roles: reply.Roles,
+	})
+}
 
-	return &userHandler{
-		connection: con,
-		client:     client,
-		logger:     logger,
-		jwt:        jwtMiddleware,
-	}, nil
-}
-func (h *userHandler) Close() error {
-	if err := h.connection.Close(); err != nil {
-		return err
+// @Summary      Authorizes user
+// @Description  log in user with provided login and password
+// @Tags         users
+// @Produce      json
+// @Param request body users_pb.LoginRequest true "Request body"
+// @Success      200  {object}  handlers.UserLogin.UserResponse "User successfully authorized"
+// @Failure      400  {object}  middleware.CustomError "Invalid request data"
+// @Failure      410 {object}  middleware.CustomError "Service does not responding (maybe crush)"
+// @Router       /users/login [post]
+func (h *userHandler) UserLogin(c *gin.Context) {
+	var request users_pb.LoginRequest
+	if err := c.BindJSON(&request); err != nil {
+		c.Error(status.Error(codes.InvalidArgument, err.Error()))
+		return
 	}
-	return nil
-}
-func (h *userHandler) RegisterRouter(router *gin.Engine) {
-	var userRoutes = []struct {
-		method  string
-		route   string
-		handler []gin.HandlerFunc
-	}{}
-	for _, v := range userRoutes {
-		router.Handle(v.method, v.route, v.handler...)
+	type UserResponse struct {
+		Login string   `json:"login"`
+		Roles []string `json:"roles"`
 	}
-	h.logger.Infof("user handler has been registered with %d routes", len(userRoutes))
+	reply, err := h.client.Login(c.Request.Context(), &request)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+	c.SetCookie(middleware.TokenCookieName, reply.Token, (int)((31*24*time.Hour)/time.Second), "/", "/", true, true)
+	c.SetCookie(middleware.RefreshCookieName, reply.Refreshtoken, (int)((31*24*time.Hour)/time.Second), "/", "/", true, true)
+
+	c.JSON(http.StatusOK, UserResponse{
+		Login: reply.Login,
+		Roles: reply.Roles,
+	})
 }

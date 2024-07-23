@@ -5,12 +5,15 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	_ "github.com/reversersed/go-grpc/tree/main/api_gateway/docs"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/config"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers"
 	freecache "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/cache"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/logging"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/middleware"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/shutdown"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 type handler interface {
@@ -32,6 +35,18 @@ type app struct {
 	handlers []handler
 }
 
+// @title API
+// @version 1.0
+
+// @host localhost:9000
+// @BasePath /api/v1/
+
+// @scheme http
+// @accept json
+
+// @securityDefinitions.apiKey ApiKeyAuth
+// @in Cookie
+// @name Authorization
 func New() (*app, error) {
 	logger, err := logging.GetLogger()
 	if err != nil {
@@ -72,6 +87,9 @@ func (a *app) Run() error {
 	} else {
 		a.handlers = append(a.handlers, userHandler)
 		userHandler.RegisterRouter(a.router)
+	}
+	if a.config.Server.Environment == "debug" {
+		a.router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 	a.logger.Infof("starting listening address %s:%d...", a.config.Server.Host, a.config.Server.Port)
 	if err := a.router.Run(fmt.Sprintf("%s:%d", a.config.Server.Host, a.config.Server.Port)); err != nil {

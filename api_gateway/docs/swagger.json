@@ -1,0 +1,156 @@
+{
+    "consumes": [
+        "application/json"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "title": "API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:9000",
+    "basePath": "/api/v1/",
+    "paths": {
+        "/users/auth": {
+            "get": {
+                "description": "check if current user has legit token",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Authenticates user",
+                "responses": {
+                    "200": {
+                        "description": "User successfully authorized",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.UserAuthenticate.UserResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "User does not authorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.CustomError"
+                        }
+                    },
+                    "410": {
+                        "description": "Service does not responding (maybe crush)",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.CustomError"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/login": {
+            "post": {
+                "description": "log in user with provided login and password",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Authorizes user",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/users_pb.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User successfully authorized",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.UserLogin.UserResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request data",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.CustomError"
+                        }
+                    },
+                    "410": {
+                        "description": "Service does not responding (maybe crush)",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.CustomError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "handlers.UserAuthenticate.UserResponse": {
+            "type": "object",
+            "properties": {
+                "login": {
+                    "type": "string"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "handlers.UserLogin.UserResponse": {
+            "type": "object",
+            "properties": {
+                "login": {
+                    "type": "string"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "middleware.CustomError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "details": {
+                    "type": "array",
+                    "items": {}
+                },
+                "message": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "users_pb.LoginRequest": {
+            "type": "object",
+            "properties": {
+                "login": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "Cookie"
+        }
+    }
+}
