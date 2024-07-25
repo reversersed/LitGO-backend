@@ -92,6 +92,55 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/users/signin": {
+            "post": {
+                "description": "creates new user and authorizes it",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Registration",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/users_pb.RegistrationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User successfully authorized",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.UserRegister.UserResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request data",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.CustomError"
+                        }
+                    },
+                    "410": {
+                        "description": "Service does not responding (maybe crush)",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.CustomError"
+                        }
+                    },
+                    "500": {
+                        "description": "Some internal error occured",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.CustomError"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -110,6 +159,20 @@ const docTemplate = `{
             }
         },
         "handlers.UserLogin.UserResponse": {
+            "type": "object",
+            "properties": {
+                "login": {
+                    "type": "string"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "handlers.UserRegister.UserResponse": {
             "type": "object",
             "properties": {
                 "login": {
@@ -148,6 +211,23 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "users_pb.RegistrationRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "login": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "password_repeat": {
                     "type": "string"
                 }
             }

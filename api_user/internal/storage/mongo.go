@@ -9,6 +9,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type logger interface {
@@ -128,4 +130,23 @@ func (d *db) FindByEmail(ctx context.Context, email string) (*User, error) {
 		return nil, err
 	}
 	return &u, nil
+}
+func (d *db) CreateUser(ctx context.Context, model *User) (string, error) {
+	d.Lock()
+	defer d.Unlock()
+
+	contx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+
+	result, err := d.collection.InsertOne(contx, model)
+	if err != nil {
+		d.logger.Warnf("error while user creation: %v", err)
+		return "", status.Error(codes.Internal, err.Error())
+	}
+	oid, ok := result.InsertedID.(primitive.ObjectID)
+	if ok {
+		return oid.Hex(), nil
+	}
+	d.logger.Warnf("cant get created user id: %v (%v)", oid.Hex(), oid)
+	return "", status.Error(codes.Internal, "cant resolve user id")
 }

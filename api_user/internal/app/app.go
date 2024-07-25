@@ -11,6 +11,8 @@ import (
 	freecache "github.com/reversersed/go-grpc/tree/main/api_user/pkg/cache"
 	"github.com/reversersed/go-grpc/tree/main/api_user/pkg/logging"
 	"github.com/reversersed/go-grpc/tree/main/api_user/pkg/mongo"
+	"github.com/reversersed/go-grpc/tree/main/api_user/pkg/shutdown"
+	"github.com/reversersed/go-grpc/tree/main/api_user/pkg/validator"
 	"google.golang.org/grpc"
 )
 
@@ -42,6 +44,7 @@ func New() (*app, error) {
 		return nil, err
 	}
 	cache := freecache.NewFreeCache(104857600)
+	validator := validator.New()
 	dbClient, err := mongo.NewClient(context.Background(), cfg.Database)
 	if err != nil {
 		logger.Error(err)
@@ -52,7 +55,7 @@ func New() (*app, error) {
 		logger:  logger,
 		config:  cfg,
 		cache:   cache,
-		service: srv.NewServer(cfg.Server.JwtSecret, logger, cache, storage),
+		service: srv.NewServer(cfg.Server.JwtSecret, logger, cache, storage, validator),
 	}
 
 	return app, nil
@@ -64,6 +67,7 @@ func (a *app) Run() error {
 		a.logger.Errorf("failed to listen: %v", err)
 		return err
 	}
+	go shutdown.Graceful(a)
 	server := grpc.NewServer()
 	a.service.Register(server)
 
@@ -72,5 +76,8 @@ func (a *app) Run() error {
 		a.logger.Errorf("failed to start server: %v", err)
 		return err
 	}
+	return nil
+}
+func (a *app) Close() error {
 	return nil
 }

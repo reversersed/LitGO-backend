@@ -40,13 +40,14 @@ func (h *userHandler) Close() error {
 	return nil
 }
 func (h *userHandler) RegisterRouter(router *gin.Engine) {
-	group := router.Group("/api/v1/users")
+	general := router.Group("/api/v1/users")
 	{
-		authorized := group.Group("/").Use(h.jwt.Middleware(h.client))
+		authorized := general.Group("/").Use(h.jwt.Middleware(h.client))
 		{
 			authorized.GET("/auth", h.UserAuthenticate)
 		}
-		group.POST("/login", h.UserLogin)
+		general.POST("/login", h.UserLogin)
+		general.POST("/signin", h.UserRegister)
 	}
 	h.logger.Info("user handler has been registered")
 }

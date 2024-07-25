@@ -99,22 +99,22 @@ func (j *jwtMiddleware) Middleware(server UserServer, roles ...string) gin.Handl
 		if !claims.IsValidAt(time.Now()) {
 			refreshCookie, err := c.Cookie(RefreshCookieName)
 			if err != nil {
-				c.SetCookie(TokenCookieName, "", -1, "/", "/", true, true)
-				c.SetCookie(RefreshCookieName, "", -1, "/", "/", true, true)
+				c.SetCookie(TokenCookieName, "", -1, "/", "", true, true)
+				c.SetCookie(RefreshCookieName, "", -1, "/", "", true, true)
 				c.Error(status.Errorf(codes.Unauthenticated, err.Error()))
 				c.Abort()
 				return
 			}
 			tokenReply, err := server.UpdateToken(c.Request.Context(), &users_pb.TokenRequest{Refreshtoken: refreshCookie})
 			if err != nil {
-				c.SetCookie(TokenCookieName, "", -1, "/", "/", true, true)
-				c.SetCookie(RefreshCookieName, "", -1, "/", "/", true, true)
+				c.SetCookie(TokenCookieName, "", -1, "/", "", true, true)
+				c.SetCookie(RefreshCookieName, "", -1, "/", "", true, true)
 				c.Error(status.Errorf(codes.Unauthenticated, err.Error()))
 				c.Abort()
 				return
 			}
-			c.SetCookie(TokenCookieName, tokenReply.Token, (int)((31*24*time.Hour)/time.Second), "/", "/", true, true)
-			c.SetCookie(RefreshCookieName, tokenReply.Refreshtoken, (int)((31*24*time.Hour)/time.Second), "/", "/", true, true)
+			c.SetCookie(TokenCookieName, tokenReply.Token, (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
+			c.SetCookie(RefreshCookieName, tokenReply.Refreshtoken, (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
 		}
 		if len(roles) > 0 {
 			var errorRoles []string

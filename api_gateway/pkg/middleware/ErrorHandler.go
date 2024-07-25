@@ -19,14 +19,18 @@ func ErrorHandler(c *gin.Context) {
 	c.Next()
 
 	if lastError := c.Errors.Last(); lastError != nil {
-		err := status.Convert(lastError.Unwrap())
-		custom := CustomError{
-			Code:      err.Proto().Code,
-			NamedCode: err.Code().String(),
-			Message:   err.Message(),
-			Details:   err.Details(),
+		err, valid := status.FromError(lastError.Unwrap())
+		if !valid {
+			c.JSON(http.StatusInternalServerError, lastError.Error())
+		} else {
+			custom := CustomError{
+				Code:      err.Proto().Code,
+				NamedCode: err.Code().String(),
+				Message:   err.Message(),
+				Details:   err.Details(),
+			}
+			c.JSON(rpgCodeToHttpStatus(err.Code()), custom)
 		}
-		c.JSON(rpgCodeToHttpStatus(err.Code()), custom)
 	}
 }
 

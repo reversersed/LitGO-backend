@@ -20,6 +20,15 @@ definitions:
           type: string
         type: array
     type: object
+  handlers.UserRegister.UserResponse:
+    properties:
+      login:
+        type: string
+      roles:
+        items:
+          type: string
+        type: array
+    type: object
   middleware.CustomError:
     properties:
       code:
@@ -37,6 +46,17 @@ definitions:
       login:
         type: string
       password:
+        type: string
+    type: object
+  users_pb.RegistrationRequest:
+    properties:
+      email:
+        type: string
+      login:
+        type: string
+      password:
+        type: string
+      password_repeat:
         type: string
     type: object
 host: localhost:9000
@@ -92,6 +112,38 @@ paths:
           schema:
             $ref: '#/definitions/middleware.CustomError'
       summary: Authorizes user
+      tags:
+      - users
+  /users/signin:
+    post:
+      description: creates new user and authorizes it
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/users_pb.RegistrationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User successfully authorized
+          schema:
+            $ref: '#/definitions/handlers.UserRegister.UserResponse'
+        "400":
+          description: Invalid request data
+          schema:
+            $ref: '#/definitions/middleware.CustomError'
+        "410":
+          description: Service does not responding (maybe crush)
+          schema:
+            $ref: '#/definitions/middleware.CustomError'
+        "500":
+          description: Some internal error occured
+          schema:
+            $ref: '#/definitions/middleware.CustomError'
+      summary: Registration
       tags:
       - users
 securityDefinitions:

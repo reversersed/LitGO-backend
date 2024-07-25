@@ -1,6 +1,6 @@
 API_DIRECTORIES = api_gateway api_user
 
-run: gen start
+run: clean gen start
 
 gen:
 	@echo Generating protobuf files...
@@ -12,8 +12,33 @@ gen:
 	@cd ./api_gateway/ && go generate ./...
 	@cd ./api_user/ && go generate ./...
 
+upgrade: clean
+	@cd ./api_gateway/ && go get -u ./... && go mod tidy
+	@cd ./api_user/ && go get -u ./... && go mod tidy
+
+clean:
+	@cd ./api_gateway/ && go mod tidy
+	@cd ./api_user/ && go mod tidy
+
 start:
 	@docker compose up --build --timestamps --wait --wait-timeout 1800 --remove-orphans -d
 
 stop:
 	@docker compose stop
+
+test-verbose:
+	@cd ./api_gateway/ && go generate ./... && go test ./... -v
+	@cd ./api_user/ && go generate ./... && go test ./... -v
+
+test: test-folder-creation
+	@cd ./api_gateway/ && go generate ./... && go test ./... -coverprofile=tests/coverage -coverpkg=./... && go tool cover -func=tests/coverage -o tests/coverage.func && go tool cover -html=tests/coverage -o tests/coverage.html
+	@cd ./api_user/ && go generate ./... && go test ./... -coverprofile=tests/coverage -coverpkg=./... && go tool cover -func=tests/coverage -o tests/coverage.func && go tool cover -html=tests/coverage -o tests/coverage.html
+
+test-folder-creation:
+ifeq ($(OS),Windows_NT)
+	-@cd ./api_gateway/ && mkdir tests
+	-@cd ./api_user/ && mkdir tests
+else
+	-@cd ./api_gateway/ && mkdir -p tests
+	-@cd ./api_user/ && mkdir -p tests
+endif
