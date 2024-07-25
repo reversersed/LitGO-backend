@@ -10,12 +10,12 @@ import (
 )
 
 type DatabaseConfig struct {
-	Host     string `env:"DB_HOST" env-required:"true"`
-	Port     int    `env:"DB_PORT" env-required:"true"`
-	User     string `env:"DB_NAME" env-required:"true"`
-	Password string `env:"DB_PASS" env-required:"true"`
-	Base     string `env:"DB_BASE" env-required:"true"`
-	AuthDb   string `env:"DB_AUTHDB" env-required:"true"`
+	Host     string `env:"DB_HOST" env-required:"true"  env-description:"Database hosting address"`
+	Port     int    `env:"DB_PORT" env-required:"true"  env-description:"Database port"`
+	User     string `env:"DB_NAME" env-description:"Database user. If not provided, application will attempt to log in without credentials"`
+	Password string `env:"DB_PASS" env-description:"Database user's password. If not provided, application will attempt to log in without credentials"`
+	Base     string `env:"DB_BASE" env-required:"true" env-description:"Database name"`
+	AuthDb   string `env:"DB_AUTHDB" env-required:"true" env-description:"Authentication base name"`
 }
 
 func NewClient(ctx context.Context, cfg *DatabaseConfig) (*mongo.Database, error) {

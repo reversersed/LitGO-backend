@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	users "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/users"
+	users_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/users"
 	grpc "google.golang.org/grpc"
 )
 
@@ -225,14 +225,14 @@ func (m *MockUserServer) EXPECT() *MockUserServerMockRecorder {
 }
 
 // UpdateToken mocks base method.
-func (m *MockUserServer) UpdateToken(arg0 context.Context, arg1 *users.TokenRequest, arg2 ...grpc.CallOption) (*users.TokenReply, error) {
+func (m *MockUserServer) UpdateToken(arg0 context.Context, arg1 *users_pb.TokenRequest, arg2 ...grpc.CallOption) (*users_pb.TokenReply, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "UpdateToken", varargs...)
-	ret0, _ := ret[0].(*users.TokenReply)
+	ret0, _ := ret[0].(*users_pb.TokenReply)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

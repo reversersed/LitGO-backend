@@ -14,10 +14,10 @@ type Config struct {
 }
 
 type ServerConfig struct {
-	Host        string `env:"SERVER_HOST" env-required:"true"`
-	Port        int    `env:"SERVER_PORT" env-required:"true"`
-	Environment string `env:"ENVIRONMENT"`
-	JwtSecret   string `env:"JWT_SECRET" env-required:"true"`
+	Host        string `env:"SERVER_HOST" env-required:"true" env-description:"Server listening address"`
+	Port        int    `env:"SERVER_PORT" env-required:"true" env-description:"Server listening port"`
+	Environment string `env:"ENVIRONMENT" env-default:"debug" env-description:"Application environment"`
+	JwtSecret   string `env:"JWT_SECRET" env-required:"true"  env-description:"JWT secret token. Must be unique and strong"`
 }
 
 var once sync.Once
@@ -30,16 +30,15 @@ func GetConfig() (*Config, error) {
 		database := &mongo.DatabaseConfig{}
 
 		if err := cleanenv.ReadConfig("config/.env", server); err != nil {
-			desc, _ := cleanenv.GetDescription(config, nil)
+			var header string = "Server part config"
+			desc, _ := cleanenv.GetDescription(server, &header)
 			e = fmt.Errorf("%v: %s", err, desc)
 			return
 		}
-		if len(server.Environment) == 0 {
-			server.Environment = "debug"
-		}
 		if err := cleanenv.ReadConfig("config/.env", database); err != nil {
-			desc, _ := cleanenv.GetDescription(config, nil)
-			e = fmt.Errorf("%v: %s", err, desc)
+			var header string = "Database part config"
+			desc, _ := cleanenv.GetDescription(database, &header)
+			e = fmt.Errorf("%v\n%s", err, desc)
 			return
 		}
 		config = &Config{
