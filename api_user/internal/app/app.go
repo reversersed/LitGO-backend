@@ -9,32 +9,15 @@ import (
 	srv "github.com/reversersed/go-grpc/tree/main/api_user/internal/service"
 	"github.com/reversersed/go-grpc/tree/main/api_user/internal/storage"
 	freecache "github.com/reversersed/go-grpc/tree/main/api_user/pkg/cache"
-	"github.com/reversersed/go-grpc/tree/main/api_user/pkg/logging"
+	"github.com/reversersed/go-grpc/tree/main/api_user/pkg/logging/logrus"
 	"github.com/reversersed/go-grpc/tree/main/api_user/pkg/mongo"
 	"github.com/reversersed/go-grpc/tree/main/api_user/pkg/shutdown"
 	"github.com/reversersed/go-grpc/tree/main/api_user/pkg/validator"
 	"google.golang.org/grpc"
 )
 
-type service interface {
-	Register(s grpc.ServiceRegistrar)
-}
-type cache interface {
-	Get(key []byte) ([]byte, error)
-	Set(key []byte, value []byte, expiration int) error
-	Delete(key []byte) (affected bool)
-
-	EntryCount() int64
-}
-type app struct {
-	config  *config.Config
-	logger  *logging.Logger
-	service service
-	cache   cache
-}
-
 func New() (*app, error) {
-	logger, err := logging.GetLogger()
+	logger, err := logrus.GetLogger()
 	if err != nil {
 		return nil, err
 	}

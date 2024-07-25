@@ -15,13 +15,22 @@ type CustomError struct {
 	Details   []any  `json:"details"`
 }
 
+func (c *CustomError) Error() string {
+	return c.Message
+}
 func ErrorHandler(c *gin.Context) {
 	c.Next()
 
 	if lastError := c.Errors.Last(); lastError != nil {
 		err, valid := status.FromError(lastError.Unwrap())
 		if !valid {
-			c.JSON(http.StatusInternalServerError, lastError.Error())
+			custom := CustomError{
+				Code:      int32(codes.Internal),
+				NamedCode: codes.Internal.String(),
+				Message:   lastError.Error(),
+				Details:   nil,
+			}
+			c.JSON(http.StatusInternalServerError, custom)
 		} else {
 			custom := CustomError{
 				Code:      err.Proto().Code,

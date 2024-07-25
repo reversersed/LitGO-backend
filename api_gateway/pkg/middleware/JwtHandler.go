@@ -16,6 +16,8 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+//go:generate mockgen -source=JwtHandler.go -destination=mocks/jwt_mw_mock.go
+
 type Key string
 
 const (

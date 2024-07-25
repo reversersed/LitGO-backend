@@ -9,31 +9,12 @@ import (
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/config"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers"
 	freecache "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/cache"
-	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/logging"
+	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/logging/logrus"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/middleware"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/shutdown"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
-
-type handler interface {
-	RegisterRouter(router *gin.Engine)
-	Close() error
-}
-type cache interface {
-	Get(key []byte) ([]byte, error)
-	Set(key []byte, value []byte, expiration int) error
-	Delete(key []byte) (affected bool)
-
-	EntryCount() int64
-}
-type app struct {
-	router   *gin.Engine
-	config   *config.Config
-	logger   *logging.Logger
-	cache    cache
-	handlers []handler
-}
 
 // @title API
 // @version 1.0
@@ -48,7 +29,7 @@ type app struct {
 // @in Cookie
 // @name Authorization
 func New() (*app, error) {
-	logger, err := logging.GetLogger()
+	logger, err := logrus.GetLogger()
 	if err != nil {
 		return nil, err
 	}
