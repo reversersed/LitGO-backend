@@ -18,12 +18,12 @@ import (
 
 //go:generate mockgen -source=JwtHandler.go -destination=mocks/jwt_mw_mock.go
 
-type Key string
-
 const (
-	TokenCookieName   string = "authTokenCookie"
-	RefreshCookieName string = "refreshTokenCookie"
-	UserIdKey         Key    = "userAuthId"
+	TokenCookieName     string = "authTokenCookie"
+	RefreshCookieName   string = "refreshTokenCookie"
+	UserIdKey           string = "userAuthId"
+	UserCredentialLogin string = "userLoginCredential"
+	UserCredentialRoles string = "userRolesCredential"
 )
 
 type Logger interface {
@@ -80,14 +80,14 @@ func (j *jwtMiddleware) Middleware(server UserServer, roles ...string) gin.Handl
 		verifier, err := jwt.NewVerifierHS(jwt.HS256, key)
 		if err != nil {
 			j.logger.Errorf("error creating verifier for key. key length = %d, error = %v", len(key), err)
-			c.Error(status.Errorf(codes.Unauthenticated, "error creating verifier for key"))
+			c.Error(status.Error(codes.Unauthenticated, "error creating verifier for key"))
 			c.Abort()
 			return
 		}
 		j.logger.Info("parsing and verifying token...")
 		token, err := jwt.ParseAndVerifyString(headertoken, verifier)
 		if err != nil {
-			c.Error(status.Errorf(codes.Unauthenticated, err.Error()))
+			c.Error(status.Error(codes.Unauthenticated, err.Error()))
 			c.Abort()
 			return
 		}
@@ -103,7 +103,7 @@ func (j *jwtMiddleware) Middleware(server UserServer, roles ...string) gin.Handl
 			if err != nil {
 				c.SetCookie(TokenCookieName, "", -1, "/", "", true, true)
 				c.SetCookie(RefreshCookieName, "", -1, "/", "", true, true)
-				c.Error(status.Errorf(codes.Unauthenticated, err.Error()))
+				c.Error(status.Error(codes.Unauthenticated, err.Error()))
 				c.Abort()
 				return
 			}
@@ -111,7 +111,7 @@ func (j *jwtMiddleware) Middleware(server UserServer, roles ...string) gin.Handl
 			if err != nil {
 				c.SetCookie(TokenCookieName, "", -1, "/", "", true, true)
 				c.SetCookie(RefreshCookieName, "", -1, "/", "", true, true)
-				c.Error(status.Errorf(codes.Unauthenticated, err.Error()))
+				c.Error(err)
 				c.Abort()
 				return
 			}
@@ -126,34 +126,15 @@ func (j *jwtMiddleware) Middleware(server UserServer, roles ...string) gin.Handl
 				}
 			}
 			if len(errorRoles) > 0 {
-				c.Error(status.Errorf(codes.PermissionDenied, strings.Join(errorRoles, ", ")))
+				c.Error(status.Error(codes.PermissionDenied, strings.Join(errorRoles, ", ")))
 				c.Abort()
 				return
 			}
 		}
-		j.logger.Infof("user %s token has been verified with %v rights", claims.Login, claims.Roles)
-		c.Set(string(UserIdKey), claims.ID)
+		j.logger.Infof("user's %s token has been verified with %v rights", claims.Login, claims.Roles)
+		c.Set(UserIdKey, claims.ID)
+		c.Set(UserCredentialLogin, claims.Login)
+		c.Set(UserCredentialRoles, claims.Roles)
 		c.Next()
 	}
-}
-func (j *jwtMiddleware) GetUserClaims(token string) (*UserTokenModel, error) {
-	verifier, err := jwt.NewVerifierHS(jwt.HS256, []byte(j.secret))
-	if err != nil {
-		return nil, err
-	}
-
-	claimToken, err := jwt.ParseAndVerifyString(token, verifier)
-	if err != nil {
-		return nil, err
-	}
-
-	var claims claims
-	if err := json.Unmarshal(claimToken.RawClaims(), &claims); err != nil {
-		return nil, err
-	}
-	j.logger.Infof("user %s authorized with %v rights", claims.Login, claims.Roles)
-	return &UserTokenModel{
-		Login: claims.Login,
-		Roles: claims.Roles,
-	}, nil
 }

@@ -115,8 +115,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "User successfully authorized",
+                    "201": {
+                        "description": "User registered and authorized",
                         "schema": {
                             "$ref": "#/definitions/handlers.UserRegister.UserResponse"
                         }

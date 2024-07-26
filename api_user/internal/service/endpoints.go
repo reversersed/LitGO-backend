@@ -38,7 +38,7 @@ func (u *userServer) UpdateToken(c context.Context, r *users_pb.TokenRequest) (*
 
 	token, refresh, err := u.UpdateRefreshToken(r.Refreshtoken)
 	if err != nil {
-		return nil, status.Error(codes.NotFound, err.Error())
+		return nil, err
 	}
 	return &users_pb.TokenReply{
 		Token:        token,

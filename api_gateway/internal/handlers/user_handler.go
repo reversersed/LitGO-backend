@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"reflect"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -21,7 +22,7 @@ import (
 // @Failure      410 {object}  middleware.CustomError "Service does not responding (maybe crush)"
 // @Router       /users/auth [get]
 func (h *userHandler) UserAuthenticate(c *gin.Context) {
-	id, exist := c.Get(string(middleware.UserIdKey))
+	id, exist := c.Get(middleware.UserIdKey)
 	if !exist {
 		c.Error(status.Error(codes.Unauthenticated, "no user credentials found"))
 		return
@@ -31,6 +32,22 @@ func (h *userHandler) UserAuthenticate(c *gin.Context) {
 		c.Error(err)
 		return
 	}
+	roles, exist := c.Get(middleware.UserCredentialRoles)
+	if exist && !reflect.DeepEqual(roles.([]string), reply.Roles) {
+		h.logger.Infof("user's %s rights has changed, regenerating token...", reply.Login)
+		refreshCookie, _ := c.Cookie(middleware.RefreshCookieName)
+		tokenReply, err := h.client.UpdateToken(c.Request.Context(), &users_pb.TokenRequest{Refreshtoken: refreshCookie})
+		if err != nil {
+			c.SetCookie(middleware.TokenCookieName, "", -1, "/", "", true, true)
+			c.SetCookie(middleware.RefreshCookieName, "", -1, "/", "", true, true)
+			c.Error(err)
+			c.Abort()
+			return
+		}
+		c.SetCookie(middleware.TokenCookieName, tokenReply.Token, (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
+		c.SetCookie(middleware.RefreshCookieName, tokenReply.Refreshtoken, (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
+	}
+	h.logger.Infof("user %s authenticated with token and %v rights", reply.Login, reply.Roles)
 	type UserResponse struct {
 		Login string   `json:"login"`
 		Roles []string `json:"roles"`
@@ -65,6 +82,7 @@ func (h *userHandler) UserLogin(c *gin.Context) {
 		c.Error(err)
 		return
 	}
+	h.logger.Infof("user %s authoirized via login and password", request.Login)
 	c.SetCookie(middleware.TokenCookieName, reply.Token, (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
 	c.SetCookie(middleware.RefreshCookieName, reply.Refreshtoken, (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
 
@@ -79,7 +97,7 @@ func (h *userHandler) UserLogin(c *gin.Context) {
 // @Tags         users
 // @Produce      json
 // @Param        request body users_pb.RegistrationRequest true "Request body"
-// @Success      200  {object}  handlers.UserRegister.UserResponse "User successfully authorized"
+// @Success      201  {object}  handlers.UserRegister.UserResponse "User registered and authorized"
 // @Failure      400  {object}  middleware.CustomError "Invalid request data"
 // @Failure      410  {object}  middleware.CustomError "Service does not responding (maybe crush)"
 // @Failure      500  {object}  middleware.CustomError "Some internal error occured"
@@ -99,6 +117,7 @@ func (h *userHandler) UserRegister(c *gin.Context) {
 		c.Error(err)
 		return
 	}
+	h.logger.Infof("user %s registered with email %s", reply.Login, request.Email)
 	c.SetCookie(middleware.TokenCookieName, reply.Token, (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
 	c.SetCookie(middleware.RefreshCookieName, reply.Refreshtoken, (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
 
