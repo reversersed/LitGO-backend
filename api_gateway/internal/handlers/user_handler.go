@@ -18,7 +18,7 @@ import (
 // @Description  first found user will be returned. If no user found, there'll be an error with details
 // @Tags         users
 // @Produce      json
-// @Param		 id   query     string 		false 		"User Id"
+// @Param		 id      query     string 		false 		"User Id"
 // @Param		 login   query     string 		false 		"User login"
 // @Param		 email   query     string 		false 		"User email" Format(email)
 // @Success      200  {object}  users_pb.UserModel 		"User DTO model"

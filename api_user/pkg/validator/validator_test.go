@@ -78,3 +78,38 @@ func TestEmptyFieldName(t *testing.T) {
 	assert.True(t, ok)
 	assert.Equal(t, errs[0].Field(), "Field")
 }
+
+func TestEqualFields(t *testing.T) {
+	data := []struct {
+		name     string
+		excepted bool
+		Field1   string `validate:"eqfield=Field2"`
+		Field2   string
+	}{
+		{
+			name:     "equal fields",
+			excepted: false,
+			Field1:   "field 1 and эт хорошо!",
+			Field2:   "field 1 and эт хорошо!",
+		},
+		{
+			name:     "not equal fields",
+			excepted: true,
+			Field1:   "field 2 and эт not хорошо!",
+			Field2:   "field 1 and эт хорошо!",
+		},
+	}
+
+	for _, d := range data {
+		t.Run(d.name, func(t *testing.T) {
+			valid := New()
+			err := valid.Struct(d)
+
+			if d.excepted {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}

@@ -8,7 +8,6 @@ import (
 	_ "github.com/reversersed/go-grpc/tree/main/api_gateway/docs"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/config"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers"
-	freecache "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/cache"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/logging/logrus"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/middleware"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/shutdown"
@@ -42,7 +41,6 @@ func New() (*app, error) {
 		router: gin.New(),
 		config: cfg,
 		logger: logger,
-		cache:  freecache.NewFreeCache(104857600),
 	}
 	server.logger.Info("setting up gin router...")
 	gin.SetMode(server.config.Server.Environment)
