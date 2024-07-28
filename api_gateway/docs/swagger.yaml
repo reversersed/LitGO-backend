@@ -30,34 +30,53 @@ definitions:
         type: array
     type: object
   middleware.CustomError:
+    description: General error object. This structure always returns when error occured
     properties:
       code:
+        description: Internal gRPC error code (e.g. 3)
         type: integer
       details:
+        description: Error details. Check 'ErrorDetail' structure for more information
         items: {}
         type: array
       message:
+        description: Error message. Can be shown to users
         type: string
       type:
+        description: Error code in string (e.g. InvalidArgument)
         type: string
     type: object
   users_pb.LoginRequest:
     properties:
       login:
+        example: admin
         type: string
       password:
+        example: admin
         type: string
+    required:
+    - login
+    - password
     type: object
   users_pb.RegistrationRequest:
     properties:
       email:
         type: string
       login:
+        maxLength: 16
+        minLength: 4
         type: string
       password:
+        maxLength: 32
+        minLength: 8
         type: string
       password_repeat:
         type: string
+    required:
+    - email
+    - login
+    - password
+    - password_repeat
     type: object
   users_pb.UserModel:
     properties:
@@ -141,6 +160,8 @@ paths:
           description: Service does not responding (maybe crush)
           schema:
             $ref: '#/definitions/middleware.CustomError'
+      security:
+      - ApiKeyAuth: []
       summary: Authenticates user
       tags:
       - users

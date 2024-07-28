@@ -38,9 +38,6 @@ func New() *Validator {
 	v.RegisterValidation("eqfield", validate_FieldsEqual)
 	return &Validator{v}
 }
-func (v *Validator) Register(data any, rules map[string]string) {
-	v.Validate.RegisterStructValidationMapRules(rules, data)
-}
 func (v *Validator) StructValidation(data any) error {
 	result := v.Validate.Struct(data)
 

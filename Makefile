@@ -1,4 +1,5 @@
 API_DIRECTORIES = api_gateway api_user
+PROTO_PKG_FOLDERS = users
 CMDSEP = &
 
 run: clean gen test start
@@ -8,13 +9,16 @@ install: i
 i:
 	@go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	@go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+	@go install github.com/favadi/protoc-go-inject-tag@latest
 	@go install github.com/golang/mock/mockgen@latest
 	@go install github.com/swaggo/swag/cmd/swag@latest
 	@$(MAKE) clean
 
 gen:
 	@$(foreach directory,$(API_DIRECTORIES),\
-		cd ./$(directory)/ && protoc -I ../proto --go_out=. --go-grpc_out=. ../proto/*.proto && cd .. \
+		cd ./$(directory)/ && protoc -I ../proto --go_out=. --go-grpc_out=. ../proto/*.proto && $(foreach folder,$(PROTO_PKG_FOLDERS),\
+		protoc-go-inject-tag -input="./pkg/proto/$(folder)/*.pb.go" -remove_tag_comment &&)\
+		protoc-go-inject-tag -input="./pkg/proto/*.pb.go" -remove_tag_comment && cd .. \
 		$(CMDSEP)) echo proto files generated
 
 	@swag init --parseDependency -d ./api_gateway/internal/handlers -g ../app/app.go -o ./api_gateway/docs

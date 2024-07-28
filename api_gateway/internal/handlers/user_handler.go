@@ -51,6 +51,7 @@ func (h *userHandler) UserSearch(c *gin.Context) {
 // @Failure      401  {object}  middleware.CustomError "User does not authorized"
 // @Failure      404  {object}  middleware.CustomError "User does not exists in database"
 // @Failure      503  {object}  middleware.CustomError "Service does not responding (maybe crush)"
+// @Security 	 ApiKeyAuth
 // @Router       /users/auth [get]
 func (h *userHandler) UserAuthenticate(c *gin.Context) {
 	user, err := middleware.GetCredentialsFromContext(c)

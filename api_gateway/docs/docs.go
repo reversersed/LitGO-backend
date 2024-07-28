@@ -79,6 +79,11 @@ const docTemplate = `{
         },
         "/users/auth": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "check if current user has legit token",
                 "produces": [
                     "application/json"
@@ -252,45 +257,66 @@ const docTemplate = `{
             }
         },
         "middleware.CustomError": {
+            "description": "General error object. This structure always returns when error occured",
             "type": "object",
             "properties": {
                 "code": {
+                    "description": "Internal gRPC error code (e.g. 3)",
                     "type": "integer"
                 },
                 "details": {
+                    "description": "Error details. Check 'ErrorDetail' structure for more information",
                     "type": "array",
                     "items": {}
                 },
                 "message": {
+                    "description": "Error message. Can be shown to users",
                     "type": "string"
                 },
                 "type": {
+                    "description": "Error code in string (e.g. InvalidArgument)",
                     "type": "string"
                 }
             }
         },
         "users_pb.LoginRequest": {
             "type": "object",
+            "required": [
+                "login",
+                "password"
+            ],
             "properties": {
                 "login": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "admin"
                 },
                 "password": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "admin"
                 }
             }
         },
         "users_pb.RegistrationRequest": {
             "type": "object",
+            "required": [
+                "email",
+                "login",
+                "password",
+                "password_repeat"
+            ],
             "properties": {
                 "email": {
                     "type": "string"
                 },
                 "login": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 16,
+                    "minLength": 4
                 },
                 "password": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 8
                 },
                 "password_repeat": {
                     "type": "string"
