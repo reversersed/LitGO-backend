@@ -24,7 +24,7 @@ func (j *userServer) UpdateRefreshToken(refreshToken string) (string, string, er
 	userBytes, err := j.cache.Get([]byte(refreshToken))
 	if err != nil {
 		j.logger.Warn(err)
-		return "", "", status.Errorf(codes.NotFound, "refresh token not found")
+		return "", "", status.Errorf(codes.Unauthenticated, "refresh token not found")
 	}
 	var u model.User
 	err = json.Unmarshal(userBytes, &u)

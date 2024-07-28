@@ -43,9 +43,10 @@ type UserServer interface {
 	UpdateToken(context.Context, *users_pb.TokenRequest, ...grpc.CallOption) (*users_pb.TokenReply, error)
 }
 type jwtMiddleware struct {
-	secret string
-	logger Logger
-	cache  Cache
+	secret     string
+	logger     Logger
+	cache      Cache
+	userServer UserServer
 }
 type claims struct {
 	jwt.RegisteredClaims
@@ -67,8 +68,10 @@ func NewJwtMiddleware(logger Logger, cache Cache, secret string) *jwtMiddleware 
 		cache:  cache,
 	}
 }
-
-func (j *jwtMiddleware) Middleware(server UserServer, roles ...string) gin.HandlerFunc {
+func (j *jwtMiddleware) ApplyUserServer(UserServer UserServer) {
+	j.userServer = UserServer
+}
+func (j *jwtMiddleware) Middleware(roles ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		headertoken, err := c.Cookie(TokenCookieName)
 		if err != nil {
@@ -107,7 +110,7 @@ func (j *jwtMiddleware) Middleware(server UserServer, roles ...string) gin.Handl
 				c.Abort()
 				return
 			}
-			tokenReply, err := server.UpdateToken(c.Request.Context(), &users_pb.TokenRequest{Refreshtoken: refreshCookie})
+			tokenReply, err := j.userServer.UpdateToken(c.Request.Context(), &users_pb.TokenRequest{Refreshtoken: refreshCookie})
 			if err != nil {
 				c.SetCookie(TokenCookieName, "", -1, "/", "", true, true)
 				c.SetCookie(RefreshCookieName, "", -1, "/", "", true, true)

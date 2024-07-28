@@ -19,7 +19,7 @@ import (
 // @Produce      json
 // @Success      200  {object}  handlers.UserAuthenticate.UserResponse "User successfully authorized"
 // @Failure      401  {object}  middleware.CustomError "User does not authorized"
-// @Failure      410 {object}  middleware.CustomError "Service does not responding (maybe crush)"
+// @Failure      503  {object}  middleware.CustomError "Service does not responding (maybe crush)"
 // @Router       /users/auth [get]
 func (h *userHandler) UserAuthenticate(c *gin.Context) {
 	id, exist := c.Get(middleware.UserIdKey)
@@ -27,7 +27,7 @@ func (h *userHandler) UserAuthenticate(c *gin.Context) {
 		c.Error(status.Error(codes.Unauthenticated, "no user credentials found"))
 		return
 	}
-	reply, err := h.client.GetUserById(c.Request.Context(), &users_pb.UserIdRequest{Id: id.(string)})
+	reply, err := h.Client.GetUserById(c.Request.Context(), &users_pb.UserIdRequest{Id: id.(string)})
 	if err != nil {
 		c.Error(err)
 		return
@@ -36,7 +36,7 @@ func (h *userHandler) UserAuthenticate(c *gin.Context) {
 	if exist && !reflect.DeepEqual(roles.([]string), reply.Roles) {
 		h.logger.Infof("user's %s rights has changed, regenerating token...", reply.Login)
 		refreshCookie, _ := c.Cookie(middleware.RefreshCookieName)
-		tokenReply, err := h.client.UpdateToken(c.Request.Context(), &users_pb.TokenRequest{Refreshtoken: refreshCookie})
+		tokenReply, err := h.Client.UpdateToken(c.Request.Context(), &users_pb.TokenRequest{Refreshtoken: refreshCookie})
 		if err != nil {
 			c.SetCookie(middleware.TokenCookieName, "", -1, "/", "", true, true)
 			c.SetCookie(middleware.RefreshCookieName, "", -1, "/", "", true, true)
@@ -65,7 +65,7 @@ func (h *userHandler) UserAuthenticate(c *gin.Context) {
 // @Param        request body users_pb.LoginRequest true "Request body"
 // @Success      200  {object}  handlers.UserLogin.UserResponse "User successfully authorized"
 // @Failure      400  {object}  middleware.CustomError "Invalid request data"
-// @Failure      410 {object}  middleware.CustomError "Service does not responding (maybe crush)"
+// @Failure      503  {object}  middleware.CustomError "Service does not responding (maybe crush)"
 // @Router       /users/login [post]
 func (h *userHandler) UserLogin(c *gin.Context) {
 	var request users_pb.LoginRequest
@@ -77,7 +77,7 @@ func (h *userHandler) UserLogin(c *gin.Context) {
 		Login string   `json:"login"`
 		Roles []string `json:"roles"`
 	}
-	reply, err := h.client.Login(c.Request.Context(), &request)
+	reply, err := h.Client.Login(c.Request.Context(), &request)
 	if err != nil {
 		c.Error(err)
 		return
@@ -99,8 +99,8 @@ func (h *userHandler) UserLogin(c *gin.Context) {
 // @Param        request body users_pb.RegistrationRequest true "Request body"
 // @Success      201  {object}  handlers.UserRegister.UserResponse "User registered and authorized"
 // @Failure      400  {object}  middleware.CustomError "Invalid request data"
-// @Failure      410  {object}  middleware.CustomError "Service does not responding (maybe crush)"
 // @Failure      500  {object}  middleware.CustomError "Some internal error occured"
+// @Failure      503  {object}  middleware.CustomError "Service does not responding (maybe crush)"
 // @Router       /users/signin [post]
 func (h *userHandler) UserRegister(c *gin.Context) {
 	var request users_pb.RegistrationRequest
@@ -112,7 +112,7 @@ func (h *userHandler) UserRegister(c *gin.Context) {
 		Login string   `json:"login"`
 		Roles []string `json:"roles"`
 	}
-	reply, err := h.client.RegisterUser(c.Request.Context(), &request)
+	reply, err := h.Client.RegisterUser(c.Request.Context(), &request)
 	if err != nil {
 		c.Error(err)
 		return

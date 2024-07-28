@@ -1,6 +1,6 @@
 API_DIRECTORIES = api_gateway api_user
 
-run: clean gen start
+run: clean gen test start
 
 gen:
 	@echo Generating protobuf files...

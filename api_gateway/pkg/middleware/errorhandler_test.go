@@ -90,6 +90,7 @@ func TestErrorHandler(t *testing.T) {
 	}
 	for _, v := range table {
 		t.Run(v.Name, func(t *testing.T) {
+			gin.SetMode(gin.ReleaseMode)
 			engine := gin.Default()
 			engine.Use(ErrorHandler)
 			engine.GET("/", v.Endpoint)

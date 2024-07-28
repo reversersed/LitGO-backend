@@ -3,18 +3,17 @@ package handlers
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/config"
-	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/middleware"
 	users_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/users"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
 type jwtMiddleware interface {
-	Middleware(middleware.UserServer, ...string) gin.HandlerFunc
+	Middleware(...string) gin.HandlerFunc
 }
 type userHandler struct {
 	connection *grpc.ClientConn
-	client     users_pb.UserClient
+	Client     users_pb.UserClient
 	jwt        jwtMiddleware
 	logger     Logger
 }
@@ -28,7 +27,7 @@ func NewUserHandler(config *config.UrlConfig, logger Logger, jwtMiddleware jwtMi
 
 	return &userHandler{
 		connection: con,
-		client:     client,
+		Client:     client,
 		logger:     logger,
 		jwt:        jwtMiddleware,
 	}, nil
@@ -42,7 +41,7 @@ func (h *userHandler) Close() error {
 func (h *userHandler) RegisterRouter(router *gin.Engine) {
 	general := router.Group("/api/v1/users")
 	{
-		authorized := general.Group("/").Use(h.jwt.Middleware(h.client))
+		authorized := general.Group("/").Use(h.jwt.Middleware())
 		{
 			authorized.GET("/auth", h.UserAuthenticate)
 		}

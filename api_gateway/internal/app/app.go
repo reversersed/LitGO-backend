@@ -66,6 +66,7 @@ func (a *app) Run() error {
 	if userHandler, err := handlers.NewUserHandler(a.config.Url, a.logger, jwt); err != nil {
 		return err
 	} else {
+		jwt.ApplyUserServer(userHandler.Client)
 		a.handlers = append(a.handlers, userHandler)
 		userHandler.RegisterRouter(a.router)
 	}
