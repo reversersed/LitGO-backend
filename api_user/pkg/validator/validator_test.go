@@ -14,13 +14,14 @@ var cases = []struct {
 	err   bool
 }{
 	{"primitive id tag testing", "6665976c2691650b53a24009", "primitiveid", false},
-	{"primitive id tag fail testing", "", "primitiveid", true},
+	{"primitive id tag fail testing", "ghfjtufbgbc", "primitiveid", true},
 	{"lowercase tag testing", "This Is Lower Containing String With 1 Number And !@#$% Specials", "lowercase", false},
 	{"lowercase tag fail testing", "THIS IS NOT LOWERCASE WITH 2 NUMBER AND @#%$#@ SPECIALS", "lowercase", true},
 	{"uppercase tag testing", "This Is Upper Containing String With 1 Number And !@#$% Specials", "uppercase", false},
 	{"uppercase tag fail testing", "this is not uppercase containig string with 252 numbers and $!@ specials", "uppercase", true},
 	{"only english tag testing", "OnlyEnglishLetters", "onlyenglish", false},
 	{"only english tag fail testing on spaces", "this is only english letters testing but with spaces", "onlyenglish", true},
+	{"only english tag success on empty string", "", "onlyenglish", false},
 	{"only english tag fail testing on numbers", "this is only english letters testing but with 513 number", "onlyenglish", true},
 	{"only english tag fail testing on other letters", "этот тест тэга onlyenglish должен провалиться, т.к. тут есть русские символы", "onlyenglish", true},
 	{"only english tag fail testing on specials", "this is only english letters testing but with %@#!&*(@#", "onlyenglish", true},

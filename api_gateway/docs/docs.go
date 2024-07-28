@@ -18,6 +18,65 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/users": {
+            "get": {
+                "description": "params goes in specific order: id -\u003e login -\u003e email\nfirst found user will be returned. If no user found, there'll be an error with details",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Find user by credentials",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User Id",
+                        "name": "id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "User login",
+                        "name": "login",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "format": "email",
+                        "description": "User email",
+                        "name": "email",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User DTO model",
+                        "schema": {
+                            "$ref": "#/definitions/users_pb.UserModel"
+                        }
+                    },
+                    "400": {
+                        "description": "Request's field was not in a correct format",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.CustomError"
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.CustomError"
+                        }
+                    },
+                    "503": {
+                        "description": "Service does not responding (maybe crush)",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.CustomError"
+                        }
+                    }
+                }
+            }
+        },
         "/users/auth": {
             "get": {
                 "description": "check if current user has legit token",
@@ -37,6 +96,12 @@ const docTemplate = `{
                     },
                     "401": {
                         "description": "User does not authorized",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.CustomError"
+                        }
+                    },
+                    "404": {
+                        "description": "User does not exists in database",
                         "schema": {
                             "$ref": "#/definitions/middleware.CustomError"
                         }
@@ -229,6 +294,26 @@ const docTemplate = `{
                 },
                 "password_repeat": {
                     "type": "string"
+                }
+            }
+        },
+        "users_pb.UserModel": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "login": {
+                    "type": "string"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         }

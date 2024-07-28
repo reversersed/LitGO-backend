@@ -8,9 +8,6 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-type jwtMiddleware interface {
-	Middleware(...string) gin.HandlerFunc
-}
 type userHandler struct {
 	connection *grpc.ClientConn
 	Client     users_pb.UserClient
@@ -45,6 +42,7 @@ func (h *userHandler) RegisterRouter(router *gin.Engine) {
 		{
 			authorized.GET("/auth", h.UserAuthenticate)
 		}
+		general.GET("/", h.UserSearch)
 		general.POST("/login", h.UserLogin)
 		general.POST("/signin", h.UserRegister)
 	}

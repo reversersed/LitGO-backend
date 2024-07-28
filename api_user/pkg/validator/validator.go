@@ -56,11 +56,16 @@ func (v *Validator) StructValidation(data any) error {
 		if len(i.Param()) > 0 {
 			tag = fmt.Sprintf("%s:%s", i.Tag(), i.Param())
 		}
+		actual := fmt.Sprintf("%v", i.Value())
+		if strings.ToLower(i.Field()) == "password" {
+			actual = "password hidden"
+		}
 		details = append(details, &shared_pb.ErrorDetail{
 			Field:       i.Field(),
 			Struct:      i.StructNamespace(),
 			Tag:         tag,
 			Description: errorToStringByTag(i),
+			Actualvalue: actual,
 		})
 	}
 	stat, err := status.New(codes.InvalidArgument, "validation failed, see the details").WithDetails(details...)
@@ -105,6 +110,8 @@ func errorToStringByTag(err validator.FieldError) string {
 		return fmt.Sprintf("%s: must be a primitive id type", err.Field())
 	case "eqfield":
 		return fmt.Sprintf("%s: field must be equal to %s field's value", err.Field(), err.Param())
+	case "required_without_all":
+		return fmt.Sprintf("%s: at least one field must be present", err.Field())
 	default:
 		return err.Error()
 	}

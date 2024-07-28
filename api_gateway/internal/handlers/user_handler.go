@@ -13,6 +13,36 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+// @Summary      Find user by credentials
+// @Description  params goes in specific order: id -> login -> email
+// @Description  first found user will be returned. If no user found, there'll be an error with details
+// @Tags         users
+// @Produce      json
+// @Param		 id   query     string 		false 		"User Id"
+// @Param		 login   query     string 		false 		"User login"
+// @Param		 email   query     string 		false 		"User email" Format(email)
+// @Success      200  {object}  users_pb.UserModel 		"User DTO model"
+// @Failure      400  {object}  middleware.CustomError 	"Request's field was not in a correct format"
+// @Failure      404  {object}  middleware.CustomError 	"User not found"
+// @Failure      503  {object}  middleware.CustomError 	"Service does not responding (maybe crush)"
+// @Router       /users [get]
+func (h *userHandler) UserSearch(c *gin.Context) {
+
+	var request users_pb.UserRequest
+	if err := c.BindQuery(&request); err != nil {
+		c.Error(status.Error(codes.InvalidArgument, err.Error()))
+		return
+	}
+	// need to made
+	reply, err := h.Client.GetUser(c.Request.Context(), &request)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, reply)
+}
+
 // @Summary      Authenticates user
 // @Description  check if current user has legit token
 // @Tags         users
