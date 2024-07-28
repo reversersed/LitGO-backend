@@ -130,7 +130,7 @@ type UserRequest struct {
 
 	Id    string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Login string `protobuf:"bytes,2,opt,name=login,proto3" json:"login,omitempty"`
-	Email string `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"` // @go_tags(`validate:"required"`)
+	Email string `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"` //https://stackoverflow.com/questions/51828804/defining-custom-go-struct-tags-for-protobuf-message-fields
 }
 
 func (x *UserRequest) Reset() {

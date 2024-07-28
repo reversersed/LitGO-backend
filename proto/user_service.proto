@@ -20,7 +20,7 @@ message TokenRequest {
 message UserRequest {
   string id = 1;
   string login = 2;
-  string email = 3; `validate:"required"` //https://stackoverflow.com/questions/51828804/defining-custom-go-struct-tags-for-protobuf-message-fields
+  string email = 3; //https://stackoverflow.com/questions/51828804/defining-custom-go-struct-tags-for-protobuf-message-fields
 }
 message RegistrationRequest {
   string login = 1;
