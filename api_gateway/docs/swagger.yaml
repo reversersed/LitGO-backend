@@ -79,7 +79,7 @@ paths:
           description: User does not authorized
           schema:
             $ref: '#/definitions/middleware.CustomError'
-        "410":
+        "503":
           description: Service does not responding (maybe crush)
           schema:
             $ref: '#/definitions/middleware.CustomError'
@@ -107,7 +107,7 @@ paths:
           description: Invalid request data
           schema:
             $ref: '#/definitions/middleware.CustomError'
-        "410":
+        "503":
           description: Service does not responding (maybe crush)
           schema:
             $ref: '#/definitions/middleware.CustomError'
@@ -135,12 +135,12 @@ paths:
           description: Invalid request data
           schema:
             $ref: '#/definitions/middleware.CustomError'
-        "410":
-          description: Service does not responding (maybe crush)
-          schema:
-            $ref: '#/definitions/middleware.CustomError'
         "500":
           description: Some internal error occured
+          schema:
+            $ref: '#/definitions/middleware.CustomError'
+        "503":
+          description: Service does not responding (maybe crush)
           schema:
             $ref: '#/definitions/middleware.CustomError'
       summary: Registration

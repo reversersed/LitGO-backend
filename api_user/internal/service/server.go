@@ -35,9 +35,11 @@ var dataValidationRules = []struct {
 		},
 	},
 	{
-		Data: users_pb.UserIdRequest{},
+		Data: users_pb.UserRequest{},
 		Rules: map[string]string{
-			"Id": "required,primitiveid",
+			"Id":    "primitiveid",
+			"Login": "onlyenglish",
+			"Email": "email",
 		},
 	},
 }

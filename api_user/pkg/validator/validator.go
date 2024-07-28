@@ -116,14 +116,14 @@ func validate_PrimitiveId(field validator.FieldLevel) bool {
 	var obj primitive.ObjectID
 
 	_, err := primitive.ObjectIDFromHex(field.Field().String())
-	return (err == nil) || (field.Field().Kind() == reflect.TypeOf(obj).Kind())
+	return (err == nil) || (field.Field().Kind() == reflect.TypeOf(obj).Kind()) || len(field.Field().String()) == 0
 }
 func validate_OnlyEnglish(field validator.FieldLevel) bool {
 	mathed, err := regexp.MatchString(`^[a-zA-Z]+$`, field.Field().String())
 	if err != nil {
 		return false
 	}
-	if !mathed {
+	if !mathed && len(field.Field().String()) > 0 {
 		return false
 	}
 	return true

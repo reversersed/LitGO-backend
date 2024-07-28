@@ -2,10 +2,11 @@ syntax = "proto3";
 package users;
 option go_package = "pkg/proto/users;users_pb";
 
+
 service User {
   rpc Login (LoginRequest) returns (LoginResponse) {}
   rpc UpdateToken (TokenRequest) returns (TokenReply) {}
-  rpc GetUserById (UserIdRequest) returns (UserModel) {}
+  rpc GetUser (UserRequest) returns (UserModel) {}
   rpc RegisterUser (RegistrationRequest) returns (LoginResponse) {}
 }
 //Requests
@@ -16,8 +17,10 @@ message LoginRequest {
 message TokenRequest {
   string refreshtoken = 1;
 }
-message UserIdRequest {
+message UserRequest {
   string id = 1;
+  string login = 2;
+  string email = 3;
 }
 message RegistrationRequest {
   string login = 1;

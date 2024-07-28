@@ -21,7 +21,7 @@ const _ = grpc.SupportPackageIsVersion8
 const (
 	User_Login_FullMethodName        = "/users.User/Login"
 	User_UpdateToken_FullMethodName  = "/users.User/UpdateToken"
-	User_GetUserById_FullMethodName  = "/users.User/GetUserById"
+	User_GetUser_FullMethodName      = "/users.User/GetUser"
 	User_RegisterUser_FullMethodName = "/users.User/RegisterUser"
 )
 
@@ -31,7 +31,7 @@ const (
 type UserClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	UpdateToken(ctx context.Context, in *TokenRequest, opts ...grpc.CallOption) (*TokenReply, error)
-	GetUserById(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*UserModel, error)
+	GetUser(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserModel, error)
 	RegisterUser(ctx context.Context, in *RegistrationRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 }
 
@@ -63,10 +63,10 @@ func (c *userClient) UpdateToken(ctx context.Context, in *TokenRequest, opts ...
 	return out, nil
 }
 
-func (c *userClient) GetUserById(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*UserModel, error) {
+func (c *userClient) GetUser(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserModel, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UserModel)
-	err := c.cc.Invoke(ctx, User_GetUserById_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, User_GetUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -89,7 +89,7 @@ func (c *userClient) RegisterUser(ctx context.Context, in *RegistrationRequest, 
 type UserServer interface {
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	UpdateToken(context.Context, *TokenRequest) (*TokenReply, error)
-	GetUserById(context.Context, *UserIdRequest) (*UserModel, error)
+	GetUser(context.Context, *UserRequest) (*UserModel, error)
 	RegisterUser(context.Context, *RegistrationRequest) (*LoginResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
@@ -104,8 +104,8 @@ func (UnimplementedUserServer) Login(context.Context, *LoginRequest) (*LoginResp
 func (UnimplementedUserServer) UpdateToken(context.Context, *TokenRequest) (*TokenReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateToken not implemented")
 }
-func (UnimplementedUserServer) GetUserById(context.Context, *UserIdRequest) (*UserModel, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUserById not implemented")
+func (UnimplementedUserServer) GetUser(context.Context, *UserRequest) (*UserModel, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
 func (UnimplementedUserServer) RegisterUser(context.Context, *RegistrationRequest) (*LoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterUser not implemented")
@@ -159,20 +159,20 @@ func _User_UpdateToken_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_GetUserById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserIdRequest)
+func _User_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServer).GetUserById(ctx, in)
+		return srv.(UserServer).GetUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: User_GetUserById_FullMethodName,
+		FullMethod: User_GetUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).GetUserById(ctx, req.(*UserIdRequest))
+		return srv.(UserServer).GetUser(ctx, req.(*UserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -211,8 +211,8 @@ var User_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _User_UpdateToken_Handler,
 		},
 		{
-			MethodName: "GetUserById",
-			Handler:    _User_GetUserById_Handler,
+			MethodName: "GetUser",
+			Handler:    _User_GetUser_Handler,
 		},
 		{
 			MethodName: "RegisterUser",

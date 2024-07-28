@@ -10,6 +10,7 @@ import (
 
 	"github.com/cristalhq/jwt/v3"
 	"github.com/gin-gonic/gin"
+	shared_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto"
 	users_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/users"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -34,18 +35,12 @@ type Logger interface {
 	Warnf(string, ...interface{})
 	Warn(...interface{})
 }
-type Cache interface {
-	Get([]byte) ([]byte, error)
-	Set([]byte, []byte, int) error
-	Delete([]byte) bool
-}
 type UserServer interface {
 	UpdateToken(context.Context, *users_pb.TokenRequest, ...grpc.CallOption) (*users_pb.TokenReply, error)
 }
 type jwtMiddleware struct {
 	secret     string
 	logger     Logger
-	cache      Cache
 	userServer UserServer
 }
 type claims struct {
@@ -61,11 +56,10 @@ type UserTokenModel struct {
 	Email string   `json:"-"`
 }
 
-func NewJwtMiddleware(logger Logger, cache Cache, secret string) *jwtMiddleware {
+func NewJwtMiddleware(logger Logger, secret string) *jwtMiddleware {
 	return &jwtMiddleware{
 		secret: secret,
 		logger: logger,
-		cache:  cache,
 	}
 }
 func (j *jwtMiddleware) ApplyUserServer(UserServer UserServer) {
@@ -96,11 +90,8 @@ func (j *jwtMiddleware) Middleware(roles ...string) gin.HandlerFunc {
 		}
 
 		var claims claims
-		if err := json.Unmarshal(token.RawClaims(), &claims); err != nil {
-			c.Error(status.Errorf(codes.Unauthenticated, err.Error()))
-			c.Abort()
-			return
-		}
+		json.Unmarshal(token.RawClaims(), &claims)
+
 		if !claims.IsValidAt(time.Now()) {
 			refreshCookie, err := c.Cookie(RefreshCookieName)
 			if err != nil {
@@ -140,4 +131,26 @@ func (j *jwtMiddleware) Middleware(roles ...string) gin.HandlerFunc {
 		c.Set(UserCredentialRoles, claims.Roles)
 		c.Next()
 	}
+}
+func GetCredentialsFromContext(c *gin.Context) (*shared_pb.UserCredentials, error) {
+	userId, exist := c.Get(UserIdKey)
+	if !exist {
+		erro, _ := status.New(codes.Unauthenticated, "no user credentials found").WithDetails(&shared_pb.ErrorDetail{Field: "User ID", Description: "User id was not found in context"})
+		return nil, erro.Err()
+	}
+	userLogin, exist := c.Get(UserCredentialLogin)
+	if !exist {
+		erro, _ := status.New(codes.Unauthenticated, "no user credentials found").WithDetails(&shared_pb.ErrorDetail{Field: "User Login", Description: "User login was not found in context"})
+		return nil, erro.Err()
+	}
+	userRoles, exist := c.Get(UserCredentialRoles)
+	if !exist {
+		erro, _ := status.New(codes.Unauthenticated, "no user credentials found").WithDetails(&shared_pb.ErrorDetail{Field: "User Roles", Description: "User roles was not found in context"})
+		return nil, erro.Err()
+	}
+	return &shared_pb.UserCredentials{
+		Id:    userId.(string),
+		Login: userLogin.(string),
+		Roles: userRoles.([]string),
+	}, nil
 }

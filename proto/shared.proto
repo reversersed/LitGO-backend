@@ -8,3 +8,8 @@ message ErrorDetail {
   string tag = 3;
   string description = 4;
 }
+message UserCredentials {
+  string id = 1;
+  string login = 2;
+  repeated string roles = 3;
+}

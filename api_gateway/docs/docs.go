@@ -41,7 +41,7 @@ const docTemplate = `{
                             "$ref": "#/definitions/middleware.CustomError"
                         }
                     },
-                    "410": {
+                    "503": {
                         "description": "Service does not responding (maybe crush)",
                         "schema": {
                             "$ref": "#/definitions/middleware.CustomError"
@@ -84,7 +84,7 @@ const docTemplate = `{
                             "$ref": "#/definitions/middleware.CustomError"
                         }
                     },
-                    "410": {
+                    "503": {
                         "description": "Service does not responding (maybe crush)",
                         "schema": {
                             "$ref": "#/definitions/middleware.CustomError"
@@ -127,14 +127,14 @@ const docTemplate = `{
                             "$ref": "#/definitions/middleware.CustomError"
                         }
                     },
-                    "410": {
-                        "description": "Service does not responding (maybe crush)",
+                    "500": {
+                        "description": "Some internal error occured",
                         "schema": {
                             "$ref": "#/definitions/middleware.CustomError"
                         }
                     },
-                    "500": {
-                        "description": "Some internal error occured",
+                    "503": {
+                        "description": "Service does not responding (maybe crush)",
                         "schema": {
                             "$ref": "#/definitions/middleware.CustomError"
                         }

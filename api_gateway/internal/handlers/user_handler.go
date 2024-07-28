@@ -19,21 +19,22 @@ import (
 // @Produce      json
 // @Success      200  {object}  handlers.UserAuthenticate.UserResponse "User successfully authorized"
 // @Failure      401  {object}  middleware.CustomError "User does not authorized"
+// @Failure      404  {object}  middleware.CustomError "User does not exists in database"
 // @Failure      503  {object}  middleware.CustomError "Service does not responding (maybe crush)"
 // @Router       /users/auth [get]
 func (h *userHandler) UserAuthenticate(c *gin.Context) {
-	id, exist := c.Get(middleware.UserIdKey)
-	if !exist {
-		c.Error(status.Error(codes.Unauthenticated, "no user credentials found"))
-		return
-	}
-	reply, err := h.Client.GetUserById(c.Request.Context(), &users_pb.UserIdRequest{Id: id.(string)})
+	user, err := middleware.GetCredentialsFromContext(c)
 	if err != nil {
 		c.Error(err)
 		return
 	}
-	roles, exist := c.Get(middleware.UserCredentialRoles)
-	if exist && !reflect.DeepEqual(roles.([]string), reply.Roles) {
+
+	reply, err := h.Client.GetUser(c.Request.Context(), &users_pb.UserRequest{Id: user.Id})
+	if err != nil {
+		c.Error(err)
+		return
+	}
+	if !reflect.DeepEqual(user.Roles, reply.Roles) {
 		h.logger.Infof("user's %s rights has changed, regenerating token...", reply.Login)
 		refreshCookie, _ := c.Cookie(middleware.RefreshCookieName)
 		tokenReply, err := h.Client.UpdateToken(c.Request.Context(), &users_pb.TokenRequest{Refreshtoken: refreshCookie})

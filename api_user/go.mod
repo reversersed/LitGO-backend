@@ -5,6 +5,7 @@ go 1.22.1
 require (
 	github.com/coocood/freecache v1.2.4
 	github.com/cristalhq/jwt/v3 v3.1.0
+	github.com/golang/mock v1.6.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.9.0

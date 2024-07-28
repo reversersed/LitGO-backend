@@ -91,6 +91,69 @@ func (x *ErrorDetail) GetDescription() string {
 	return ""
 }
 
+type UserCredentials struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id    string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Login string   `protobuf:"bytes,2,opt,name=login,proto3" json:"login,omitempty"`
+	Roles []string `protobuf:"bytes,3,rep,name=roles,proto3" json:"roles,omitempty"`
+}
+
+func (x *UserCredentials) Reset() {
+	*x = UserCredentials{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_shared_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *UserCredentials) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserCredentials) ProtoMessage() {}
+
+func (x *UserCredentials) ProtoReflect() protoreflect.Message {
+	mi := &file_shared_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserCredentials.ProtoReflect.Descriptor instead.
+func (*UserCredentials) Descriptor() ([]byte, []int) {
+	return file_shared_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *UserCredentials) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *UserCredentials) GetLogin() string {
+	if x != nil {
+		return x.Login
+	}
+	return ""
+}
+
+func (x *UserCredentials) GetRoles() []string {
+	if x != nil {
+		return x.Roles
+	}
+	return nil
+}
+
 var File_shared_proto protoreflect.FileDescriptor
 
 var file_shared_proto_rawDesc = []byte{
@@ -102,9 +165,14 @@ var file_shared_proto_rawDesc = []byte{
 	0x75, 0x63, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x74, 0x61, 0x67, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09,
 	0x52, 0x03, 0x74, 0x61, 0x67, 0x12, 0x20, 0x0a, 0x0b, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70,
 	0x74, 0x69, 0x6f, 0x6e, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x64, 0x65, 0x73, 0x63,
-	0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x42, 0x15, 0x5a, 0x13, 0x70, 0x6b, 0x67, 0x2f, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x3b, 0x73, 0x68, 0x61, 0x72, 0x65, 0x64, 0x5f, 0x70, 0x62, 0x62, 0x06,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x4d, 0x0a, 0x0f, 0x55, 0x73, 0x65, 0x72, 0x43,
+	0x72, 0x65, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x61, 0x6c, 0x73, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x6c, 0x6f,
+	0x67, 0x69, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x6c, 0x6f, 0x67, 0x69, 0x6e,
+	0x12, 0x14, 0x0a, 0x05, 0x72, 0x6f, 0x6c, 0x65, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x09, 0x52,
+	0x05, 0x72, 0x6f, 0x6c, 0x65, 0x73, 0x42, 0x15, 0x5a, 0x13, 0x70, 0x6b, 0x67, 0x2f, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x3b, 0x73, 0x68, 0x61, 0x72, 0x65, 0x64, 0x5f, 0x70, 0x62, 0x62, 0x06, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -119,9 +187,10 @@ func file_shared_proto_rawDescGZIP() []byte {
 	return file_shared_proto_rawDescData
 }
 
-var file_shared_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_shared_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_shared_proto_goTypes = []any{
-	(*ErrorDetail)(nil), // 0: shared.ErrorDetail
+	(*ErrorDetail)(nil),     // 0: shared.ErrorDetail
+	(*UserCredentials)(nil), // 1: shared.UserCredentials
 }
 var file_shared_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -149,6 +218,18 @@ func file_shared_proto_init() {
 				return nil
 			}
 		}
+		file_shared_proto_msgTypes[1].Exporter = func(v any, i int) any {
+			switch v := v.(*UserCredentials); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -156,7 +237,7 @@ func file_shared_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_shared_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

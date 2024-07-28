@@ -60,7 +60,7 @@ func (a *app) Run() error {
 	go shutdown.Graceful(a)
 
 	a.logger.Info("setting up middleware...")
-	jwt := middleware.NewJwtMiddleware(a.logger, a.cache, a.config.Server.JwtSecret)
+	jwt := middleware.NewJwtMiddleware(a.logger, a.config.Server.JwtSecret)
 
 	a.logger.Info("setting up handlers...")
 	if userHandler, err := handlers.NewUserHandler(a.config.Url, a.logger, jwt); err != nil {
