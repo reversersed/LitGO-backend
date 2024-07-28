@@ -59,19 +59,64 @@ const docTemplate = `{
                     "400": {
                         "description": "Request's field was not in a correct format",
                         "schema": {
-                            "$ref": "#/definitions/middleware.CustomError"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "404": {
                         "description": "User not found",
                         "schema": {
-                            "$ref": "#/definitions/middleware.CustomError"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "503": {
                         "description": "Service does not responding (maybe crush)",
                         "schema": {
-                            "$ref": "#/definitions/middleware.CustomError"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -102,19 +147,64 @@ const docTemplate = `{
                     "401": {
                         "description": "User does not authorized",
                         "schema": {
-                            "$ref": "#/definitions/middleware.CustomError"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "404": {
                         "description": "User does not exists in database",
                         "schema": {
-                            "$ref": "#/definitions/middleware.CustomError"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "503": {
                         "description": "Service does not responding (maybe crush)",
                         "schema": {
-                            "$ref": "#/definitions/middleware.CustomError"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -151,13 +241,43 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid request data",
                         "schema": {
-                            "$ref": "#/definitions/middleware.CustomError"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "503": {
                         "description": "Service does not responding (maybe crush)",
                         "schema": {
-                            "$ref": "#/definitions/middleware.CustomError"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -194,19 +314,64 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid request data",
                         "schema": {
-                            "$ref": "#/definitions/middleware.CustomError"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "500": {
                         "description": "Some internal error occured",
                         "schema": {
-                            "$ref": "#/definitions/middleware.CustomError"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "503": {
                         "description": "Service does not responding (maybe crush)",
                         "schema": {
-                            "$ref": "#/definitions/middleware.CustomError"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -218,13 +383,17 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "login": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "admin"
                 },
                 "roles": {
                     "type": "array",
                     "items": {
                         "type": "string"
-                    }
+                    },
+                    "example": [
+                        "user"
+                    ]
                 }
             }
         },
@@ -232,13 +401,17 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "login": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "admin"
                 },
                 "roles": {
                     "type": "array",
                     "items": {
                         "type": "string"
-                    }
+                    },
+                    "example": [
+                        "user"
+                    ]
                 }
             }
         },
@@ -246,13 +419,17 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "login": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "admin"
                 },
                 "roles": {
                     "type": "array",
                     "items": {
                         "type": "string"
-                    }
+                    },
+                    "example": [
+                        "user"
+                    ]
                 }
             }
         },
@@ -262,7 +439,8 @@ const docTemplate = `{
             "properties": {
                 "code": {
                     "description": "Internal gRPC error code (e.g. 3)",
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 3
                 },
                 "details": {
                     "description": "Error details. Check 'ErrorDetail' structure for more information",
@@ -271,11 +449,44 @@ const docTemplate = `{
                 },
                 "message": {
                     "description": "Error message. Can be shown to users",
-                    "type": "string"
+                    "type": "string",
+                    "example": "Bad token provided"
                 },
                 "type": {
                     "description": "Error code in string (e.g. InvalidArgument)",
-                    "type": "string"
+                    "type": "string",
+                    "example": "InvalidArgument"
+                }
+            }
+        },
+        "shared_pb.ErrorDetail": {
+            "description": "Error detail contains information about error",
+            "type": "object",
+            "properties": {
+                "actualvalue": {
+                    "description": "Actual value of field that causes the error. Note: 'password' field will be hidden",
+                    "type": "string",
+                    "example": "token"
+                },
+                "description": {
+                    "description": "Error description. Only development purposes, do not show users",
+                    "type": "string",
+                    "example": "Field must be a jwt token"
+                },
+                "field": {
+                    "description": "Field that error occured on",
+                    "type": "string",
+                    "example": "Token"
+                },
+                "struct": {
+                    "description": "Structure that contains field",
+                    "type": "string",
+                    "example": "users_pb.TokenRequest"
+                },
+                "tag": {
+                    "description": "Failed validation tag",
+                    "type": "string",
+                    "example": "jwt"
                 }
             }
         },

@@ -22,9 +22,9 @@ import (
 // @Param		 login   query     string 		false 		"User login"
 // @Param		 email   query     string 		false 		"User email" Format(email)
 // @Success      200  {object}  users_pb.UserModel 		"User DTO model"
-// @Failure      400  {object}  middleware.CustomError 	"Request's field was not in a correct format"
-// @Failure      404  {object}  middleware.CustomError 	"User not found"
-// @Failure      503  {object}  middleware.CustomError 	"Service does not responding (maybe crush)"
+// @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Request's field was not in a correct format"
+// @Failure      404  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"User not found"
+// @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Service does not responding (maybe crush)"
 // @Router       /users [get]
 func (h *userHandler) UserSearch(c *gin.Context) {
 
@@ -48,9 +48,9 @@ func (h *userHandler) UserSearch(c *gin.Context) {
 // @Tags         users
 // @Produce      json
 // @Success      200  {object}  handlers.UserAuthenticate.UserResponse "User successfully authorized"
-// @Failure      401  {object}  middleware.CustomError "User does not authorized"
-// @Failure      404  {object}  middleware.CustomError "User does not exists in database"
-// @Failure      503  {object}  middleware.CustomError "Service does not responding (maybe crush)"
+// @Failure      401  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "User does not authorized"
+// @Failure      404  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "User does not exists in database"
+// @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Service does not responding (maybe crush)"
 // @Security 	 ApiKeyAuth
 // @Router       /users/auth [get]
 func (h *userHandler) UserAuthenticate(c *gin.Context) {
@@ -81,8 +81,8 @@ func (h *userHandler) UserAuthenticate(c *gin.Context) {
 	}
 	h.logger.Infof("user %s authenticated with token and %v rights", reply.Login, reply.Roles)
 	type UserResponse struct {
-		Login string   `json:"login"`
-		Roles []string `json:"roles"`
+		Login string   `json:"login" example:"admin"`
+		Roles []string `json:"roles" example:"user"`
 	}
 	c.JSON(http.StatusOK, UserResponse{
 		Login: reply.Login,
@@ -96,8 +96,8 @@ func (h *userHandler) UserAuthenticate(c *gin.Context) {
 // @Produce      json
 // @Param        request body users_pb.LoginRequest true "Request body"
 // @Success      200  {object}  handlers.UserLogin.UserResponse "User successfully authorized"
-// @Failure      400  {object}  middleware.CustomError "Invalid request data"
-// @Failure      503  {object}  middleware.CustomError "Service does not responding (maybe crush)"
+// @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Invalid request data"
+// @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Service does not responding (maybe crush)"
 // @Router       /users/login [post]
 func (h *userHandler) UserLogin(c *gin.Context) {
 	var request users_pb.LoginRequest
@@ -106,8 +106,8 @@ func (h *userHandler) UserLogin(c *gin.Context) {
 		return
 	}
 	type UserResponse struct {
-		Login string   `json:"login"`
-		Roles []string `json:"roles"`
+		Login string   `json:"login" example:"admin"`
+		Roles []string `json:"roles" example:"user"`
 	}
 	reply, err := h.Client.Login(c.Request.Context(), &request)
 	if err != nil {
@@ -130,9 +130,9 @@ func (h *userHandler) UserLogin(c *gin.Context) {
 // @Produce      json
 // @Param        request body users_pb.RegistrationRequest true "Request body"
 // @Success      201  {object}  handlers.UserRegister.UserResponse "User registered and authorized"
-// @Failure      400  {object}  middleware.CustomError "Invalid request data"
-// @Failure      500  {object}  middleware.CustomError "Some internal error occured"
-// @Failure      503  {object}  middleware.CustomError "Service does not responding (maybe crush)"
+// @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Invalid request data"
+// @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Some internal error occured"
+// @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Service does not responding (maybe crush)"
 // @Router       /users/signin [post]
 func (h *userHandler) UserRegister(c *gin.Context) {
 	var request users_pb.RegistrationRequest
@@ -141,8 +141,8 @@ func (h *userHandler) UserRegister(c *gin.Context) {
 		return
 	}
 	type UserResponse struct {
-		Login string   `json:"login"`
-		Roles []string `json:"roles"`
+		Login string   `json:"login" example:"admin"`
+		Roles []string `json:"roles" example:"user"`
 	}
 	reply, err := h.Client.RegisterUser(c.Request.Context(), &request)
 	if err != nil {

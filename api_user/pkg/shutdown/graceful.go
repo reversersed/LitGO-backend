@@ -20,4 +20,5 @@ func Graceful(closers ...io.Closer) {
 			fmt.Printf("error closing: %v", err)
 		}
 	}
+	os.Exit(0)
 }

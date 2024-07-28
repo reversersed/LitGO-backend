@@ -30,14 +30,14 @@ message RegistrationRequest {
 }
 //Responses
 message LoginResponse {
-  string login = 1;
-  repeated string roles = 2;
-  string token = 3;
-  string refreshtoken = 4;
+  string login = 1; // @gotags: example:"admin"
+  repeated string roles = 2; // @gotags: example:["user","admin"]
+  string token = 3; // @gotags: example:"token"
+  string refreshtoken = 4; // @gotags: example:"refresh token"
 }
 message TokenReply {
-  string token = 1;
-  string refreshtoken = 2;
+  string token = 1 ;// @gotags: example:"token"
+  string refreshtoken = 2; // @gotags: example:"refresh token"
 }
 //Models
 message UserModel {

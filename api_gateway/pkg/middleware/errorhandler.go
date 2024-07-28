@@ -4,16 +4,17 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	_ "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 // @Description General error object. This structure always returns when error occured
 type CustomError struct {
-	Code      int32  `json:"code"` // Internal gRPC error code (e.g. 3)
-	NamedCode string `json:"type"` // Error code in string (e.g. InvalidArgument)
-	Message   string `json:"message"` // Error message. Can be shown to users
-	Details   []any  `json:"details"` // Error details. Check 'ErrorDetail' structure for more information
+	Code      int32  `json:"code" example:"3"`                     // Internal gRPC error code (e.g. 3)
+	NamedCode string `json:"type" example:"InvalidArgument"`       // Error code in string (e.g. InvalidArgument)
+	Message   string `json:"message" example:"Bad token provided"` // Error message. Can be shown to users
+	Details   []any  `json:"details"`                              // Error details. Check 'ErrorDetail' structure for more information
 }
 
 func (c *CustomError) Error() string {

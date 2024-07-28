@@ -263,10 +263,10 @@ type LoginResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Login        string   `protobuf:"bytes,1,opt,name=login,proto3" json:"login,omitempty"`
-	Roles        []string `protobuf:"bytes,2,rep,name=roles,proto3" json:"roles,omitempty"`
-	Token        string   `protobuf:"bytes,3,opt,name=token,proto3" json:"token,omitempty"`
-	Refreshtoken string   `protobuf:"bytes,4,opt,name=refreshtoken,proto3" json:"refreshtoken,omitempty"`
+	Login        string   `protobuf:"bytes,1,opt,name=login,proto3" json:"login,omitempty" example:"admin"`                
+	Roles        []string `protobuf:"bytes,2,rep,name=roles,proto3" json:"roles,omitempty"`                
+	Token        string   `protobuf:"bytes,3,opt,name=token,proto3" json:"token,omitempty" example:"token"`                
+	Refreshtoken string   `protobuf:"bytes,4,opt,name=refreshtoken,proto3" json:"refreshtoken,omitempty" example:"refresh token"`  
 }
 
 func (x *LoginResponse) Reset() {
@@ -334,8 +334,8 @@ type TokenReply struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Token        string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
-	Refreshtoken string `protobuf:"bytes,2,opt,name=refreshtoken,proto3" json:"refreshtoken,omitempty"`
+	Token        string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty" example:"token"`                
+	Refreshtoken string `protobuf:"bytes,2,opt,name=refreshtoken,proto3" json:"refreshtoken,omitempty" example:"refresh token"`  
 }
 
 func (x *TokenReply) Reset() {
