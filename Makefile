@@ -2,6 +2,15 @@ API_DIRECTORIES = api_gateway api_user
 
 run: clean gen test start
 
+
+install: i
+
+i:
+	@go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+	@go install github.com/golang/mock/mockgen@latest
+	@go install github.com/swaggo/swag/cmd/swag@latest
+	@$(MAKE) clean
+
 gen:
 	@echo Generating protobuf files...
 	@cd ./api_gateway && protoc -I ../proto --go_out=. --go-grpc_out=. ../proto/*.proto && cd ..
