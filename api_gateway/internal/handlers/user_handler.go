@@ -94,7 +94,7 @@ func (h *userHandler) UserAuthenticate(c *gin.Context) {
 // @Description  log in user with provided login and password
 // @Tags         users
 // @Produce      json
-// @Param        request body users_pb.LoginRequest true "Request body"
+// @Param        request body users_pb.LoginRequest true "Login field can be presented as login and email as well"
 // @Success      200  {object}  handlers.UserLogin.UserResponse "User successfully authorized"
 // @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Invalid request data"
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Service does not responding (maybe crush)"

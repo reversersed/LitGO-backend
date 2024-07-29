@@ -11,16 +11,17 @@ service User {
 }
 //Requests
 message LoginRequest {
-  string login = 1; // @gotags: validate:"required" example:"admin"
+  // @gotags: validate:"required" example:"admin"
+  string login = 1; // Can be presented as login or email
   string password = 2; // @gotags: validate:"required" example:"admin"
 }
 message TokenRequest {
   string refreshtoken = 1; // @gotags: validate:"required,jwt"
 }
 message UserRequest {
-  string id = 1; // @gotags: validate:"primitiveid,required_without_all=Id" form:"id"
-  string login = 2; // @gotags: validate:"onlyenglish,required_without_all=Login" form:"login"
-  string email = 3; // @gotags: validate:"email,required_without_all=Email" form:"email"
+  string id = 1; // @gotags: validate:"primitiveid,required_without_all=Login Email" form:"id"
+  string login = 2; // @gotags: validate:"onlyenglish,required_without_all=Id Email" form:"login"
+  string email = 3; // @gotags: validate:"required_without_all=Id Login" form:"email"
 }
 message RegistrationRequest {
   string login = 1; // @gotags: validate:"required,min=4,max=16,onlyenglish"
@@ -30,10 +31,10 @@ message RegistrationRequest {
 }
 //Responses
 message LoginResponse {
-  string login = 1; // @gotags: example:"admin"
-  repeated string roles = 2; // @gotags: example:["user","admin"]
-  string token = 3; // @gotags: example:"token"
-  string refreshtoken = 4; // @gotags: example:"refresh token"
+  string login = 1;
+  repeated string roles = 2;
+  string token = 3;
+  string refreshtoken = 4;
 }
 message TokenReply {
   string token = 1 ;// @gotags: example:"token"

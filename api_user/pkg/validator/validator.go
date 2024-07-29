@@ -55,7 +55,7 @@ func (v *Validator) StructValidation(data any) error {
 		}
 		actual := fmt.Sprintf("%v", i.Value())
 		if strings.Contains(strings.ToLower(i.Field()), "password") {
-			actual = "password hidden"
+			actual = ""
 		}
 		details = append(details, &shared_pb.ErrorDetail{
 			Field:       i.Field(),

@@ -222,7 +222,7 @@ const docTemplate = `{
                 "summary": "Authorizes user",
                 "parameters": [
                     {
-                        "description": "Request body",
+                        "description": "Login field can be presented as login and email as well",
                         "name": "request",
                         "in": "body",
                         "required": true,
@@ -498,6 +498,7 @@ const docTemplate = `{
             ],
             "properties": {
                 "login": {
+                    "description": "Can be presented as login or email",
                     "type": "string",
                     "example": "admin"
                 },

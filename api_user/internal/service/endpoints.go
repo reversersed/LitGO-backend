@@ -29,19 +29,21 @@ func (u *userServer) GetUser(c context.Context, r *users_pb.UserRequest) (*users
 		user, err = u.storage.FindById(c, r.Id)
 		if err != nil {
 			user = nil
-			details = append(details, &shared_pb.ErrorDetail{Field: "Id", Struct: "users_pb.UserRequest", Description: err.Error()})
+			details = append(details, &shared_pb.ErrorDetail{Field: "Id", Struct: "users_pb.UserRequest", Description: err.Error(), Actualvalue: r.Id})
 		}
-	} else if len(r.Login) > 0 {
+	}
+	if len(r.Login) > 0 && user == nil {
 		user, err = u.storage.FindByLogin(c, r.Login)
 		if err != nil {
 			user = nil
-			details = append(details, &shared_pb.ErrorDetail{Field: "Login", Struct: "users_pb.UserRequest", Description: err.Error()})
+			details = append(details, &shared_pb.ErrorDetail{Field: "Login", Struct: "users_pb.UserRequest", Description: err.Error(), Actualvalue: r.Login})
 		}
-	} else if len(r.Email) > 0 {
+	}
+	if len(r.Email) > 0 && user == nil {
 		user, err = u.storage.FindByEmail(c, r.Email)
 		if err != nil {
 			user = nil
-			details = append(details, &shared_pb.ErrorDetail{Field: "Email", Struct: "users_pb.UserRequest", Description: err.Error()})
+			details = append(details, &shared_pb.ErrorDetail{Field: "Email", Struct: "users_pb.UserRequest", Description: err.Error(), Actualvalue: r.Email})
 		}
 	}
 

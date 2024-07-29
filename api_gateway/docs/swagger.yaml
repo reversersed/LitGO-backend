@@ -86,6 +86,7 @@ definitions:
   users_pb.LoginRequest:
     properties:
       login:
+        description: Can be presented as login or email
         example: admin
         type: string
       password:
@@ -248,7 +249,7 @@ paths:
     post:
       description: log in user with provided login and password
       parameters:
-      - description: Request body
+      - description: Login field can be presented as login and email as well
         in: body
         name: request
         required: true
