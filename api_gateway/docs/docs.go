@@ -141,7 +141,7 @@ const docTemplate = `{
                     "200": {
                         "description": "User successfully authorized",
                         "schema": {
-                            "$ref": "#/definitions/handlers.UserAuthenticate.UserResponse"
+                            "$ref": "#/definitions/user.UserAuthenticate.UserResponse"
                         }
                     },
                     "401": {
@@ -235,7 +235,7 @@ const docTemplate = `{
                     "200": {
                         "description": "User successfully authorized",
                         "schema": {
-                            "$ref": "#/definitions/handlers.UserLogin.UserResponse"
+                            "$ref": "#/definitions/user.UserLogin.UserResponse"
                         }
                     },
                     "400": {
@@ -308,7 +308,7 @@ const docTemplate = `{
                     "201": {
                         "description": "User registered and authorized",
                         "schema": {
-                            "$ref": "#/definitions/handlers.UserRegister.UserResponse"
+                            "$ref": "#/definitions/user.UserRegister.UserResponse"
                         }
                     },
                     "400": {
@@ -379,60 +379,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "handlers.UserAuthenticate.UserResponse": {
-            "type": "object",
-            "properties": {
-                "login": {
-                    "type": "string",
-                    "example": "admin"
-                },
-                "roles": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "example": [
-                        "user"
-                    ]
-                }
-            }
-        },
-        "handlers.UserLogin.UserResponse": {
-            "type": "object",
-            "properties": {
-                "login": {
-                    "type": "string",
-                    "example": "admin"
-                },
-                "roles": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "example": [
-                        "user"
-                    ]
-                }
-            }
-        },
-        "handlers.UserRegister.UserResponse": {
-            "type": "object",
-            "properties": {
-                "login": {
-                    "type": "string",
-                    "example": "admin"
-                },
-                "roles": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "example": [
-                        "user"
-                    ]
-                }
-            }
-        },
         "middleware.CustomError": {
             "description": "General error object. This structure always returns when error occured",
             "type": "object",
@@ -487,6 +433,60 @@ const docTemplate = `{
                     "description": "Failed validation tag",
                     "type": "string",
                     "example": "jwt"
+                }
+            }
+        },
+        "user.UserAuthenticate.UserResponse": {
+            "type": "object",
+            "properties": {
+                "login": {
+                    "type": "string",
+                    "example": "admin"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "user"
+                    ]
+                }
+            }
+        },
+        "user.UserLogin.UserResponse": {
+            "type": "object",
+            "properties": {
+                "login": {
+                    "type": "string",
+                    "example": "admin"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "user"
+                    ]
+                }
+            }
+        },
+        "user.UserRegister.UserResponse": {
+            "type": "object",
+            "properties": {
+                "login": {
+                    "type": "string",
+                    "example": "admin"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "user"
+                    ]
                 }
             }
         },

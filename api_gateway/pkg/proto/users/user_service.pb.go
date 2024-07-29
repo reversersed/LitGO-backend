@@ -82,7 +82,7 @@ type TokenRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Refreshtoken string `protobuf:"bytes,1,opt,name=refreshtoken,proto3" json:"refreshtoken,omitempty" validate:"required,jwt"`  
+	Refreshtoken string `protobuf:"bytes,1,opt,name=refreshtoken,proto3" json:"refreshtoken,omitempty" validate:"required"`  
 }
 
 func (x *TokenRequest) Reset() {
@@ -194,7 +194,7 @@ type RegistrationRequest struct {
 
 	Login          string `protobuf:"bytes,1,opt,name=login,proto3" json:"login,omitempty" validate:"required,min=4,max=16,onlyenglish"`                                          
 	Password       string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty" validate:"required,min=8,max=32,lowercase,uppercase,digitrequired,specialsymbol"`                                    
-	PasswordRepeat string `protobuf:"bytes,3,opt,name=password_repeat,json=passwordRepeat,proto3" json:"password_repeat,omitempty" validate:"required,eqfield=password"`  
+	PasswordRepeat string `protobuf:"bytes,3,opt,name=password_repeat,json=passwordRepeat,proto3" json:"password_repeat,omitempty" validate:"required,eqfield=Password"`  
 	Email          string `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty" validate:"required,email"`                                          
 }
 

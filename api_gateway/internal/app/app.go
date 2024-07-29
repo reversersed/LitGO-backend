@@ -7,12 +7,15 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/reversersed/go-grpc/tree/main/api_gateway/docs"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/config"
-	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers"
+	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers/user"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/logging/logrus"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/middleware"
+	users_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/users"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/shutdown"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 // @title API
@@ -55,16 +58,22 @@ func New() (*app, error) {
 	return server, nil
 }
 func (a *app) Run() error {
-	go shutdown.Graceful(a)
+
+	a.logger.Info("setting up grpc clients...")
+	userConnection, err := grpc.NewClient(a.config.Url.UserServiceUrl, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		return err
+	}
+	userClient := users_pb.NewUserClient(userConnection)
 
 	a.logger.Info("setting up middleware...")
 	jwt := middleware.NewJwtMiddleware(a.logger, a.config.Server.JwtSecret)
 
 	a.logger.Info("setting up handlers...")
-	if userHandler, err := handlers.NewUserHandler(a.config.Url, a.logger, jwt); err != nil {
+	if userHandler, err := user.NewUserHandler(userClient, a.logger, jwt); err != nil {
 		return err
 	} else {
-		jwt.ApplyUserServer(userHandler.Client)
+		jwt.ApplyUserServer(userClient)
 		a.handlers = append(a.handlers, userHandler)
 		userHandler.RegisterRouter(a.router)
 	}
@@ -72,6 +81,7 @@ func (a *app) Run() error {
 		a.router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 	a.logger.Infof("starting listening address %s:%d...", a.config.Server.Host, a.config.Server.Port)
+	go shutdown.Graceful(a, userConnection)
 	if err := a.router.Run(fmt.Sprintf("%s:%d", a.config.Server.Host, a.config.Server.Port)); err != nil {
 		return err
 	}

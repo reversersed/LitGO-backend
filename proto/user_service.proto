@@ -16,7 +16,7 @@ message LoginRequest {
   string password = 2; // @gotags: validate:"required" example:"admin"
 }
 message TokenRequest {
-  string refreshtoken = 1; // @gotags: validate:"required,jwt"
+  string refreshtoken = 1; // @gotags: validate:"required"
 }
 message UserRequest {
   string id = 1; // @gotags: validate:"primitiveid,required_without_all=Login Email" form:"id"
@@ -26,7 +26,7 @@ message UserRequest {
 message RegistrationRequest {
   string login = 1; // @gotags: validate:"required,min=4,max=16,onlyenglish"
   string password = 2; // @gotags: validate:"required,min=8,max=32,lowercase,uppercase,digitrequired,specialsymbol"
-  string password_repeat = 3; // @gotags: validate:"required,eqfield=password"
+  string password_repeat = 3; // @gotags: validate:"required,eqfield=Password"
   string email = 4; // @gotags: validate:"required,email"
 }
 //Responses

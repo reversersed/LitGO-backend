@@ -1,4 +1,4 @@
-package handlers
+package user
 
 import (
 	"net/http"
@@ -34,7 +34,7 @@ func (h *userHandler) UserSearch(c *gin.Context) {
 		return
 	}
 	// need to made
-	reply, err := h.Client.GetUser(c.Request.Context(), &request)
+	reply, err := h.client.GetUser(c.Request.Context(), &request)
 	if err != nil {
 		c.Error(err)
 		return
@@ -47,7 +47,7 @@ func (h *userHandler) UserSearch(c *gin.Context) {
 // @Description  check if current user has legit token
 // @Tags         users
 // @Produce      json
-// @Success      200  {object}  handlers.UserAuthenticate.UserResponse "User successfully authorized"
+// @Success      200  {object}  user.UserAuthenticate.UserResponse "User successfully authorized"
 // @Failure      401  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "User does not authorized"
 // @Failure      404  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "User does not exists in database"
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Service does not responding (maybe crush)"
@@ -60,7 +60,7 @@ func (h *userHandler) UserAuthenticate(c *gin.Context) {
 		return
 	}
 
-	reply, err := h.Client.GetUser(c.Request.Context(), &users_pb.UserRequest{Id: user.Id})
+	reply, err := h.client.GetUser(c.Request.Context(), &users_pb.UserRequest{Id: user.Id})
 	if err != nil {
 		c.Error(err)
 		return
@@ -68,7 +68,7 @@ func (h *userHandler) UserAuthenticate(c *gin.Context) {
 	if !reflect.DeepEqual(user.Roles, reply.Roles) {
 		h.logger.Infof("user's %s rights has changed, regenerating token...", reply.Login)
 		refreshCookie, _ := c.Cookie(middleware.RefreshCookieName)
-		tokenReply, err := h.Client.UpdateToken(c.Request.Context(), &users_pb.TokenRequest{Refreshtoken: refreshCookie})
+		tokenReply, err := h.client.UpdateToken(c.Request.Context(), &users_pb.TokenRequest{Refreshtoken: refreshCookie})
 		if err != nil {
 			c.SetCookie(middleware.TokenCookieName, "", -1, "/", "", true, true)
 			c.SetCookie(middleware.RefreshCookieName, "", -1, "/", "", true, true)
@@ -95,7 +95,7 @@ func (h *userHandler) UserAuthenticate(c *gin.Context) {
 // @Tags         users
 // @Produce      json
 // @Param        request body users_pb.LoginRequest true "Login field can be presented as login and email as well"
-// @Success      200  {object}  handlers.UserLogin.UserResponse "User successfully authorized"
+// @Success      200  {object}  user.UserLogin.UserResponse "User successfully authorized"
 // @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Invalid request data"
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Service does not responding (maybe crush)"
 // @Router       /users/login [post]
@@ -109,7 +109,7 @@ func (h *userHandler) UserLogin(c *gin.Context) {
 		Login string   `json:"login" example:"admin"`
 		Roles []string `json:"roles" example:"user"`
 	}
-	reply, err := h.Client.Login(c.Request.Context(), &request)
+	reply, err := h.client.Login(c.Request.Context(), &request)
 	if err != nil {
 		c.Error(err)
 		return
@@ -129,7 +129,7 @@ func (h *userHandler) UserLogin(c *gin.Context) {
 // @Tags         users
 // @Produce      json
 // @Param        request body users_pb.RegistrationRequest true "Request body"
-// @Success      201  {object}  handlers.UserRegister.UserResponse "User registered and authorized"
+// @Success      201  {object}  user.UserRegister.UserResponse "User registered and authorized"
 // @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Invalid request data"
 // @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Some internal error occured"
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Service does not responding (maybe crush)"
@@ -144,7 +144,7 @@ func (h *userHandler) UserRegister(c *gin.Context) {
 		Login string   `json:"login" example:"admin"`
 		Roles []string `json:"roles" example:"user"`
 	}
-	reply, err := h.Client.RegisterUser(c.Request.Context(), &request)
+	reply, err := h.client.RegisterUser(c.Request.Context(), &request)
 	if err != nil {
 		c.Error(err)
 		return

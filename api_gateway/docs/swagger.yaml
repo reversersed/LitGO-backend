@@ -2,42 +2,6 @@ basePath: /api/v1/
 consumes:
 - application/json
 definitions:
-  handlers.UserAuthenticate.UserResponse:
-    properties:
-      login:
-        example: admin
-        type: string
-      roles:
-        example:
-        - user
-        items:
-          type: string
-        type: array
-    type: object
-  handlers.UserLogin.UserResponse:
-    properties:
-      login:
-        example: admin
-        type: string
-      roles:
-        example:
-        - user
-        items:
-          type: string
-        type: array
-    type: object
-  handlers.UserRegister.UserResponse:
-    properties:
-      login:
-        example: admin
-        type: string
-      roles:
-        example:
-        - user
-        items:
-          type: string
-        type: array
-    type: object
   middleware.CustomError:
     description: General error object. This structure always returns when error occured
     properties:
@@ -82,6 +46,42 @@ definitions:
         description: Failed validation tag
         example: jwt
         type: string
+    type: object
+  user.UserAuthenticate.UserResponse:
+    properties:
+      login:
+        example: admin
+        type: string
+      roles:
+        example:
+        - user
+        items:
+          type: string
+        type: array
+    type: object
+  user.UserLogin.UserResponse:
+    properties:
+      login:
+        example: admin
+        type: string
+      roles:
+        example:
+        - user
+        items:
+          type: string
+        type: array
+    type: object
+  user.UserRegister.UserResponse:
+    properties:
+      login:
+        example: admin
+        type: string
+      roles:
+        example:
+        - user
+        items:
+          type: string
+        type: array
     type: object
   users_pb.LoginRequest:
     properties:
@@ -206,7 +206,7 @@ paths:
         "200":
           description: User successfully authorized
           schema:
-            $ref: '#/definitions/handlers.UserAuthenticate.UserResponse'
+            $ref: '#/definitions/user.UserAuthenticate.UserResponse'
         "401":
           description: User does not authorized
           schema:
@@ -261,7 +261,7 @@ paths:
         "200":
           description: User successfully authorized
           schema:
-            $ref: '#/definitions/handlers.UserLogin.UserResponse'
+            $ref: '#/definitions/user.UserLogin.UserResponse'
         "400":
           description: Invalid request data
           schema:
@@ -303,7 +303,7 @@ paths:
         "201":
           description: User registered and authorized
           schema:
-            $ref: '#/definitions/handlers.UserRegister.UserResponse'
+            $ref: '#/definitions/user.UserRegister.UserResponse'
         "400":
           description: Invalid request data
           schema:

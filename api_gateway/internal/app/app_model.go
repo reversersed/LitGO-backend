@@ -9,13 +9,6 @@ type handler interface {
 	RegisterRouter(router *gin.Engine)
 	Close() error
 }
-type cache interface {
-	Get(key []byte) ([]byte, error)
-	Set(key []byte, value []byte, expiration int) error
-	Delete(key []byte) (affected bool)
-
-	EntryCount() int64
-}
 type logger interface {
 	Info(...interface{})
 	Error(...interface{})
@@ -30,6 +23,5 @@ type app struct {
 	router   *gin.Engine
 	config   *config.Config
 	logger   logger
-	cache    cache
 	handlers []handler
 }

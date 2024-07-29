@@ -6,6 +6,6 @@ type Logger interface {
 	Infof(format string, args ...interface{})
 	Info(...interface{})
 }
-type jwtMiddleware interface {
+type JwtMiddleware interface {
 	Middleware(...string) gin.HandlerFunc
 }
