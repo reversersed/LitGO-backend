@@ -1,8 +1,8 @@
-API_DIRECTORIES = api_gateway api_user
-PROTO_PKG_FOLDERS = users
+API_DIRECTORIES = api_gateway api_user api_genre
+PROTO_PKG_FOLDERS = users genres
 CMDSEP = &
 
-run: clean gen test start
+run: clean gen test-verbose start
 
 install: i
 
@@ -13,7 +13,7 @@ i:
 	@go install github.com/golang/mock/mockgen@latest
 	@go install github.com/swaggo/swag/cmd/swag@latest
 	@$(MAKE) clean
-
+	
 gen:
 	@$(foreach directory,$(API_DIRECTORIES),\
 		cd ./$(directory)/ && protoc -I ../proto --go_out=. --go-grpc_out=. ../proto/*.proto && $(foreach folder,$(PROTO_PKG_FOLDERS),\
@@ -42,6 +42,9 @@ start:
 
 stop:
 	@docker compose stop
+
+up:
+	@docker compose up --timestamps --wait --wait-timeout 1800 --remove-orphans -d
 
 test-verbose: test-folder-creation gen
 	@$(foreach directory,$(API_DIRECTORIES),\

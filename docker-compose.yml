@@ -49,3 +49,19 @@ services:
         condition: service_started
       mongo:
         condition: service_healthy
+
+  api_genre:
+    image: api_genre
+    container_name: api_genre
+    volumes:
+      - ./api_genre/logs:/logs
+      - ./api_genre/config:/config
+    user: root
+    build:
+      context: ./api_genre
+      dockerfile: ./Dockerfile
+    depends_on:
+      api_gateway:
+        condition: service_started
+      mongo:
+        condition: service_healthy

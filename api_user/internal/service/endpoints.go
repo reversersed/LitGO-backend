@@ -4,6 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/jinzhu/copier"
+
 	model "github.com/reversersed/go-grpc/tree/main/api_user/internal/storage"
 	shared_pb "github.com/reversersed/go-grpc/tree/main/api_user/pkg/proto"
 	users_pb "github.com/reversersed/go-grpc/tree/main/api_user/pkg/proto/users"
@@ -51,12 +53,12 @@ func (u *userServer) GetUser(c context.Context, r *users_pb.UserRequest) (*users
 		err, _ := status.New(codes.NotFound, "user does not exist").WithDetails(details...)
 		return nil, err.Err()
 	}
-	return &users_pb.UserModel{
-		Id:    user.Id.Hex(),
-		Login: user.Login,
-		Email: user.Email,
-		Roles: user.Roles,
-	}, nil
+	model := &users_pb.UserModel{}
+	if err := copier.Copy(model, user); err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	model.Id = user.Id.Hex()
+	return model, nil
 }
 func (u *userServer) UpdateToken(c context.Context, r *users_pb.TokenRequest) (*users_pb.TokenReply, error) {
 	if err := u.validator.StructValidation(r); err != nil {
@@ -115,11 +117,10 @@ func (u *userServer) RegisterUser(c context.Context, usr *users_pb.RegistrationR
 		return nil, err
 	}
 	user := model.User{
-		Login:          usr.Login,
-		Password:       pass,
-		Roles:          []string{"user"},
-		Email:          usr.Email,
-		EmailConfirmed: false,
+		Login:    usr.Login,
+		Password: pass,
+		Roles:    []string{"user"},
+		Email:    usr.Email,
 	}
 	cntx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()

@@ -1,0 +1,24 @@
+syntax = "proto3";
+package genres;
+option go_package = "pkg/proto/genres;genres_pb";
+
+service Genre {
+    rpc GetAll(Empty) returns (GetAllResponse);
+}
+//Requests
+
+//Responses
+message GetAllResponse {
+    repeated CategoryModel Categories = 1;
+}
+//Models
+message Empty {}
+message CategoryModel {
+    string Name = 1;
+    string TranslitName = 2;
+    repeated GenreModel Genres = 3;
+}
+message GenreModel {
+    string Name = 1;
+    string TranslitName = 2;
+}

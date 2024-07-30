@@ -18,6 +18,92 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/genres": {
+            "get": {
+                "description": "Fetches all categories (with genres included)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "genres"
+                ],
+                "summary": "Get all genres",
+                "responses": {
+                    "200": {
+                        "description": "Genres fetched successfully",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/genres_pb.CategoryModel"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "There's no genres in database",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal error occured",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "503": {
+                        "description": "Service does not responding (maybe crush)",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
                 "description": "params goes in specific order: id -\u003e login -\u003e email\nfirst found user will be returned. If no user found, there'll be an error with details",
@@ -379,6 +465,34 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "genres_pb.CategoryModel": {
+            "type": "object",
+            "properties": {
+                "Genres": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/genres_pb.GenreModel"
+                    }
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "TranslitName": {
+                    "type": "string"
+                }
+            }
+        },
+        "genres_pb.GenreModel": {
+            "type": "object",
+            "properties": {
+                "Name": {
+                    "type": "string"
+                },
+                "TranslitName": {
+                    "type": "string"
+                }
+            }
+        },
         "middleware.CustomError": {
             "description": "General error object. This structure always returns when error occured",
             "type": "object",

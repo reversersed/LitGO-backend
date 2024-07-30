@@ -2,6 +2,24 @@ basePath: /api/v1/
 consumes:
 - application/json
 definitions:
+  genres_pb.CategoryModel:
+    properties:
+      Genres:
+        items:
+          $ref: '#/definitions/genres_pb.GenreModel'
+        type: array
+      Name:
+        type: string
+      TranslitName:
+        type: string
+    type: object
+  genres_pb.GenreModel:
+    properties:
+      Name:
+        type: string
+      TranslitName:
+        type: string
+    type: object
   middleware.CustomError:
     description: General error object. This structure always returns when error occured
     properties:
@@ -135,6 +153,54 @@ info:
   title: API
   version: "1.0"
 paths:
+  /genres:
+    get:
+      description: Fetches all categories (with genres included)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Genres fetched successfully
+          schema:
+            items:
+              $ref: '#/definitions/genres_pb.CategoryModel'
+            type: array
+        "404":
+          description: There's no genres in database
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "500":
+          description: Internal error occured
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "503":
+          description: Service does not responding (maybe crush)
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+      summary: Get all genres
+      tags:
+      - genres
   /users:
     get:
       description: |-
