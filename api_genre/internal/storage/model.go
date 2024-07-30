@@ -6,6 +6,7 @@ type Genre struct {
 	Id           primitive.ObjectID `bson:"_id,omitempty"`
 	Name         string             `bson:"name"`
 	TranslitName string             `bson:"translitName"`
+	BookCount    int64              `bson:"bookCount"`
 }
 type Category struct {
 	Id           primitive.ObjectID `bson:"_id,omitempty"`

@@ -485,6 +485,9 @@ const docTemplate = `{
         "genres_pb.GenreModel": {
             "type": "object",
             "properties": {
+                "bookCount": {
+                    "type": "integer"
+                },
                 "name": {
                     "type": "string"
                 },

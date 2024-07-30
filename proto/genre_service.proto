@@ -21,4 +21,5 @@ message CategoryModel {
 message GenreModel {
     string name = 1;
     string translitName = 2;
+    int64 bookCount = 3;
 }
