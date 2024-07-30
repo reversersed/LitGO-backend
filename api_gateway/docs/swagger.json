@@ -11,7 +11,7 @@
     "host": "localhost:9000",
     "basePath": "/api/v1/",
     "paths": {
-        "/genres": {
+        "/genres/all": {
             "get": {
                 "description": "Fetches all categories (with genres included)",
                 "produces": [
@@ -461,16 +461,16 @@
         "genres_pb.CategoryModel": {
             "type": "object",
             "properties": {
-                "Genres": {
+                "genres": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/genres_pb.GenreModel"
                     }
                 },
-                "Name": {
+                "name": {
                     "type": "string"
                 },
-                "TranslitName": {
+                "translitName": {
                     "type": "string"
                 }
             }
@@ -478,10 +478,10 @@
         "genres_pb.GenreModel": {
             "type": "object",
             "properties": {
-                "Name": {
+                "name": {
                     "type": "string"
                 },
-                "TranslitName": {
+                "translitName": {
                     "type": "string"
                 }
             }

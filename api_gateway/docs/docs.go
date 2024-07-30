@@ -18,7 +18,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/genres": {
+        "/genres/all": {
             "get": {
                 "description": "Fetches all categories (with genres included)",
                 "produces": [
@@ -468,16 +468,16 @@ const docTemplate = `{
         "genres_pb.CategoryModel": {
             "type": "object",
             "properties": {
-                "Genres": {
+                "genres": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/genres_pb.GenreModel"
                     }
                 },
-                "Name": {
+                "name": {
                     "type": "string"
                 },
-                "TranslitName": {
+                "translitName": {
                     "type": "string"
                 }
             }
@@ -485,10 +485,10 @@ const docTemplate = `{
         "genres_pb.GenreModel": {
             "type": "object",
             "properties": {
-                "Name": {
+                "name": {
                     "type": "string"
                 },
-                "TranslitName": {
+                "translitName": {
                     "type": "string"
                 }
             }

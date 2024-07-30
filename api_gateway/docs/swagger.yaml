@@ -4,20 +4,20 @@ consumes:
 definitions:
   genres_pb.CategoryModel:
     properties:
-      Genres:
+      genres:
         items:
           $ref: '#/definitions/genres_pb.GenreModel'
         type: array
-      Name:
+      name:
         type: string
-      TranslitName:
+      translitName:
         type: string
     type: object
   genres_pb.GenreModel:
     properties:
-      Name:
+      name:
         type: string
-      TranslitName:
+      translitName:
         type: string
     type: object
   middleware.CustomError:
@@ -153,7 +153,7 @@ info:
   title: API
   version: "1.0"
 paths:
-  /genres:
+  /genres/all:
     get:
       description: Fetches all categories (with genres included)
       produces:

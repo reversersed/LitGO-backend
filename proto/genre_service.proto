@@ -9,16 +9,16 @@ service Genre {
 
 //Responses
 message GetAllResponse {
-    repeated CategoryModel Categories = 1;
+    repeated CategoryModel categories = 1;
 }
 //Models
 message Empty {}
 message CategoryModel {
-    string Name = 1;
-    string TranslitName = 2;
-    repeated GenreModel Genres = 3;
+    string name = 1;
+    string translitName = 2;
+    repeated GenreModel genres = 3;
 }
 message GenreModel {
-    string Name = 1;
-    string TranslitName = 2;
+    string name = 1;
+    string translitName = 2;
 }
