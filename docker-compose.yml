@@ -19,6 +19,7 @@ services:
       retries: 10
 
   rabbitmq:
+    container_name: rabbitmq
     image: rabbitmq:3.10.7-management
     hostname: rabbitmq
     restart: always
