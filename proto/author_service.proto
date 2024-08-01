@@ -1,0 +1,12 @@
+syntax = "proto3";
+package authors;
+option go_package = "pkg/proto/authors;authors_pb";
+
+service Genre {
+}
+//Requests
+
+//Responses
+
+//Models
+message Empty {}

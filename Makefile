@@ -1,4 +1,4 @@
-API_DIRECTORIES = api_gateway api_user api_genre
+API_DIRECTORIES = api_gateway api_user api_genre api_author
 PROTO_PKG_FOLDERS = users genres
 CMDSEP = &
 

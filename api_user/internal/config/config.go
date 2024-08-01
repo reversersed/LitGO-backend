@@ -6,11 +6,13 @@ import (
 
 	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/reversersed/go-grpc/tree/main/api_user/pkg/mongo"
+	"github.com/reversersed/go-grpc/tree/main/api_user/pkg/rabbitmq"
 )
 
 type Config struct {
 	Server   *ServerConfig
 	Database *mongo.DatabaseConfig
+	Rabbit   *rabbitmq.RabbitConfig
 }
 
 type ServerConfig struct {
@@ -28,6 +30,7 @@ func GetConfig() (*Config, error) {
 	once.Do(func() {
 		server := &ServerConfig{}
 		database := &mongo.DatabaseConfig{}
+		rabbit := &rabbitmq.RabbitConfig{}
 
 		if err := cleanenv.ReadConfig("config/.env", server); err != nil {
 			var header string = "Server part config"
@@ -41,9 +44,16 @@ func GetConfig() (*Config, error) {
 			e = fmt.Errorf("%v\n%s", err, desc)
 			return
 		}
+		if err := cleanenv.ReadConfig("config/.env", rabbit); err != nil {
+			var header string = "RabbitMQ part config"
+			desc, _ := cleanenv.GetDescription(database, &header)
+			e = fmt.Errorf("%v\n%s", err, desc)
+			return
+		}
 		config = &Config{
 			Server:   server,
 			Database: database,
+			Rabbit:   rabbit,
 		}
 	})
 	if e != nil {

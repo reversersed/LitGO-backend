@@ -83,3 +83,17 @@ services:
     depends_on:
       api_gateway:
         condition: service_started
+
+  api_author:
+    image: api_author
+    container_name: api_author
+    volumes:
+      - ./api_author/logs:/logs
+      - ./api_author/config:/config
+    user: root
+    build:
+      context: ./api_author
+      dockerfile: ./Dockerfile
+    depends_on:
+      api_gateway:
+        condition: service_started

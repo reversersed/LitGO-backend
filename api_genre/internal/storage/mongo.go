@@ -36,6 +36,11 @@ func generateIntegerFromObjectId(id primitive.ObjectID) int {
 	lastBytes := id[len(id)-3:]
 	return int(lastBytes[0])<<16 | int(lastBytes[1])<<8 | int(lastBytes[2])
 }
+func generateTranslitName(name string, id primitive.ObjectID) string {
+	rxSpaces := regexp.MustCompile(`\s+`)
+	reg := regexp.MustCompile(`[^\p{L}\s]`)
+	return fmt.Sprintf("%s-%d", strings.ReplaceAll(strings.TrimSpace(rxSpaces.ReplaceAllString(translit.Ru(reg.ReplaceAllString(strings.ToLower(strings.ReplaceAll(name, "-", " ")), "")), " ")), " ", "-"), generateIntegerFromObjectId(id))
+}
 func NewStorage(storage *mongo.Database, collection string, logger logger) *db {
 	db := &db{
 		collection: storage.Collection(collection),
@@ -242,15 +247,12 @@ func (d *db) seedGenres() {
 	d.logger.Info("categories seeded")
 }
 func (d *db) InsertGenre(ctx context.Context, category primitive.ObjectID, genreName string) (*Genre, error) {
-	rxSpaces := regexp.MustCompile(`\s+`)
-	reg := regexp.MustCompile(`[^\p{L}\s]`)
-
 	genreName = strings.TrimSpace(genreName)
 	genre := &Genre{
 		Id:   primitive.NewObjectID(),
 		Name: genreName,
 	}
-	genre.TranslitName = fmt.Sprintf("%s-%d", strings.ReplaceAll(strings.TrimSpace(rxSpaces.ReplaceAllString(translit.Ru(reg.ReplaceAllString(strings.ToLower(strings.ReplaceAll(genreName, "-", " ")), "")), " ")), " ", "-"), generateIntegerFromObjectId(genre.Id))
+	genre.TranslitName = generateTranslitName(genre.Name, genre.Id)
 
 	insertRequest := bson.M{"$push": bson.M{"genres": genre}}
 	result, err := d.collection.UpdateByID(ctx, category, insertRequest)
@@ -264,8 +266,6 @@ func (d *db) InsertGenre(ctx context.Context, category primitive.ObjectID, genre
 	return genre, nil
 }
 func (d *db) InsertCategory(ctx context.Context, categoryName string) (*Category, error) {
-	rxSpaces := regexp.MustCompile(`\s+`)
-	reg := regexp.MustCompile(`[^\p{L}\s]`)
 
 	categoryName = strings.TrimSpace(categoryName)
 	category := &Category{
@@ -273,7 +273,7 @@ func (d *db) InsertCategory(ctx context.Context, categoryName string) (*Category
 		Name:   categoryName,
 		Genres: []*Genre{},
 	}
-	category.TranslitName = fmt.Sprintf("%s-%d", strings.ReplaceAll(strings.TrimSpace(rxSpaces.ReplaceAllString(translit.Ru(reg.ReplaceAllString(strings.ToLower(strings.ReplaceAll(categoryName, "-", " ")), "")), " ")), " ", "-"), generateIntegerFromObjectId(category.Id))
+	category.TranslitName = generateTranslitName(categoryName, category.Id)
 
 	result, err := d.collection.InsertOne(ctx, category)
 	if err != nil {
