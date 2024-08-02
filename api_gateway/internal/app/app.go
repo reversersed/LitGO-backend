@@ -87,27 +87,21 @@ func (a *app) Run() error {
 
 	a.logger.Info("setting up handlers...")
 
-	if userHandler, err := user.New(userClient, a.logger, jwt); err != nil {
-		return err
-	} else {
-		jwt.ApplyUserServer(userClient)
-		a.handlers = append(a.handlers, userHandler)
-		userHandler.RegisterRouter(a.router)
-	}
+	//users
+	userHandler := user.New(userClient, a.logger, jwt)
+	jwt.ApplyUserServer(userClient)
+	a.handlers = append(a.handlers, userHandler)
+	userHandler.RegisterRouter(a.router)
 
-	if genreHandler, err := genre.New(genreClient, a.logger, jwt); err != nil {
-		return err
-	} else {
-		a.handlers = append(a.handlers, genreHandler)
-		genreHandler.RegisterRouter(a.router)
-	}
+	//genres
+	genreHandler := genre.New(genreClient, a.logger, jwt)
+	a.handlers = append(a.handlers, genreHandler)
+	genreHandler.RegisterRouter(a.router)
 
-	if authorHandler, err := author.New(authorClient, a.logger, jwt); err != nil {
-		return err
-	} else {
-		a.handlers = append(a.handlers, authorHandler)
-		authorHandler.RegisterRouter(a.router)
-	}
+	//authors
+	authorHandler := author.New(authorClient, a.logger, jwt)
+	a.handlers = append(a.handlers, authorHandler)
+	authorHandler.RegisterRouter(a.router)
 
 	if a.config.Server.Environment == "debug" {
 		a.router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

@@ -9,7 +9,7 @@ import (
 
 type option func(*copier.Option)
 
-func CopyOption(opt ...option) copier.Option {
+func copyOption(opt ...option) copier.Option {
 	var option copier.Option
 
 	for _, v := range opt {

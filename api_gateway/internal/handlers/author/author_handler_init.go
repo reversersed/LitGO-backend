@@ -12,12 +12,12 @@ type handler struct {
 	logger handlers.Logger
 }
 
-func New(client authors_pb.AuthorClient, logger handlers.Logger, jwtMiddleware handlers.JwtMiddleware) (*handler, error) {
+func New(client authors_pb.AuthorClient, logger handlers.Logger, jwtMiddleware handlers.JwtMiddleware) *handler {
 	return &handler{
 		client: client,
 		logger: logger,
 		jwt:    jwtMiddleware,
-	}, nil
+	}
 }
 func (h *handler) Close() error {
 	return nil
