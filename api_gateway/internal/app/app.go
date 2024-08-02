@@ -7,10 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/reversersed/go-grpc/tree/main/api_gateway/docs"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/config"
+	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers/author"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers/genre"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers/user"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/logging/logrus"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/middleware"
+	authors_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/authors"
 	genres_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/genres"
 	users_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/users"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/shutdown"
@@ -74,12 +76,18 @@ func (a *app) Run() error {
 	}
 	genreClient := genres_pb.NewGenreClient(genreConnection)
 
+	authorConnection, err := grpc.NewClient(a.config.Url.AuthorServiceUrl, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		return err
+	}
+	authorClient := authors_pb.NewAuthorClient(authorConnection)
+
 	a.logger.Info("setting up middleware...")
 	jwt := middleware.NewJwtMiddleware(a.logger, a.config.Server.JwtSecret)
 
 	a.logger.Info("setting up handlers...")
 
-	if userHandler, err := user.NewUserHandler(userClient, a.logger, jwt); err != nil {
+	if userHandler, err := user.New(userClient, a.logger, jwt); err != nil {
 		return err
 	} else {
 		jwt.ApplyUserServer(userClient)
@@ -87,11 +95,18 @@ func (a *app) Run() error {
 		userHandler.RegisterRouter(a.router)
 	}
 
-	if genreHandler, err := genre.NewGenreHandler(genreClient, a.logger, jwt); err != nil {
+	if genreHandler, err := genre.New(genreClient, a.logger, jwt); err != nil {
 		return err
 	} else {
 		a.handlers = append(a.handlers, genreHandler)
 		genreHandler.RegisterRouter(a.router)
+	}
+
+	if authorHandler, err := author.New(authorClient, a.logger, jwt); err != nil {
+		return err
+	} else {
+		a.handlers = append(a.handlers, authorHandler)
+		authorHandler.RegisterRouter(a.router)
 	}
 
 	if a.config.Server.Environment == "debug" {

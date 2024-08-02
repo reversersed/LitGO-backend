@@ -7,6 +7,7 @@ import (
 	"github.com/jinzhu/copier"
 
 	model "github.com/reversersed/go-grpc/tree/main/api_user/internal/storage"
+	option "github.com/reversersed/go-grpc/tree/main/api_user/pkg/copier"
 	shared_pb "github.com/reversersed/go-grpc/tree/main/api_user/pkg/proto"
 	users_pb "github.com/reversersed/go-grpc/tree/main/api_user/pkg/proto/users"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -54,10 +55,9 @@ func (u *userServer) GetUser(c context.Context, r *users_pb.UserRequest) (*users
 		return nil, err.Err()
 	}
 	model := &users_pb.UserModel{}
-	if err := copier.Copy(model, user); err != nil {
+	if err := copier.CopyWithOption(model, user, option.CopyOption(option.WithPrimitiveToStringConverter)); err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
-	model.Id = user.Id.Hex()
 	return model, nil
 }
 func (u *userServer) UpdateToken(c context.Context, r *users_pb.TokenRequest) (*users_pb.TokenReply, error) {

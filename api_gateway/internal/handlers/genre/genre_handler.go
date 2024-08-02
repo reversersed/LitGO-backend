@@ -16,7 +16,7 @@ import (
 // @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Internal error occured"
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Service does not responding (maybe crush)"
 // @Router       /genres/all [get]
-func (h *genreHandler) GetAll(c *gin.Context) {
+func (h *handler) GetAll(c *gin.Context) {
 	response, err := h.client.GetAll(c.Request.Context(), &genres_pb.Empty{})
 	if err != nil {
 		c.Error(err)

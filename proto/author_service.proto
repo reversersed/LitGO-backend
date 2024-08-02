@@ -2,11 +2,27 @@ syntax = "proto3";
 package authors;
 option go_package = "pkg/proto/authors;authors_pb";
 
-service Genre {
+service Author {
+    rpc GetAuthors(GetAuthorsRequest) returns (GetAuthorsResponse);
 }
 //Requests
-
+message GetAuthorsRequest {
+    // array of authors id to find
+    repeated string id = 1; // @gotags: form:"id" validate:"primitiveid,required_without_all=Translit"
+    // array of translit names to find
+    repeated string translit = 2; // @gotags: form:"translit" validate:"required_without_all=Id"
+}
 //Responses
-
+message GetAuthorsResponse {
+    repeated AuthorModel authors = 1;
+}
 //Models
 message Empty {}
+message AuthorModel {
+    string id = 1;
+    string name = 2;
+    string translitname = 3;
+    string profilepicture = 4;
+    string about = 5;
+    float rating = 6;
+}

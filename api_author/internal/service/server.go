@@ -1,7 +1,11 @@
 package service
 
 import (
+	"context"
+
+	model "github.com/reversersed/go-grpc/tree/main/api_author/internal/storage"
 	authors_pb "github.com/reversersed/go-grpc/tree/main/api_author/pkg/proto/authors"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc"
 )
 
@@ -17,28 +21,29 @@ type logger interface {
 	Warn(...any)
 }
 type storage interface {
+	GetAuthors(ctx context.Context, id []primitive.ObjectID, translit []string) ([]*model.Author, error)
 }
 type cache interface {
 	Get([]byte) ([]byte, error)
 	Set([]byte, []byte, int) error
 	Delete([]byte) bool
 }
-type genreServer struct {
+type authorServer struct {
 	cache     cache
 	logger    logger
 	storage   storage
 	validator validator
-	authors_pb.UnimplementedGenreServer
+	authors_pb.UnimplementedAuthorServer
 }
 
-func NewServer(logger logger, cache cache, storage storage, validator validator) *genreServer {
-	return &genreServer{
+func NewServer(logger logger, cache cache, storage storage, validator validator) *authorServer {
+	return &authorServer{
 		storage:   storage,
 		logger:    logger,
 		cache:     cache,
 		validator: validator,
 	}
 }
-func (u *genreServer) Register(s grpc.ServiceRegistrar) {
-	authors_pb.RegisterGenreServer(s, u)
+func (u *authorServer) Register(s grpc.ServiceRegistrar) {
+	authors_pb.RegisterAuthorServer(s, u)
 }

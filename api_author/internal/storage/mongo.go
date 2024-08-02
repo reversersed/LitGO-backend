@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/mdigger/translit"
+	shared_pb "github.com/reversersed/go-grpc/tree/main/api_author/pkg/proto"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -102,4 +103,53 @@ func (d *db) CreateAuthor(ctx context.Context, author *Author) (*Author, error) 
 	}
 
 	return author, nil
+}
+func (d *db) GetAuthors(ctx context.Context, id []primitive.ObjectID, translit []string) ([]*Author, error) {
+	authors := make([]*Author, 0)
+
+	if len(id) > 0 {
+		result, err := d.collection.Find(ctx, bson.M{"_id": bson.D{{Key: "$in", Value: id}}})
+		if err != nil {
+			return nil, status.Error(codes.Internal, err.Error())
+		}
+		var temp []*Author
+		err = result.All(ctx, &temp)
+		if err != nil {
+			return nil, status.Error(codes.Internal, err.Error())
+		}
+		authors = append(authors, temp...)
+	}
+	if len(translit) > 0 {
+		result, err := d.collection.Find(ctx, bson.M{"translit": bson.D{{Key: "$in", Value: translit}}})
+		if err != nil {
+			return nil, status.Error(codes.Internal, err.Error())
+		}
+		var temp []*Author
+		err = result.All(ctx, &temp)
+		if err != nil {
+			return nil, status.Error(codes.Internal, err.Error())
+		}
+		authors = append(authors, temp...)
+	}
+	if len(id) == 0 && len(translit) == 0 {
+		return nil, status.Error(codes.InvalidArgument, "no id or translit name argument presented")
+	}
+	if len(authors) == 0 {
+		var str string
+		for _, i := range id {
+			str += i.Hex() + ","
+		}
+		status, _ := status.New(codes.NotFound, "no authors found").WithDetails(&shared_pb.ErrorDetail{
+			Field:       "id",
+			Struct:      "authors_pb.GetAuthorsRequest",
+			Actualvalue: strings.Trim(str, ","),
+		}, &shared_pb.ErrorDetail{
+			Field:       "translit",
+			Struct:      "authors_pb.GetAuthorsRequest",
+			Actualvalue: strings.Join(translit, ","),
+		})
+		return nil, status.Err()
+	}
+
+	return authors, nil
 }

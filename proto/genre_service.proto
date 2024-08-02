@@ -14,12 +14,14 @@ message GetAllResponse {
 //Models
 message Empty {}
 message CategoryModel {
-    string name = 1;
-    string translitName = 2;
-    repeated GenreModel genres = 3;
+    string id = 1;
+    string name = 2;
+    string translitName = 3;
+    repeated GenreModel genres = 4;
 }
 message GenreModel {
-    string name = 1;
-    string translitName = 2;
-    int64 bookCount = 3;
+    string id = 1;
+    string name = 2;
+    string translitName = 3;
+    int64 bookCount = 4;
 }

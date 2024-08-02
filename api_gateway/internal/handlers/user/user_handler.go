@@ -26,7 +26,7 @@ import (
 // @Failure      404  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"User not found"
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Service does not responding (maybe crush)"
 // @Router       /users [get]
-func (h *userHandler) UserSearch(c *gin.Context) {
+func (h *handler) UserSearch(c *gin.Context) {
 
 	var request users_pb.UserRequest
 	if err := c.BindQuery(&request); err != nil {
@@ -53,7 +53,7 @@ func (h *userHandler) UserSearch(c *gin.Context) {
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Service does not responding (maybe crush)"
 // @Security 	 ApiKeyAuth
 // @Router       /users/auth [get]
-func (h *userHandler) UserAuthenticate(c *gin.Context) {
+func (h *handler) UserAuthenticate(c *gin.Context) {
 	user, err := middleware.GetCredentialsFromContext(c)
 	if err != nil {
 		c.Error(err)
@@ -99,7 +99,7 @@ func (h *userHandler) UserAuthenticate(c *gin.Context) {
 // @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Invalid request data"
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Service does not responding (maybe crush)"
 // @Router       /users/login [post]
-func (h *userHandler) UserLogin(c *gin.Context) {
+func (h *handler) UserLogin(c *gin.Context) {
 	var request users_pb.LoginRequest
 	if err := c.BindJSON(&request); err != nil {
 		c.Error(status.Error(codes.InvalidArgument, err.Error()))
@@ -134,7 +134,7 @@ func (h *userHandler) UserLogin(c *gin.Context) {
 // @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Some internal error occured"
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Service does not responding (maybe crush)"
 // @Router       /users/signin [post]
-func (h *userHandler) UserRegister(c *gin.Context) {
+func (h *handler) UserRegister(c *gin.Context) {
 	var request users_pb.RegistrationRequest
 	if err := c.BindJSON(&request); err != nil {
 		c.Error(status.Error(codes.InvalidArgument, err.Error()))

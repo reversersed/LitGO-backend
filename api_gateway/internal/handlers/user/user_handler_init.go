@@ -6,23 +6,23 @@ import (
 	users_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/users"
 )
 
-type userHandler struct {
+type handler struct {
 	client users_pb.UserClient
 	jwt    handlers.JwtMiddleware
 	logger handlers.Logger
 }
 
-func NewUserHandler(client users_pb.UserClient, logger handlers.Logger, jwtMiddleware handlers.JwtMiddleware) (*userHandler, error) {
-	return &userHandler{
+func New(client users_pb.UserClient, logger handlers.Logger, jwtMiddleware handlers.JwtMiddleware) (*handler, error) {
+	return &handler{
 		client: client,
 		logger: logger,
 		jwt:    jwtMiddleware,
 	}, nil
 }
-func (h *userHandler) Close() error {
+func (h *handler) Close() error {
 	return nil
 }
-func (h *userHandler) RegisterRouter(router *gin.Engine) {
+func (h *handler) RegisterRouter(router *gin.Engine) {
 	general := router.Group("/api/v1/users")
 	{
 		authorized := general.Group("/").Use(h.jwt.Middleware())

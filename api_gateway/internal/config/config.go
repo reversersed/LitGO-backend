@@ -12,8 +12,9 @@ type Config struct {
 	Url    *UrlConfig
 }
 type UrlConfig struct {
-	UserServiceUrl  string `env:"SERVICE_USER_URL" env-required:"true" env-description:"External URL of user (identity) service"`
-	GenreServiceUrl string `env:"SERVICE_GENRE_URL" env-required:"true" env-description:"External URL of genre service"`
+	UserServiceUrl   string `env:"SERVICE_USER_URL" env-required:"true" env-description:"External URL of user (identity) service"`
+	GenreServiceUrl  string `env:"SERVICE_GENRE_URL" env-required:"true" env-description:"External URL of genre service"`
+	AuthorServiceUrl string `env:"SERVICE_AUTHOR_URL" env-required:"true" env-description:"External URL of author service"`
 }
 type ServerConfig struct {
 	Host        string `env:"SERVER_HOST" env-required:"true" env-description:"Server listening address"`

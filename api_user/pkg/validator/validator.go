@@ -118,7 +118,18 @@ func validate_FieldsEqual(fl validator.FieldLevel) bool {
 }
 func validate_PrimitiveId(field validator.FieldLevel) bool {
 	var obj primitive.ObjectID
-
+	if slice, ok := field.Field().Interface().([]string); ok {
+		if len(slice) == 0 {
+			return true
+		}
+		for _, v := range slice {
+			_, err := primitive.ObjectIDFromHex(v)
+			if err != nil {
+				return false
+			}
+		}
+		return true
+	}
 	_, err := primitive.ObjectIDFromHex(field.Field().String())
 	return (err == nil) || (field.Field().Kind() == reflect.TypeOf(obj).Kind()) || len(field.Field().String()) == 0
 }

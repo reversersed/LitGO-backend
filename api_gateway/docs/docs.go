@@ -18,6 +18,127 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/authors": {
+            "get": {
+                "description": "there can be multiple search parameters, id or translit, or both\nexample: ?id=1\u0026id=2\u0026translit=author-21\u0026id=3\u0026translit=author-756342",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "authors"
+                ],
+                "summary": "Find authors",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Author Id, must be a primitive id hex",
+                        "name": "id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Translit author name",
+                        "name": "translit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Authors",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/authors_pb.GetAuthorsResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Field was not in a correct format",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Authors not found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Some internal error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "503": {
+                        "description": "Service does not responding (maybe crush)",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/genres/all": {
             "get": {
                 "description": "Fetches all categories (with genres included)",
@@ -465,6 +586,40 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "authors_pb.AuthorModel": {
+            "type": "object",
+            "properties": {
+                "about": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "profilepicture": {
+                    "type": "string"
+                },
+                "rating": {
+                    "type": "number"
+                },
+                "translitname": {
+                    "type": "string"
+                }
+            }
+        },
+        "authors_pb.GetAuthorsResponse": {
+            "type": "object",
+            "properties": {
+                "authors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/authors_pb.AuthorModel"
+                    }
+                }
+            }
+        },
         "genres_pb.CategoryModel": {
             "type": "object",
             "properties": {
@@ -473,6 +628,9 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/genres_pb.GenreModel"
                     }
+                },
+                "id": {
+                    "type": "string"
                 },
                 "name": {
                     "type": "string"
@@ -487,6 +645,9 @@ const docTemplate = `{
             "properties": {
                 "bookCount": {
                     "type": "integer"
+                },
+                "id": {
+                    "type": "string"
                 },
                 "name": {
                     "type": "string"
