@@ -8,4 +8,5 @@ type Author struct {
 	TranslitName   string             `bson:"translit"`
 	About          string             `bson:"about"`
 	ProfilePicture string             `bson:"profilepic"`
+	Rating         float32            `bson:"rating"`
 }

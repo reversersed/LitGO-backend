@@ -19,7 +19,6 @@ type ServerConfig struct {
 	Host        string `env:"SERVER_HOST" env-required:"true" env-description:"Server listening address"`
 	Port        int    `env:"SERVER_PORT" env-required:"true" env-description:"Server listening port"`
 	Environment string `env:"ENVIRONMENT" env-default:"debug" env-description:"Application environment"`
-	JwtSecret   string `env:"JWT_SECRET" env-required:"true"  env-description:"JWT secret token. Must be unique and strong"`
 }
 
 var once sync.Once
