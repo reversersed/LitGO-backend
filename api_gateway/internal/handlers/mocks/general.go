@@ -9,6 +9,7 @@ import (
 
 	gin "github.com/gin-gonic/gin"
 	gomock "github.com/golang/mock/gomock"
+	shared_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto"
 )
 
 // MockLogger is a mock of Logger interface.
@@ -88,6 +89,21 @@ func NewMockJwtMiddleware(ctrl *gomock.Controller) *MockJwtMiddleware {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockJwtMiddleware) EXPECT() *MockJwtMiddlewareMockRecorder {
 	return m.recorder
+}
+
+// GetCredentialsFromContext mocks base method.
+func (m *MockJwtMiddleware) GetCredentialsFromContext(c *gin.Context) (*shared_pb.UserCredentials, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCredentialsFromContext", c)
+	ret0, _ := ret[0].(*shared_pb.UserCredentials)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCredentialsFromContext indicates an expected call of GetCredentialsFromContext.
+func (mr *MockJwtMiddlewareMockRecorder) GetCredentialsFromContext(c interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCredentialsFromContext", reflect.TypeOf((*MockJwtMiddleware)(nil).GetCredentialsFromContext), c)
 }
 
 // Middleware mocks base method.

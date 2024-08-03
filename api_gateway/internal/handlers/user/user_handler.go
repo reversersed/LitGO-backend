@@ -54,7 +54,7 @@ func (h *handler) UserSearch(c *gin.Context) {
 // @Security 	 ApiKeyAuth
 // @Router       /users/auth [get]
 func (h *handler) UserAuthenticate(c *gin.Context) {
-	user, err := middleware.GetCredentialsFromContext(c)
+	user, err := h.jwt.GetCredentialsFromContext(c)
 	if err != nil {
 		c.Error(err)
 		return

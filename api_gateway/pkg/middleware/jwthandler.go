@@ -132,7 +132,7 @@ func (j *jwtMiddleware) Middleware(roles ...string) gin.HandlerFunc {
 		c.Next()
 	}
 }
-func GetCredentialsFromContext(c *gin.Context) (*shared_pb.UserCredentials, error) {
+func (j *jwtMiddleware) GetCredentialsFromContext(c *gin.Context) (*shared_pb.UserCredentials, error) {
 	userId, exist := c.Get(UserIdKey)
 	if !exist {
 		erro, _ := status.New(codes.Unauthenticated, "no user credentials found").WithDetails(&shared_pb.ErrorDetail{Field: "User ID", Description: "User id was not found in context"})

@@ -50,7 +50,7 @@ func TestGetCredentials(t *testing.T) {
 	router := gin.Default()
 	router.Use(ErrorHandler)
 	router.Group("/success").Use(jwt.Middleware()).GET("/", func(ctx *gin.Context) {
-		credential, err := GetCredentialsFromContext(ctx)
+		credential, err := jwt.GetCredentialsFromContext(ctx)
 		assert.NoError(t, err)
 		assert.Equal(t, userId, credential.Id)
 		assert.Equal(t, "user", credential.Login)
@@ -58,7 +58,7 @@ func TestGetCredentials(t *testing.T) {
 		ctx.Status(http.StatusOK)
 	})
 	router.GET("/error", func(ctx *gin.Context) {
-		_, err := GetCredentialsFromContext(ctx)
+		_, err := jwt.GetCredentialsFromContext(ctx)
 		assert.Error(t, err)
 		ctx.Error(err)
 	})

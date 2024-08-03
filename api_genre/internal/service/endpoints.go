@@ -5,9 +5,8 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/jinzhu/copier"
 	model "github.com/reversersed/go-grpc/tree/main/api_genre/internal/storage"
-	option "github.com/reversersed/go-grpc/tree/main/api_genre/pkg/copier"
+	"github.com/reversersed/go-grpc/tree/main/api_genre/pkg/copier"
 	genres_pb "github.com/reversersed/go-grpc/tree/main/api_genre/pkg/proto/genres"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -30,7 +29,7 @@ func (s *genreServer) GetAll(ctx context.Context, _ *genres_pb.Empty) (*genres_p
 	}
 
 	var categories []*genres_pb.CategoryModel
-	if err := copier.CopyWithOption(&categories, &response, option.CopyOption(option.WithPrimitiveToStringConverter)); err != nil {
+	if err := copier.Copy(&categories, &response, copier.WithPrimitiveToStringConverter); err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 	if len(categories) == 0 {
