@@ -2,17 +2,15 @@ package storage
 
 import (
 	"context"
-	"fmt"
-	"regexp"
 	"strings"
 	"sync"
 	"time"
 
-	"github.com/mdigger/translit"
+	"github.com/reversersed/go-grpc/tree/main/api_author/pkg/mongo"
 	shared_pb "github.com/reversersed/go-grpc/tree/main/api_author/pkg/proto"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
+	mongodb "go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -28,19 +26,10 @@ type logger interface {
 type db struct {
 	sync.RWMutex
 	logger     logger
-	collection *mongo.Collection
+	collection *mongodb.Collection
 }
 
-func generateIntegerFromObjectId(id primitive.ObjectID) int {
-	lastBytes := id[len(id)-3:]
-	return int(lastBytes[0])<<16 | int(lastBytes[1])<<8 | int(lastBytes[2])
-}
-func generateTranslitName(name string, id primitive.ObjectID) string {
-	rxSpaces := regexp.MustCompile(`\s+`)
-	reg := regexp.MustCompile(`[^\p{L}\s]`)
-	return fmt.Sprintf("%s-%d", strings.ReplaceAll(strings.TrimSpace(rxSpaces.ReplaceAllString(translit.Ru(reg.ReplaceAllString(strings.ToLower(strings.ReplaceAll(name, "-", " ")), "")), " ")), " ", "-"), generateIntegerFromObjectId(id))
-}
-func NewStorage(storage *mongo.Database, collection string, logger logger) *db {
+func NewStorage(storage *mongodb.Database, collection string, logger logger) *db {
 	db := &db{
 		collection: storage.Collection(collection),
 		logger:     logger,
@@ -91,7 +80,7 @@ func (d *db) seedAuthors() {
 }
 func (d *db) CreateAuthor(ctx context.Context, author *Author) (*Author, error) {
 	author.Id = primitive.NewObjectID()
-	author.TranslitName = generateTranslitName(author.Name, author.Id)
+	author.TranslitName = mongo.GenerateTranslitName(author.Name, author.Id)
 
 	result, err := d.collection.InsertOne(ctx, author)
 	if err != nil {

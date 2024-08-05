@@ -3,8 +3,12 @@ package mongo
 import (
 	"context"
 	"fmt"
+	"regexp"
+	"strings"
 	"time"
 
+	"github.com/mdigger/translit"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -17,6 +21,8 @@ type DatabaseConfig struct {
 	Base     string `env:"DB_BASE" env-required:"true" env-description:"Database name"`
 	AuthDb   string `env:"DB_AUTHDB" env-required:"true" env-description:"Authentication base name"`
 }
+
+var client *mongo.Client
 
 func NewClient(ctx context.Context, cfg *DatabaseConfig) (*mongo.Database, error) {
 	var mongoURL string
@@ -39,7 +45,8 @@ func NewClient(ctx context.Context, cfg *DatabaseConfig) (*mongo.Database, error
 			AuthSource:  cfg.AuthDb,
 		})
 	}
-	client, err := mongo.Connect(reqCtx, clientOptions)
+	var err error
+	client, err = mongo.Connect(reqCtx, clientOptions)
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to mongodb: %w", err)
 	}
@@ -49,4 +56,16 @@ func NewClient(ctx context.Context, cfg *DatabaseConfig) (*mongo.Database, error
 	}
 
 	return client.Database(cfg.Base), nil
+}
+func Close() error {
+	return client.Disconnect(context.Background())
+}
+func generateIntegerFromObjectId(id primitive.ObjectID) int {
+	lastBytes := id[len(id)-3:]
+	return int(lastBytes[0])<<16 | int(lastBytes[1])<<8 | int(lastBytes[2])
+}
+func GenerateTranslitName(name string, id primitive.ObjectID) string {
+	rxSpaces := regexp.MustCompile(`\s+`)
+	reg := regexp.MustCompile(`[^\p{L}\s]`)
+	return fmt.Sprintf("%s-%d", strings.ReplaceAll(strings.TrimSpace(rxSpaces.ReplaceAllString(translit.Ru(reg.ReplaceAllString(strings.ToLower(strings.ReplaceAll(name, "-", " ")), "")), " ")), " ", "-"), generateIntegerFromObjectId(id))
 }

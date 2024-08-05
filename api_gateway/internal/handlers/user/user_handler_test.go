@@ -328,7 +328,6 @@ func TestHandlers(t *testing.T) {
 	for _, v := range table {
 		t.Run(v.Name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
-
 			client := mock_users_pb.NewMockUserClient(ctrl)
 			logger := mocks.NewMockLogger(ctrl)
 			jwt := mocks.NewMockJwtMiddleware(ctrl)

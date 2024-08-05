@@ -46,6 +46,11 @@ stop:
 up:
 	@docker compose up --timestamps --wait --wait-timeout 1800 --remove-orphans -d
 
+test-unit: test-folder-creation gen
+	@$(foreach directory,$(API_DIRECTORIES),\
+		cd ./$(directory) && go test ./... -v -short && cd ..\
+		$(CMDSEP)) echo tests completed successfully
+
 test-verbose: test-folder-creation gen
 	@$(foreach directory,$(API_DIRECTORIES),\
 		cd ./$(directory) && go test ./... -v && cd ..\

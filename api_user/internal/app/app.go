@@ -62,5 +62,5 @@ func (a *app) Run() error {
 	return nil
 }
 func (a *app) Close() error {
-	return nil
+	return mongo.Close()
 }

@@ -17,13 +17,14 @@ func (s *genreServer) GetAll(ctx context.Context, _ *genres_pb.Empty) (*genres_p
 	defer cancel()
 	var response []*model.Category
 
-	if cats, err := s.cache.Get([]byte("all_categories")); len(cats) > 0 && err != nil {
+	if cats, err := s.cache.Get([]byte("all_categories")); len(cats) > 0 && err == nil {
 		json.Unmarshal(cats, &response)
 	} else {
 		response, err = s.storage.GetAll(ctx)
 		if err != nil {
 			return nil, err
 		}
+
 		bytes, _ := json.Marshal(&response)
 		s.cache.Set([]byte("all_categories"), bytes, int(time.Hour*6))
 	}
@@ -31,9 +32,6 @@ func (s *genreServer) GetAll(ctx context.Context, _ *genres_pb.Empty) (*genres_p
 	var categories []*genres_pb.CategoryModel
 	if err := copier.Copy(&categories, &response, copier.WithPrimitiveToStringConverter); err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
-	}
-	if len(categories) == 0 {
-		return nil, status.Error(codes.NotFound, "there is no genres in database")
 	}
 	return &genres_pb.GetAllResponse{
 		Categories: categories,
