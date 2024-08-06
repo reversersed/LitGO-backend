@@ -17,8 +17,6 @@ import (
 	"google.golang.org/protobuf/protoadapt"
 )
 
-//go:generate mockgen -source=mongo.go -destination=mocks/mongo.go
-
 type logger interface {
 	Infof(string, ...interface{})
 	Info(...interface{})
