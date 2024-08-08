@@ -131,7 +131,7 @@ func (d *db) FindByEmail(ctx context.Context, email string) (*User, error) {
 	}
 	return &u, nil
 }
-func (d *db) CreateUser(ctx context.Context, model *User) (string, error) {
+func (d *db) CreateUser(ctx context.Context, model *User) (primitive.ObjectID, error) {
 	d.Lock()
 	defer d.Unlock()
 
@@ -141,12 +141,12 @@ func (d *db) CreateUser(ctx context.Context, model *User) (string, error) {
 	result, err := d.collection.InsertOne(contx, model)
 	if err != nil {
 		d.logger.Warnf("error while user creation: %v", err)
-		return "", status.Error(codes.Internal, err.Error())
+		return primitive.ObjectID{}, status.Error(codes.Internal, err.Error())
 	}
 	oid, ok := result.InsertedID.(primitive.ObjectID)
 	if ok {
-		return oid.Hex(), nil
+		return oid, nil
 	}
 	d.logger.Warnf("cant get created user id: %v (%v)", oid.Hex(), oid)
-	return "", status.Error(codes.Internal, "cant resolve user id")
+	return primitive.ObjectID{}, status.Error(codes.Internal, "cant resolve user id")
 }

@@ -18,6 +18,9 @@ func (s *authorServer) GetAuthors(ctx context.Context, r *authors_pb.GetAuthorsR
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
+	if r == nil {
+		return nil, status.Error(codes.InvalidArgument, "received nil request")
+	}
 	if err := s.validator.StructValidation(r); err != nil {
 		return nil, err
 	}

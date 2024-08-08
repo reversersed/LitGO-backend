@@ -9,6 +9,8 @@ import (
 	"google.golang.org/grpc"
 )
 
+//go:generate mockgen -source=server.go -destination=mocks/server.go
+
 type validator interface {
 	StructValidation(any) error
 }

@@ -8,7 +8,6 @@ import (
 	"github.com/reversersed/go-grpc/tree/main/api_user/pkg/copier"
 	shared_pb "github.com/reversersed/go-grpc/tree/main/api_user/pkg/proto"
 	users_pb "github.com/reversersed/go-grpc/tree/main/api_user/pkg/proto/users"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -93,7 +92,7 @@ func (u *userServer) Login(c context.Context, r *users_pb.LoginRequest) (*users_
 	}
 	token, refresh, err := u.GenerateAccessToken(model)
 	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, err.Error())
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	return &users_pb.LoginResponse{
 		Login:        model.Login,
@@ -137,11 +136,8 @@ func (u *userServer) RegisterUser(c context.Context, usr *users_pb.RegistrationR
 		u.logger.Errorf("couldn't add user %s to database: %v", user.Login, err)
 		return nil, err
 	}
-	user.Id, err = primitive.ObjectIDFromHex(result)
-	if err != nil {
-		u.logger.Errorf("can't create user %s id: %v", user.Login, err)
-		return nil, status.Error(codes.Internal, "can't create user id")
-	}
+	user.Id = result
+
 	token, refresh, err := u.GenerateAccessToken(&user)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())

@@ -5,8 +5,11 @@ import (
 
 	model "github.com/reversersed/go-grpc/tree/main/api_user/internal/storage"
 	users_pb "github.com/reversersed/go-grpc/tree/main/api_user/pkg/proto/users"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc"
 )
+
+//go:generate mockgen -source=server.go -destination=mocks/server.go
 
 type validator interface {
 	StructValidation(any) error
@@ -23,7 +26,7 @@ type storage interface {
 	FindById(context.Context, string) (*model.User, error)
 	FindByLogin(context.Context, string) (*model.User, error)
 	FindByEmail(context.Context, string) (*model.User, error)
-	CreateUser(ctx context.Context, model *model.User) (string, error)
+	CreateUser(ctx context.Context, model *model.User) (primitive.ObjectID, error)
 }
 type cache interface {
 	Get([]byte) ([]byte, error)
