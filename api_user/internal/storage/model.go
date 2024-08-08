@@ -10,3 +10,11 @@ type User struct {
 	Email          string             `json:"email" bson:"email"`
 	EmailConfirmed bool               `json:"emailconfirmed" bson:"emailconfirmed"`
 }
+
+var seedAdmin = &User{
+	Id:             primitive.NewObjectID(),
+	Login:          "admin",
+	Roles:          []string{"user", "admin"},
+	Email:          "admin@example.com",
+	EmailConfirmed: true,
+}

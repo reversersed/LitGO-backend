@@ -13,6 +13,8 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+//go:generate mockgen -source=mongo.go -destination=mocks/mongo.go
+
 type logger interface {
 	Infof(string, ...interface{})
 	Info(...interface{})
@@ -46,14 +48,8 @@ func (d *db) seedAdminAccount() {
 	if err := result.Err(); err != nil {
 		d.logger.Info("starting seeding admin account...")
 		pass, _ := bcrypt.GenerateFromPassword([]byte("admin"), bcrypt.MinCost)
-		admin := &User{
-			Login:          "admin",
-			Password:       pass,
-			Roles:          []string{"user", "admin"},
-			Email:          "admin@example.com",
-			EmailConfirmed: true,
-		}
-		response, err := d.collection.InsertOne(ctx, admin)
+		seedAdmin.Password = pass
+		response, err := d.collection.InsertOne(ctx, seedAdmin)
 		if err != nil {
 			d.logger.Fatalf("cannot seed admin account: %v", err)
 		}
