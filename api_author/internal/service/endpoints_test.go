@@ -141,3 +141,119 @@ func TestGetAuthors(t *testing.T) {
 		})
 	}
 }
+func TestGetAuthorSuggestion(t *testing.T) {
+	authors := []*model.Author{
+		{
+			Id:             primitive.NewObjectID(),
+			Name:           "name1",
+			TranslitName:   "isname",
+			About:          "about this author",
+			ProfilePicture: "url",
+			Rating:         5.0,
+		},
+		{
+			Id:             primitive.NewObjectID(),
+			Name:           "name2",
+			TranslitName:   "isname?",
+			About:          "about this another author",
+			ProfilePicture: "url to pic",
+			Rating:         2.3,
+		},
+		{
+			Id:             primitive.NewObjectID(),
+			Name:           "named author",
+			TranslitName:   "translit-name-21421",
+			About:          "about this author again",
+			ProfilePicture: "urls...",
+			Rating:         0,
+		},
+	}
+	authorModel := []*authors_pb.AuthorModel{
+		{
+			Id:             authors[0].Id.Hex(),
+			Name:           "name1",
+			Translitname:   "isname",
+			About:          "about this author",
+			Profilepicture: "url",
+			Rating:         5.0,
+		},
+		{
+			Id:             authors[1].Id.Hex(),
+			Name:           "name2",
+			Translitname:   "isname?",
+			About:          "about this another author",
+			Profilepicture: "url to pic",
+			Rating:         2.3,
+		},
+		{
+			Id:             authors[2].Id.Hex(),
+			Name:           "named author",
+			Translitname:   "translit-name-21421",
+			About:          "about this author again",
+			Profilepicture: "urls...",
+			Rating:         0,
+		},
+	}
+	table := []struct {
+		Name             string
+		Request          *authors_pb.GetSuggestionRequest
+		ExceptedError    string
+		ExceptedResponse *authors_pb.GetAuthorsResponse
+		MockBehaviour    func(*mock_service.Mockcache, *mock_service.Mocklogger, *mock_service.Mockstorage, *mock_service.Mockvalidator)
+	}{
+		{
+			Name:          "validation error",
+			Request:       &authors_pb.GetSuggestionRequest{},
+			ExceptedError: "rpc error: code = InvalidArgument desc = wrong arguments number",
+			MockBehaviour: func(m1 *mock_service.Mockcache, m2 *mock_service.Mocklogger, m3 *mock_service.Mockstorage, m4 *mock_service.Mockvalidator) {
+				m4.EXPECT().StructValidation(gomock.Any()).Return(status.Error(codes.InvalidArgument, "wrong arguments number"))
+			},
+		},
+		{
+			Name:          "nil request",
+			Request:       nil,
+			ExceptedError: "rpc error: code = InvalidArgument desc = received nil request",
+		},
+		{
+			Name:    "successful",
+			Request: &authors_pb.GetSuggestionRequest{Query: "Проверка правильности разбиения", Limit: 5},
+			MockBehaviour: func(m1 *mock_service.Mockcache, m2 *mock_service.Mocklogger, m3 *mock_service.Mockstorage, m4 *mock_service.Mockvalidator) {
+				m4.EXPECT().StructValidation(gomock.Any()).Return(nil)
+				m3.EXPECT().GetSuggestions(gomock.Any(), "(Проверка)|(правильности)|(разбиения)", int64(5)).Return(authors, nil)
+			},
+			ExceptedResponse: &authors_pb.GetAuthorsResponse{Authors: authorModel},
+		},
+		{
+			Name:    "storage error",
+			Request: &authors_pb.GetSuggestionRequest{Query: "Проверка правильности разбиения", Limit: 5},
+			MockBehaviour: func(m1 *mock_service.Mockcache, m2 *mock_service.Mocklogger, m3 *mock_service.Mockstorage, m4 *mock_service.Mockvalidator) {
+				m4.EXPECT().StructValidation(gomock.Any()).Return(nil)
+				m3.EXPECT().GetSuggestions(gomock.Any(), "(Проверка)|(правильности)|(разбиения)", int64(5)).Return(nil, status.Error(codes.NotFound, "authors not found"))
+			},
+			ExceptedError: "rpc error: code = NotFound desc = authors not found",
+		},
+	}
+
+	for _, v := range table {
+		t.Run(v.Name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			logger := mock_service.NewMocklogger(ctrl)
+			cache := mock_service.NewMockcache(ctrl)
+			storage := mock_service.NewMockstorage(ctrl)
+			validator := mock_service.NewMockvalidator(ctrl)
+
+			service := NewServer(logger, cache, storage, validator)
+			if v.MockBehaviour != nil {
+				v.MockBehaviour(cache, logger, storage, validator)
+			}
+
+			response, err := service.GetAuthorSuggestion(context.Background(), v.Request)
+			if len(v.ExceptedError) == 0 {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, v.ExceptedError)
+			}
+			assert.Equal(t, v.ExceptedResponse, response)
+		})
+	}
+}

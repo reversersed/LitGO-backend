@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"regexp"
 	"strings"
 	"time"
 
@@ -39,6 +40,36 @@ func (s *authorServer) GetAuthors(ctx context.Context, r *authors_pb.GetAuthorsR
 		id = append(id, v)
 	}
 	authors, err := s.storage.GetAuthors(ctx, id, r.Translit)
+	if err != nil {
+		return nil, err
+	}
+	authorModels := make([]*authors_pb.AuthorModel, len(authors))
+	if err := copier.Copy(&authorModels, &authors, copier.WithPrimitiveToStringConverter); err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return &authors_pb.GetAuthorsResponse{
+		Authors: authorModels,
+	}, nil
+}
+func (s *authorServer) GetAuthorSuggestion(ctx context.Context, r *authors_pb.GetSuggestionRequest) (*authors_pb.GetAuthorsResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	if r == nil {
+		return nil, status.Error(codes.InvalidArgument, "received nil request")
+	}
+	if err := s.validator.StructValidation(r); err != nil {
+		return nil, err
+	}
+	var pattern string
+
+	words := strings.Fields(r.Query)
+	for _, word := range words {
+		pattern += fmt.Sprintf("(%s)|", regexp.QuoteMeta(word))
+	}
+	pattern = strings.Trim(pattern, "|")
+
+	authors, err := s.storage.GetSuggestions(ctx, pattern, int64(r.Limit))
 	if err != nil {
 		return nil, err
 	}

@@ -94,3 +94,25 @@ func TestGetAuthors(t *testing.T) {
 	_, e = storage.GetAuthors(ctx, []primitive.ObjectID{}, []string{})
 	assert.EqualError(t, e, "rpc error: code = InvalidArgument desc = no id or translit name argument presented")
 }
+func TestGetSuggestion(t *testing.T) {
+	ctx := context.Background()
+	dba, err := mongo.NewClient(context.Background(), cfg)
+	defer dba.Client().Disconnect(ctx)
+	assert.NoError(t, err)
+
+	ctrl := gomock.NewController(t)
+	logger := mock_storage.NewMocklogger(ctrl)
+	logger.EXPECT().Info(gomock.Any()).AnyTimes()
+	logger.EXPECT().Infof(gomock.Any(), gomock.Any()).AnyTimes()
+
+	storage := NewStorage(dba, cfg.Base, logger)
+
+	sugg, err := storage.GetSuggestions(ctx, "(Есенин)|(Пушкин)", 1)
+
+	assert.NoError(t, err)
+	assert.Len(t, sugg, 1)
+	assert.Equal(t, "Сергей Есенин", sugg[0].Name)
+
+	_, err = storage.GetSuggestions(ctx, "(АвторНеСуществует)", 1)
+	assert.EqualError(t, err, "rpc error: code = NotFound desc = no authors found")
+}

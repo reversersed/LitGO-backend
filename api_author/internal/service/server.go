@@ -24,6 +24,7 @@ type logger interface {
 }
 type storage interface {
 	GetAuthors(ctx context.Context, id []primitive.ObjectID, translit []string) ([]*model.Author, error)
+	GetSuggestions(ctx context.Context, regex string, limit int64) ([]*model.Author, error)
 }
 type cache interface {
 	Get([]byte) ([]byte, error)

@@ -210,6 +210,21 @@ func (mr *MockstorageMockRecorder) GetAuthors(ctx, id, translit interface{}) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAuthors", reflect.TypeOf((*Mockstorage)(nil).GetAuthors), ctx, id, translit)
 }
 
+// GetSuggestions mocks base method.
+func (m *Mockstorage) GetSuggestions(ctx context.Context, regex string, limit int64) ([]*storage.Author, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSuggestions", ctx, regex, limit)
+	ret0, _ := ret[0].([]*storage.Author)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetSuggestions indicates an expected call of GetSuggestions.
+func (mr *MockstorageMockRecorder) GetSuggestions(ctx, regex, limit interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSuggestions", reflect.TypeOf((*Mockstorage)(nil).GetSuggestions), ctx, regex, limit)
+}
+
 // Mockcache is a mock of cache interface.
 type Mockcache struct {
 	ctrl     *gomock.Controller

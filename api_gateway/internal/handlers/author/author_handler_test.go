@@ -53,6 +53,46 @@ func TestHandlers(t *testing.T) {
 			ExceptedStatus: http.StatusBadRequest,
 			ExceptedBody:   "{\"code\":3,\"type\":\"InvalidArgument\",\"message\":\"wrong number of arguments\",\"details\":[]}",
 		},
+		{
+			Name:   "suggestion successful full request",
+			Path:   "/api/v1/authors/suggest?query=Сергей+Есенин&limit=1",
+			Method: http.MethodGet,
+			Body:   func() io.Reader { return nil },
+			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mac *mock_authors_pb.MockAuthorClient) {
+				mjm.EXPECT().Middleware(gomock.Any()).AnyTimes()
+				ml.EXPECT().Info(gomock.Any()).AnyTimes()
+				mac.EXPECT().GetAuthorSuggestion(gomock.Any(), &authors_pb.GetSuggestionRequest{Query: "Сергей Есенин", Limit: 1}).Return(&authors_pb.GetAuthorsResponse{Authors: []*authors_pb.AuthorModel{{Name: "Сергей Есенин"}}}, nil)
+			},
+			ExceptedStatus: http.StatusOK,
+			ExceptedBody:   "{\"authors\":[{\"name\":\"Сергей Есенин\"}]}",
+		},
+		{
+			Name:   "suggestion empty limit",
+			Path:   "/api/v1/authors/suggest?query=Сергей",
+			Method: http.MethodGet,
+			Body:   func() io.Reader { return nil },
+			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mac *mock_authors_pb.MockAuthorClient) {
+				mjm.EXPECT().Middleware(gomock.Any()).AnyTimes()
+				ml.EXPECT().Info(gomock.Any()).AnyTimes()
+				mac.EXPECT().GetAuthorSuggestion(gomock.Any(), &authors_pb.GetSuggestionRequest{Query: "Сергей", Limit: 5}).Return(&authors_pb.GetAuthorsResponse{Authors: []*authors_pb.AuthorModel{{Name: "Сергей Есенин"}}}, nil)
+
+			},
+			ExceptedStatus: http.StatusOK,
+			ExceptedBody:   "{\"authors\":[{\"name\":\"Сергей Есенин\"}]}",
+		},
+		{
+			Name:   "suggestion service error",
+			Path:   "/api/v1/authors/suggest?query=Сергей",
+			Method: http.MethodGet,
+			Body:   func() io.Reader { return nil },
+			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mac *mock_authors_pb.MockAuthorClient) {
+				mjm.EXPECT().Middleware(gomock.Any()).AnyTimes()
+				ml.EXPECT().Info(gomock.Any()).AnyTimes()
+				mac.EXPECT().GetAuthorSuggestion(gomock.Any(), &authors_pb.GetSuggestionRequest{Query: "Сергей", Limit: 5}).Return(nil, status.Error(codes.NotFound, "authors not found"))
+			},
+			ExceptedStatus: http.StatusNotFound,
+			ExceptedBody:   "{\"code\":5,\"type\":\"NotFound\",\"message\":\"authors not found\",\"details\":[]}",
+		},
 	}
 
 	for _, v := range table {

@@ -11,6 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	mongodb "go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -117,5 +118,20 @@ func (d *db) GetAuthors(ctx context.Context, id []primitive.ObjectID, translit [
 		return nil, status.Err()
 	}
 
+	return authors, nil
+}
+func (d *db) GetSuggestions(ctx context.Context, regex string, limit int64) ([]*Author, error) {
+	response, err := d.collection.Find(ctx, bson.M{"name": bson.M{"$regex": regex, "$options": "i"}}, &options.FindOptions{Limit: &limit})
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	authors := make([]*Author, 0)
+	err = response.All(ctx, &authors)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	if len(authors) == 0 {
+		return nil, status.Error(codes.NotFound, "no authors found")
+	}
 	return authors, nil
 }

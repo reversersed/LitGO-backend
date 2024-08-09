@@ -4,6 +4,7 @@ option go_package = "pkg/proto/authors;authors_pb";
 
 service Author {
     rpc GetAuthors(GetAuthorsRequest) returns (GetAuthorsResponse);
+    rpc GetAuthorSuggestion(GetSuggestionRequest) returns (GetAuthorsResponse);
 }
 //Requests
 message GetAuthorsRequest {
@@ -11,6 +12,12 @@ message GetAuthorsRequest {
     repeated string id = 1; // @gotags: form:"id" validate:"primitiveid,required_without_all=Translit"
     // array of translit names to find
     repeated string translit = 2; // @gotags: form:"translit" validate:"required_without_all=Id"
+}
+message GetSuggestionRequest {
+    // query to find
+    string query = 1; // @gotags: form:"query" validate:"required"
+    // max objects to find
+    int32 limit = 2; // @gotags: form:"limit" validate:"required,gte=1,lte=10"
 }
 //Responses
 message GetAuthorsResponse {

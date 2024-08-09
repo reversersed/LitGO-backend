@@ -36,6 +36,26 @@ func (m *MockAuthorClient) EXPECT() *MockAuthorClientMockRecorder {
 	return m.recorder
 }
 
+// GetAuthorSuggestion mocks base method.
+func (m *MockAuthorClient) GetAuthorSuggestion(ctx context.Context, in *authors_pb.GetSuggestionRequest, opts ...grpc.CallOption) (*authors_pb.GetAuthorsResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetAuthorSuggestion", varargs...)
+	ret0, _ := ret[0].(*authors_pb.GetAuthorsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAuthorSuggestion indicates an expected call of GetAuthorSuggestion.
+func (mr *MockAuthorClientMockRecorder) GetAuthorSuggestion(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAuthorSuggestion", reflect.TypeOf((*MockAuthorClient)(nil).GetAuthorSuggestion), varargs...)
+}
+
 // GetAuthors mocks base method.
 func (m *MockAuthorClient) GetAuthors(ctx context.Context, in *authors_pb.GetAuthorsRequest, opts ...grpc.CallOption) (*authors_pb.GetAuthorsResponse, error) {
 	m.ctrl.T.Helper()
@@ -77,6 +97,21 @@ func NewMockAuthorServer(ctrl *gomock.Controller) *MockAuthorServer {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockAuthorServer) EXPECT() *MockAuthorServerMockRecorder {
 	return m.recorder
+}
+
+// GetAuthorSuggestion mocks base method.
+func (m *MockAuthorServer) GetAuthorSuggestion(arg0 context.Context, arg1 *authors_pb.GetSuggestionRequest) (*authors_pb.GetAuthorsResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAuthorSuggestion", arg0, arg1)
+	ret0, _ := ret[0].(*authors_pb.GetAuthorsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAuthorSuggestion indicates an expected call of GetAuthorSuggestion.
+func (mr *MockAuthorServerMockRecorder) GetAuthorSuggestion(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAuthorSuggestion", reflect.TypeOf((*MockAuthorServer)(nil).GetAuthorSuggestion), arg0, arg1)
 }
 
 // GetAuthors mocks base method.
