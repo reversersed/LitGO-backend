@@ -2,7 +2,7 @@ API_DIRECTORIES = api_gateway api_user api_author api_genre
 PROTO_PKG_FOLDERS = users genres authors
 CMDSEP = &&
 
-run: clean gen test-verbose start
+run: clean gen test-verbose check start
 
 install: i
 
@@ -57,17 +57,17 @@ stop:
 up:
 	@docker compose up --timestamps --wait --wait-timeout 1800 --remove-orphans -d
 
-test-unit: test-folder-creation gen check
+test-unit:
 	@$(foreach directory,$(API_DIRECTORIES),\
 		cd ./$(directory) && go test ./... -v -short && cd ..\
 		$(CMDSEP)) echo tests completed successfully
 
-test-verbose: test-folder-creation gen check
+test-verbose:
 	@$(foreach directory,$(API_DIRECTORIES),\
 		cd ./$(directory) && go test ./... -v && cd ..\
 		$(CMDSEP)) echo tests completed successfully
 
-test: test-folder-creation gen check
+test: test-folder-creation gen
 	@$(foreach directory,$(API_DIRECTORIES),\
 		cd ./$(directory) && go test ./... -coverprofile=tests/coverage -coverpkg=./... && go tool cover -func=tests/coverage -o tests/coverage.func && go tool cover -html=tests/coverage -o tests/coverage.html && cd ..\
 		$(CMDSEP)) echo tests completed successfully
@@ -79,6 +79,6 @@ ifeq ($(OS),Windows_NT)
 		$(CMDSEP)) echo test directories has been created
 else
 	-@$(foreach directory,$(API_DIRECTORIES),\
-		cd ./$(directory) & mkdir -p tests & cd ..\
+		cd ./$(directory) & mkdir tests -p & cd ..\
 		$(CMDSEP)) echo test directories has been created
 endif
