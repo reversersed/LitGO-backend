@@ -29,13 +29,13 @@ func New() *Validator {
 		}
 		return name
 	})
-	v.RegisterValidation("primitiveid", validate_PrimitiveId)
-	v.RegisterValidation("lowercase", validate_LowercaseCharacter)
-	v.RegisterValidation("uppercase", validate_UppercaseCharacter)
-	v.RegisterValidation("digitrequired", validate_AtLeastOneDigit)
-	v.RegisterValidation("specialsymbol", validate_SpecialSymbol)
-	v.RegisterValidation("onlyenglish", validate_OnlyEnglish)
-	v.RegisterValidation("eqfield", validate_FieldsEqual)
+	_ = v.RegisterValidation("primitiveid", validate_PrimitiveId)
+	_ = v.RegisterValidation("lowercase", validate_LowercaseCharacter)
+	_ = v.RegisterValidation("uppercase", validate_UppercaseCharacter)
+	_ = v.RegisterValidation("digitrequired", validate_AtLeastOneDigit)
+	_ = v.RegisterValidation("specialsymbol", validate_SpecialSymbol)
+	_ = v.RegisterValidation("onlyenglish", validate_OnlyEnglish)
+	_ = v.RegisterValidation("eqfield", validate_FieldsEqual)
 	return &Validator{v}
 }
 func (v *Validator) StructValidation(data any) error {

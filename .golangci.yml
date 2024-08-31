@@ -1,0 +1,28 @@
+run:
+  timeout: 5m
+  issues-exit-code: 5
+  tests: true
+
+output:
+  formats:
+    - format: html
+      path: ./tests/lint-report.html
+    - format: colored-line-number
+  sort-results: true
+  sort-order:
+    - severity
+    - linter
+    - file
+  show-stats: true
+
+linters:
+  enable-all: true
+  disable:
+    - goimports
+
+linters-settings:
+  errcheck:
+    exclude-functions:
+      - (*github.com/gin-gonic/gin.Context).Error
+      - (io.Closer).Close
+      - (*go.mongodb.org/mongo-driver/mongo.Client).Disconnect

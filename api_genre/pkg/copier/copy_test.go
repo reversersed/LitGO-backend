@@ -30,8 +30,9 @@ func TestRegularCopy(t *testing.T) {
 		},
 	}
 	var new str
-	Copy(&new, &base)
+	err := Copy(&new, &base)
 
+	assert.NoError(t, err)
 	assert.EqualValues(t, base, new)
 }
 func TestIgnoreEmpty(t *testing.T) {
@@ -57,8 +58,9 @@ func TestIgnoreEmpty(t *testing.T) {
 		},
 	}
 	new := str{Empty: "256256"}
-	Copy(&new, &base, WithIgnoreEmptyFields)
+	err := Copy(&new, &base, WithIgnoreEmptyFields)
 
+	assert.NoError(t, err)
 	assert.Equal(t, base.Array, new.Array)
 	assert.Equal(t, "256256", new.Empty)
 	assert.Empty(t, base.Empty)
@@ -78,7 +80,9 @@ func TestPrimitiveToString(t *testing.T) {
 		Empty string
 	}{Empty: "not empty"}
 
-	Copy(&new, &str, WithIgnoreEmptyFields, WithPrimitiveToStringConverter)
+	err := Copy(&new, &str, WithIgnoreEmptyFields, WithPrimitiveToStringConverter)
+
+	assert.NoError(t, err)
 
 	assert.Equal(t, str.Id.Hex(), new.Id)
 	assert.Equal(t, str.Ids[0].Hex(), new.Ids[0])
@@ -93,7 +97,9 @@ func TestPrimitiveToString(t *testing.T) {
 		Empty primitive.ObjectID
 	}{}
 
-	Copy(&str, &new, WithPrimitiveToStringConverter)
+	err = Copy(&str, &new, WithPrimitiveToStringConverter)
+
+	assert.NoError(t, err)
 
 	assert.Equal(t, new.Id, str.Id.Hex())
 	assert.Equal(t, new.Ids[0], str.Ids[0].Hex())

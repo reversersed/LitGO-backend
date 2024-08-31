@@ -90,7 +90,12 @@ func (j *jwtMiddleware) Middleware(roles ...string) gin.HandlerFunc {
 		}
 
 		var claims claims
-		json.Unmarshal(token.RawClaims(), &claims)
+		if err := json.Unmarshal(token.RawClaims(), &claims); err != nil {
+			j.logger.Errorf("error unmarashalling claims: %v", err)
+			c.Error(status.Error(codes.Unauthenticated, "error getting claims"))
+			c.Abort()
+			return
+		}
 
 		if !claims.IsValidAt(time.Now()) {
 			refreshCookie, err := c.Cookie(RefreshCookieName)

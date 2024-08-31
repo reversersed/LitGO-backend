@@ -1,19 +1,30 @@
 API_DIRECTORIES = api_gateway api_user api_genre api_author
 PROTO_PKG_FOLDERS = users genres authors
-CMDSEP = &
+CMDSEP = &&
 
 run: clean gen test-verbose start
 
 install: i
 
 i:
+	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 	@go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	@go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 	@go install github.com/favadi/protoc-go-inject-tag@latest
 	@go install github.com/golang/mock/mockgen@latest
 	@go install github.com/swaggo/swag/cmd/swag@latest
 	@$(MAKE) clean
-	
+
+check:
+	@$(foreach directory,$(API_DIRECTORIES),\
+	cd ./$(directory)/ && echo checking $(directory)... && golangci-lint run && cd .. \
+	$(CMDSEP)) echo lint checks completed
+
+fix:
+	@$(foreach directory,$(API_DIRECTORIES),\
+	cd ./$(directory)/ && echo checking $(directory)... && golangci-lint run --fix && cd .. \
+	$(CMDSEP)) echo lint check and fix completed
+
 gen:
 	@$(foreach directory,$(API_DIRECTORIES),\
 		cd ./$(directory)/ && protoc -I ../proto --go_out=. --go-grpc_out=. ../proto/*.proto && $(foreach folder,$(PROTO_PKG_FOLDERS),\
@@ -46,17 +57,17 @@ stop:
 up:
 	@docker compose up --timestamps --wait --wait-timeout 1800 --remove-orphans -d
 
-test-unit: test-folder-creation gen
+test-unit: test-folder-creation gen check
 	@$(foreach directory,$(API_DIRECTORIES),\
 		cd ./$(directory) && go test ./... -v -short && cd ..\
 		$(CMDSEP)) echo tests completed successfully
 
-test-verbose: test-folder-creation gen
+test-verbose: test-folder-creation gen check
 	@$(foreach directory,$(API_DIRECTORIES),\
 		cd ./$(directory) && go test ./... -v && cd ..\
 		$(CMDSEP)) echo tests completed successfully
 
-test: test-folder-creation gen
+test: test-folder-creation gen check
 	@$(foreach directory,$(API_DIRECTORIES),\
 		cd ./$(directory) && go test ./... -coverprofile=tests/coverage -coverpkg=./... && go tool cover -func=tests/coverage -o tests/coverage.func && go tool cover -html=tests/coverage -o tests/coverage.html && cd ..\
 		$(CMDSEP)) echo tests completed successfully

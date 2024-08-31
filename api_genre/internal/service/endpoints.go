@@ -18,7 +18,9 @@ func (s *genreServer) GetAll(ctx context.Context, _ *genres_pb.Empty) (*genres_p
 	var response []*model.Category
 
 	if cats, err := s.cache.Get([]byte("all_categories")); len(cats) > 0 && err == nil {
-		json.Unmarshal(cats, &response)
+		if err := json.Unmarshal(cats, &response); err != nil {
+			return nil, err
+		}
 	} else {
 		response, err = s.storage.GetAll(ctx)
 		if err != nil {
@@ -26,7 +28,9 @@ func (s *genreServer) GetAll(ctx context.Context, _ *genres_pb.Empty) (*genres_p
 		}
 
 		bytes, _ := json.Marshal(&response)
-		s.cache.Set([]byte("all_categories"), bytes, int(time.Hour*6))
+		if err := s.cache.Set([]byte("all_categories"), bytes, int(time.Hour*6)); err != nil {
+			return nil, err
+		}
 	}
 
 	var categories []*genres_pb.CategoryModel

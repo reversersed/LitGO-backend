@@ -101,7 +101,8 @@ func TestErrorHandler(t *testing.T) {
 			engine.ServeHTTP(w, r)
 			assert.Equal(t, v.ExceptedCode, w.Result().StatusCode)
 			var err *CustomError = &CustomError{}
-			json.NewDecoder(w.Result().Body).Decode(err)
+			errs := json.NewDecoder(w.Result().Body).Decode(err)
+			assert.NoError(t, errs)
 			assert.EqualError(t, err, v.ExceptedError.Error())
 		})
 	}
