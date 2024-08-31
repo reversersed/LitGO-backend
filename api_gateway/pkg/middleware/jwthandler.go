@@ -20,20 +20,20 @@ import (
 //go:generate mockgen -source=JwtHandler.go -destination=mocks/jwt_mw_mock.go
 
 const (
-	TokenCookieName     string = "authTokenCookie"
-	RefreshCookieName   string = "refreshTokenCookie"
-	UserIdKey           string = "userAuthId"
-	UserCredentialLogin string = "userLoginCredential"
-	UserCredentialRoles string = "userRolesCredential"
+	TokenCookieName   string = "authTokenCookie"
+	RefreshCookieName string = "refreshTokenCookie"
+	UserIdKey         string = "userAuthId"
+	UserLoginKey      string = "userLoginCredential"
+	UserRolesKey      string = "userRolesCredential"
 )
 
 type Logger interface {
-	Infof(string, ...interface{})
-	Info(...interface{})
-	Errorf(string, ...interface{})
-	Error(...interface{})
-	Warnf(string, ...interface{})
-	Warn(...interface{})
+	Infof(string, ...any)
+	Info(...any)
+	Errorf(string, ...any)
+	Error(...any)
+	Warnf(string, ...any)
+	Warn(...any)
 }
 type UserServer interface {
 	UpdateToken(context.Context, *users_pb.TokenRequest, ...grpc.CallOption) (*users_pb.TokenReply, error)
@@ -62,8 +62,8 @@ func NewJwtMiddleware(logger Logger, secret string) *jwtMiddleware {
 		logger: logger,
 	}
 }
-func (j *jwtMiddleware) ApplyUserServer(UserServer UserServer) {
-	j.userServer = UserServer
+func (j *jwtMiddleware) ApplyUserServer(userServer UserServer) {
+	j.userServer = userServer
 }
 func (j *jwtMiddleware) Middleware(roles ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -114,8 +114,8 @@ func (j *jwtMiddleware) Middleware(roles ...string) gin.HandlerFunc {
 				c.Abort()
 				return
 			}
-			c.SetCookie(TokenCookieName, tokenReply.Token, (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
-			c.SetCookie(RefreshCookieName, tokenReply.Refreshtoken, (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
+			c.SetCookie(TokenCookieName, tokenReply.GetToken(), (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
+			c.SetCookie(RefreshCookieName, tokenReply.GetRefreshtoken(), (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
 		}
 		if len(roles) > 0 {
 			var errorRoles []string
@@ -132,8 +132,8 @@ func (j *jwtMiddleware) Middleware(roles ...string) gin.HandlerFunc {
 		}
 		j.logger.Infof("user's %s token has been verified with %v rights", claims.Login, claims.Roles)
 		c.Set(UserIdKey, claims.ID)
-		c.Set(UserCredentialLogin, claims.Login)
-		c.Set(UserCredentialRoles, claims.Roles)
+		c.Set(UserLoginKey, claims.Login)
+		c.Set(UserRolesKey, claims.Roles)
 		c.Next()
 	}
 }
@@ -143,12 +143,12 @@ func (j *jwtMiddleware) GetCredentialsFromContext(c *gin.Context) (*shared_pb.Us
 		erro, _ := status.New(codes.Unauthenticated, "no user credentials found").WithDetails(&shared_pb.ErrorDetail{Field: "User ID", Description: "User id was not found in context"})
 		return nil, erro.Err()
 	}
-	userLogin, exist := c.Get(UserCredentialLogin)
+	userLogin, exist := c.Get(UserLoginKey)
 	if !exist {
 		erro, _ := status.New(codes.Unauthenticated, "no user credentials found").WithDetails(&shared_pb.ErrorDetail{Field: "User Login", Description: "User login was not found in context"})
 		return nil, erro.Err()
 	}
-	userRoles, exist := c.Get(UserCredentialRoles)
+	userRoles, exist := c.Get(UserRolesKey)
 	if !exist {
 		erro, _ := status.New(codes.Unauthenticated, "no user credentials found").WithDetails(&shared_pb.ErrorDetail{Field: "User Roles", Description: "User roles was not found in context"})
 		return nil, erro.Err()

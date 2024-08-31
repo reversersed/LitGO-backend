@@ -26,20 +26,20 @@ func (s *authorServer) GetAuthors(ctx context.Context, r *authors_pb.GetAuthorsR
 		return nil, err
 	}
 	var id []primitive.ObjectID
-	for _, i := range r.Id {
+	for _, i := range r.GetId() {
 		v, err := primitive.ObjectIDFromHex(i)
 		if err != nil {
 			status, _ := status.New(codes.InvalidArgument, "unable to convert value to type").WithDetails(&shared_pb.ErrorDetail{
 				Field:       "id",
 				Struct:      "authors_pb.GetAuthorsRequest",
 				Description: fmt.Sprintf("unable to convert %s to primitive id type", i),
-				Actualvalue: strings.Join(r.Id, ","),
+				Actualvalue: strings.Join(r.GetId(), ","),
 			})
 			return nil, status.Err()
 		}
 		id = append(id, v)
 	}
-	authors, err := s.storage.GetAuthors(ctx, id, r.Translit)
+	authors, err := s.storage.GetAuthors(ctx, id, r.GetTranslit())
 	if err != nil {
 		return nil, err
 	}
@@ -63,13 +63,13 @@ func (s *authorServer) GetAuthorSuggestion(ctx context.Context, r *authors_pb.Ge
 	}
 	var pattern string
 
-	words := strings.Fields(r.Query)
+	words := strings.Fields(r.GetQuery())
 	for _, word := range words {
 		pattern += fmt.Sprintf("(%s)|", regexp.QuoteMeta(word))
 	}
 	pattern = strings.Trim(pattern, "|")
 
-	authors, err := s.storage.GetSuggestions(ctx, pattern, int64(r.Limit))
+	authors, err := s.storage.GetSuggestions(ctx, pattern, int64(r.GetLimit()))
 	if err != nil {
 		return nil, err
 	}

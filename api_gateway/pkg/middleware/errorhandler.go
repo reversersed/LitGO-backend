@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// @Description General error object. This structure always returns when error occured
+// @Description General error object. This structure always returns when error occurred
 type CustomError struct {
 	Code      int32  `json:"code" example:"3"`                     // Internal gRPC error code (e.g. 3)
 	NamedCode string `json:"type" example:"InvalidArgument"`       // Error code in string (e.g. InvalidArgument)
@@ -35,7 +35,7 @@ func ErrorHandler(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, custom)
 		} else {
 			custom := CustomError{
-				Code:      err.Proto().Code,
+				Code:      err.Proto().GetCode(),
 				NamedCode: err.Code().String(),
 				Message:   err.Message(),
 				Details:   err.Details(),

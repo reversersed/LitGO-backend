@@ -37,7 +37,7 @@ func (m *MockLogger) EXPECT() *MockLoggerMockRecorder {
 }
 
 // Error mocks base method.
-func (m *MockLogger) Error(arg0 ...interface{}) {
+func (m *MockLogger) Error(arg0 ...any) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{}
 	for _, a := range arg0 {
@@ -53,7 +53,7 @@ func (mr *MockLoggerMockRecorder) Error(arg0 ...interface{}) *gomock.Call {
 }
 
 // Errorf mocks base method.
-func (m *MockLogger) Errorf(arg0 string, arg1 ...interface{}) {
+func (m *MockLogger) Errorf(arg0 string, arg1 ...any) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0}
 	for _, a := range arg1 {
@@ -70,7 +70,7 @@ func (mr *MockLoggerMockRecorder) Errorf(arg0 interface{}, arg1 ...interface{}) 
 }
 
 // Info mocks base method.
-func (m *MockLogger) Info(arg0 ...interface{}) {
+func (m *MockLogger) Info(arg0 ...any) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{}
 	for _, a := range arg0 {
@@ -86,7 +86,7 @@ func (mr *MockLoggerMockRecorder) Info(arg0 ...interface{}) *gomock.Call {
 }
 
 // Infof mocks base method.
-func (m *MockLogger) Infof(arg0 string, arg1 ...interface{}) {
+func (m *MockLogger) Infof(arg0 string, arg1 ...any) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0}
 	for _, a := range arg1 {
@@ -103,7 +103,7 @@ func (mr *MockLoggerMockRecorder) Infof(arg0 interface{}, arg1 ...interface{}) *
 }
 
 // Warn mocks base method.
-func (m *MockLogger) Warn(arg0 ...interface{}) {
+func (m *MockLogger) Warn(arg0 ...any) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{}
 	for _, a := range arg0 {
@@ -119,7 +119,7 @@ func (mr *MockLoggerMockRecorder) Warn(arg0 ...interface{}) *gomock.Call {
 }
 
 // Warnf mocks base method.
-func (m *MockLogger) Warnf(arg0 string, arg1 ...interface{}) {
+func (m *MockLogger) Warnf(arg0 string, arg1 ...any) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0}
 	for _, a := range arg1 {

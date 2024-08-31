@@ -13,7 +13,7 @@ import (
 // @Produce      json
 // @Success      200  {array}   genres_pb.CategoryModel "Genres fetched successfully"
 // @Failure      404  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "There's no genres in database"
-// @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Internal error occured"
+// @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Internal error occurred"
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Service does not responding (maybe crush)"
 // @Router       /genres/all [get]
 func (h *handler) GetAll(c *gin.Context) {
@@ -22,5 +22,5 @@ func (h *handler) GetAll(c *gin.Context) {
 		c.Error(err)
 		return
 	}
-	c.JSON(http.StatusOK, response.Categories)
+	c.JSON(http.StatusOK, response.GetCategories())
 }

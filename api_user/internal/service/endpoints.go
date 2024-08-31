@@ -25,25 +25,25 @@ func (u *userServer) GetUser(c context.Context, r *users_pb.UserRequest) (*users
 	var err error
 	details := make([]protoadapt.MessageV1, 0)
 
-	if len(r.Id) > 0 {
-		user, err = u.storage.FindById(c, r.Id)
+	if len(r.GetId()) > 0 {
+		user, err = u.storage.FindById(c, r.GetId())
 		if err != nil {
 			user = nil
-			details = append(details, &shared_pb.ErrorDetail{Field: "Id", Struct: "users_pb.UserRequest", Description: err.Error(), Actualvalue: r.Id})
+			details = append(details, &shared_pb.ErrorDetail{Field: "Id", Struct: "users_pb.UserRequest", Description: err.Error(), Actualvalue: r.GetId()})
 		}
 	}
-	if len(r.Login) > 0 && user == nil {
-		user, err = u.storage.FindByLogin(c, r.Login)
+	if len(r.GetLogin()) > 0 && user == nil {
+		user, err = u.storage.FindByLogin(c, r.GetLogin())
 		if err != nil {
 			user = nil
-			details = append(details, &shared_pb.ErrorDetail{Field: "Login", Struct: "users_pb.UserRequest", Description: err.Error(), Actualvalue: r.Login})
+			details = append(details, &shared_pb.ErrorDetail{Field: "Login", Struct: "users_pb.UserRequest", Description: err.Error(), Actualvalue: r.GetLogin()})
 		}
 	}
-	if len(r.Email) > 0 && user == nil {
-		user, err = u.storage.FindByEmail(c, r.Email)
+	if len(r.GetEmail()) > 0 && user == nil {
+		user, err = u.storage.FindByEmail(c, r.GetEmail())
 		if err != nil {
 			user = nil
-			details = append(details, &shared_pb.ErrorDetail{Field: "Email", Struct: "users_pb.UserRequest", Description: err.Error(), Actualvalue: r.Email})
+			details = append(details, &shared_pb.ErrorDetail{Field: "Email", Struct: "users_pb.UserRequest", Description: err.Error(), Actualvalue: r.GetEmail()})
 		}
 	}
 
@@ -62,7 +62,7 @@ func (u *userServer) UpdateToken(c context.Context, r *users_pb.TokenRequest) (*
 		return nil, err
 	}
 
-	token, refresh, err := u.UpdateRefreshToken(r.Refreshtoken)
+	token, refresh, err := u.UpdateRefreshToken(r.GetRefreshtoken())
 	if err != nil {
 		return nil, err
 	}
@@ -79,15 +79,15 @@ func (u *userServer) Login(c context.Context, r *users_pb.LoginRequest) (*users_
 		return nil, err
 	}
 
-	model, err := u.storage.FindByLogin(c, r.Login)
+	model, err := u.storage.FindByLogin(c, r.GetLogin())
 	if err != nil {
-		model, err = u.storage.FindByEmail(c, r.Login)
+		model, err = u.storage.FindByEmail(c, r.GetLogin())
 		if err != nil {
 			return nil, status.Error(codes.InvalidArgument, "invalid password or login")
 		}
 	}
 
-	if err = bcrypt.CompareHashAndPassword(model.Password, []byte(r.Password)); err != nil {
+	if err = bcrypt.CompareHashAndPassword(model.Password, []byte(r.GetPassword())); err != nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid password or login")
 	}
 	token, refresh, err := u.GenerateAccessToken(model)
@@ -109,15 +109,15 @@ func (u *userServer) RegisterUser(c context.Context, usr *users_pb.RegistrationR
 		return nil, err
 	}
 
-	pass, err := bcrypt.GenerateFromPassword([]byte(usr.Password), bcrypt.MinCost)
+	pass, err := bcrypt.GenerateFromPassword([]byte(usr.GetPassword()), bcrypt.MinCost)
 	if err != nil {
 		return nil, err
 	}
 	user := model.User{
-		Login:    usr.Login,
+		Login:    usr.GetLogin(),
 		Password: pass,
 		Roles:    []string{"user"},
-		Email:    usr.Email,
+		Email:    usr.GetEmail(),
 	}
 	cntx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()

@@ -97,7 +97,8 @@ func TestPrimitiveToString(t *testing.T) {
 		Empty primitive.ObjectID
 	}{}
 
-	err = Copy(&str, &new, WithPrimitiveToStringConverter)
+	new.Empty = ""
+	err = Copy(&str, &new, WithIgnoreEmptyFields, WithPrimitiveToStringConverter)
 
 	assert.NoError(t, err)
 

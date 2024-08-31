@@ -2,7 +2,6 @@ package storage
 
 import (
 	"context"
-	"fmt"
 	"strings"
 	"sync"
 	"time"
@@ -20,12 +19,12 @@ import (
 //go:generate mockgen -source=mongo.go -destination=mocks/mongo.go
 
 type logger interface {
-	Infof(string, ...interface{})
-	Info(...interface{})
-	Warnf(string, ...interface{})
-	Warn(...interface{})
-	Fatalf(string, ...interface{})
-	Fatal(...interface{})
+	Infof(string, ...any)
+	Info(...any)
+	Warnf(string, ...any)
+	Warn(...any)
+	Fatalf(string, ...any)
+	Fatal(...any)
 }
 type db struct {
 	sync.RWMutex
@@ -105,7 +104,6 @@ func (d *db) InsertGenre(ctx context.Context, category primitive.ObjectID, genre
 	return genre, nil
 }
 func (d *db) InsertCategory(ctx context.Context, categoryName string) (*Category, error) {
-
 	categoryName = strings.TrimSpace(categoryName)
 	category := &Category{
 		Id:     primitive.NewObjectID(),
@@ -125,7 +123,7 @@ func (d *db) InsertCategory(ctx context.Context, categoryName string) (*Category
 		var detail protoadapt.MessageV1 = &shared_pb.ErrorDetail{
 			Field:       "Id",
 			Struct:      "Category",
-			Description: fmt.Sprintf("wanted id: %s", category.Id.Hex()),
+			Description: ("wanted id: " + category.Id.Hex()),
 			Actualvalue: id.Hex(),
 		}
 		status, _ := status.New(codes.Internal, "error retrieving id").WithDetails(detail)

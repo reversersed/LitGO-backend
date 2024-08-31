@@ -10,14 +10,14 @@ type handler interface {
 	Close() error
 }
 type logger interface {
-	Info(...interface{})
-	Error(...interface{})
-	Warn(...interface{})
-	Fatal(...interface{})
-	Infof(string, ...interface{})
-	Errorf(string, ...interface{})
-	Warnf(string, ...interface{})
-	Fatalf(string, ...interface{})
+	Info(...any)
+	Error(...any)
+	Warn(...any)
+	Fatal(...any)
+	Infof(string, ...any)
+	Errorf(string, ...any)
+	Warnf(string, ...any)
+	Fatalf(string, ...any)
 }
 type app struct {
 	router   *gin.Engine

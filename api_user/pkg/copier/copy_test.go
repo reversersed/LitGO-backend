@@ -96,10 +96,10 @@ func TestPrimitiveToString(t *testing.T) {
 		Ids   []primitive.ObjectID
 		Empty primitive.ObjectID
 	}{}
+	new.Empty = ""
+	err = Copy(&str, &new, WithIgnoreEmptyFields, WithPrimitiveToStringConverter)
 
-	err = Copy(&str, &new, WithPrimitiveToStringConverter)
-
-	assert.NoError(t, err)
+	assert.NoError(t, err, new)
 
 	assert.Equal(t, new.Id, str.Id.Hex())
 	assert.Equal(t, new.Ids[0], str.Ids[0].Hex())

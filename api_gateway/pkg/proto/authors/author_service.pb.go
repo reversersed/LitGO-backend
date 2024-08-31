@@ -27,9 +27,9 @@ type GetAuthorsRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// array of authors id to find
-	Id []string `protobuf:"bytes,1,rep,name=id,proto3" json:"id,omitempty" form:"id" validate:"primitiveid,required_without_all=Translit"`
+	Id []string `protobuf:"bytes,1,rep,name=id,proto3" json:"id,omitempty" form:"id" validate:"primitiveid,required_without_all=Translit"`  
 	// array of translit names to find
-	Translit []string `protobuf:"bytes,2,rep,name=translit,proto3" json:"translit,omitempty" form:"translit" validate:"required_without_all=Id"`
+	Translit []string `protobuf:"bytes,2,rep,name=translit,proto3" json:"translit,omitempty" form:"translit" validate:"required_without_all=Id"`  
 }
 
 func (x *GetAuthorsRequest) Reset() {
@@ -84,9 +84,9 @@ type GetSuggestionRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// query to find
-	Query string `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty" form:"query" validate:"required"`
+	Query string `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty" form:"query" validate:"required"`  
 	// max objects to find
-	Limit int32 `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty" form:"limit" validate:"required,gte=1,lte=10"`
+	Limit int32 `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty" form:"limit" validate:"required,gte=1,lte=10"`  
 }
 
 func (x *GetSuggestionRequest) Reset() {

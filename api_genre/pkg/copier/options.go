@@ -20,14 +20,14 @@ func copyOption(opt ...option) copier.Option {
 
 var (
 	WithPrimitiveToStringConverter = func(c *copier.Option) {
-		c.Converters = append(c.Converters, copier.TypeConverter{SrcType: primitive.ObjectID{}, DstType: string(""), Fn: func(src interface{}) (dst interface{}, err error) {
+		c.Converters = append(c.Converters, copier.TypeConverter{SrcType: primitive.ObjectID{}, DstType: string(""), Fn: func(src any) (dst any, err error) {
 			s, ok := src.(primitive.ObjectID)
 			if !ok {
 				return nil, fmt.Errorf("unable to convert %v to primitive object id", src)
 			}
 			return s.Hex(), nil
 		}})
-		c.Converters = append(c.Converters, copier.TypeConverter{SrcType: []primitive.ObjectID{}, DstType: []string{}, Fn: func(src interface{}) (dst interface{}, err error) {
+		c.Converters = append(c.Converters, copier.TypeConverter{SrcType: []primitive.ObjectID{}, DstType: []string{}, Fn: func(src any) (dst any, err error) {
 			s, ok := src.([]primitive.ObjectID)
 			if !ok {
 				return nil, fmt.Errorf("unable to convert %v to primitive array object id", src)
@@ -39,7 +39,7 @@ var (
 			return result, nil
 		}})
 
-		c.Converters = append(c.Converters, copier.TypeConverter{DstType: primitive.ObjectID{}, SrcType: string(""), Fn: func(src interface{}) (dst interface{}, err error) {
+		c.Converters = append(c.Converters, copier.TypeConverter{DstType: primitive.ObjectID{}, SrcType: string(""), Fn: func(src any) (dst any, err error) {
 			s, ok := src.(string)
 			if !ok {
 				return nil, fmt.Errorf("unable to convert %v to string", src)
@@ -50,7 +50,7 @@ var (
 			}
 			return i, nil
 		}})
-		c.Converters = append(c.Converters, copier.TypeConverter{DstType: []primitive.ObjectID{}, SrcType: []string{}, Fn: func(src interface{}) (dst interface{}, err error) {
+		c.Converters = append(c.Converters, copier.TypeConverter{DstType: []primitive.ObjectID{}, SrcType: []string{}, Fn: func(src any) (dst any, err error) {
 			s, ok := src.([]string)
 			if !ok {
 				return nil, fmt.Errorf("unable to convert %v to string array", src)

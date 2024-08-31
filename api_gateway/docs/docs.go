@@ -303,7 +303,7 @@ const docTemplate = `{
                         }
                     },
                     "500": {
-                        "description": "Internal error occured",
+                        "description": "Internal error occurred",
                         "schema": {
                             "allOf": [
                                 {
@@ -662,7 +662,7 @@ const docTemplate = `{
                         }
                     },
                     "500": {
-                        "description": "Some internal error occured",
+                        "description": "Some internal error occurred",
                         "schema": {
                             "allOf": [
                                 {
@@ -780,7 +780,7 @@ const docTemplate = `{
             }
         },
         "middleware.CustomError": {
-            "description": "General error object. This structure always returns when error occured",
+            "description": "General error object. This structure always returns when error occurred",
             "type": "object",
             "properties": {
                 "code": {

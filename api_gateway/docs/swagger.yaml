@@ -49,7 +49,7 @@ definitions:
         type: string
     type: object
   middleware.CustomError:
-    description: General error object. This structure always returns when error occured
+    description: General error object. This structure always returns when error occurred
     properties:
       code:
         description: Internal gRPC error code (e.g. 3)
@@ -345,7 +345,7 @@ paths:
                   type: array
               type: object
         "500":
-          description: Internal error occured
+          description: Internal error occurred
           schema:
             allOf:
             - $ref: '#/definitions/middleware.CustomError'
@@ -550,7 +550,7 @@ paths:
                   type: array
               type: object
         "500":
-          description: Some internal error occured
+          description: Some internal error occurred
           schema:
             allOf:
             - $ref: '#/definitions/middleware.CustomError'

@@ -23,7 +23,6 @@ import (
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Service does not responding (maybe crush)"
 // @Router       /authors [get]
 func (h *handler) GetAuthors(c *gin.Context) {
-
 	var request authors_pb.GetAuthorsRequest
 	if err := c.BindQuery(&request); err != nil {
 		c.Error(status.Error(codes.InvalidArgument, err.Error()))
@@ -52,13 +51,12 @@ func (h *handler) GetAuthors(c *gin.Context) {
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Service does not responding (maybe crush)"
 // @Router       /authors/suggest [get]
 func (h *handler) GetAuthorsSuggestion(c *gin.Context) {
-
 	var request authors_pb.GetSuggestionRequest
 	if err := c.BindQuery(&request); err != nil {
 		c.Error(status.Error(codes.InvalidArgument, err.Error()))
 		return
 	}
-	if request.Limit == 0 {
+	if request.GetLimit() == 0 {
 		request.Limit = 5
 	}
 

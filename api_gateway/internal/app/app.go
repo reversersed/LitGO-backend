@@ -62,7 +62,6 @@ func New() (*app, error) {
 	return server, nil
 }
 func (a *app) Run() error {
-
 	a.logger.Info("setting up grpc clients...")
 	userConnection, err := grpc.NewClient(a.config.Url.UserServiceUrl, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -87,18 +86,18 @@ func (a *app) Run() error {
 
 	a.logger.Info("setting up handlers...")
 
-	//users
+	// users
 	userHandler := user.New(userClient, a.logger, jwt)
 	jwt.ApplyUserServer(userClient)
 	a.handlers = append(a.handlers, userHandler)
 	userHandler.RegisterRouter(a.router)
 
-	//genres
+	// genres
 	genreHandler := genre.New(genreClient, a.logger, jwt)
 	a.handlers = append(a.handlers, genreHandler)
 	genreHandler.RegisterRouter(a.router)
 
-	//authors
+	// authors
 	authorHandler := author.New(authorClient, a.logger, jwt)
 	a.handlers = append(a.handlers, authorHandler)
 	authorHandler.RegisterRouter(a.router)

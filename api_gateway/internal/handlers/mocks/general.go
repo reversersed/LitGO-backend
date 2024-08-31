@@ -36,7 +36,7 @@ func (m *MockLogger) EXPECT() *MockLoggerMockRecorder {
 }
 
 // Info mocks base method.
-func (m *MockLogger) Info(arg0 ...interface{}) {
+func (m *MockLogger) Info(arg0 ...any) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{}
 	for _, a := range arg0 {
@@ -52,7 +52,7 @@ func (mr *MockLoggerMockRecorder) Info(arg0 ...interface{}) *gomock.Call {
 }
 
 // Infof mocks base method.
-func (m *MockLogger) Infof(format string, args ...interface{}) {
+func (m *MockLogger) Infof(format string, args ...any) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{format}
 	for _, a := range args {

@@ -26,14 +26,15 @@ type ErrorDetail struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
+	 
 	Field string `protobuf:"bytes,1,opt,name=field,proto3" json:"field,omitempty" example:"Token"` // Field that error occured on
-
+	 
 	Struct string `protobuf:"bytes,2,opt,name=struct,proto3" json:"struct,omitempty" example:"users_pb.TokenRequest"` // Structure that contains field
-
+	 
 	Tag string `protobuf:"bytes,3,opt,name=tag,proto3" json:"tag,omitempty" example:"jwt"` // Failed validation tag
-
+	 
 	Description string `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty" example:"Field must be a jwt token"` // Error description. Only development purposes, do not show users
-
+	 
 	Actualvalue string `protobuf:"bytes,5,opt,name=actualvalue,proto3" json:"actualvalue,omitempty" example:"token"` // Actual value of field that causes the error. Note: 'password' field will be hidden
 }
 

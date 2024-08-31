@@ -27,7 +27,6 @@ import (
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Service does not responding (maybe crush)"
 // @Router       /users [get]
 func (h *handler) UserSearch(c *gin.Context) {
-
 	var request users_pb.UserRequest
 	if err := c.BindQuery(&request); err != nil {
 		c.Error(status.Error(codes.InvalidArgument, err.Error()))
@@ -60,13 +59,13 @@ func (h *handler) UserAuthenticate(c *gin.Context) {
 		return
 	}
 
-	reply, err := h.client.GetUser(c.Request.Context(), &users_pb.UserRequest{Id: user.Id})
+	reply, err := h.client.GetUser(c.Request.Context(), &users_pb.UserRequest{Id: user.GetId()})
 	if err != nil {
 		c.Error(err)
 		return
 	}
-	if !reflect.DeepEqual(user.Roles, reply.Roles) {
-		h.logger.Infof("user's %s rights has changed, regenerating token...", reply.Login)
+	if !reflect.DeepEqual(user.GetRoles(), reply.GetRoles()) {
+		h.logger.Infof("user's %s rights has changed, regenerating token...", reply.GetLogin())
 		refreshCookie, _ := c.Cookie(middleware.RefreshCookieName)
 		tokenReply, err := h.client.UpdateToken(c.Request.Context(), &users_pb.TokenRequest{Refreshtoken: refreshCookie})
 		if err != nil {
@@ -76,17 +75,17 @@ func (h *handler) UserAuthenticate(c *gin.Context) {
 			c.Abort()
 			return
 		}
-		c.SetCookie(middleware.TokenCookieName, tokenReply.Token, (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
-		c.SetCookie(middleware.RefreshCookieName, tokenReply.Refreshtoken, (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
+		c.SetCookie(middleware.TokenCookieName, tokenReply.GetToken(), (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
+		c.SetCookie(middleware.RefreshCookieName, tokenReply.GetRefreshtoken(), (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
 	}
-	h.logger.Infof("user %s authenticated with token and %v rights", reply.Login, reply.Roles)
+	h.logger.Infof("user %s authenticated with token and %v rights", reply.GetLogin(), reply.GetRoles())
 	type UserResponse struct {
 		Login string   `json:"login" example:"admin"`
 		Roles []string `json:"roles" example:"user"`
 	}
 	c.JSON(http.StatusOK, UserResponse{
-		Login: reply.Login,
-		Roles: reply.Roles,
+		Login: reply.GetLogin(),
+		Roles: reply.GetRoles(),
 	})
 }
 
@@ -114,13 +113,13 @@ func (h *handler) UserLogin(c *gin.Context) {
 		c.Error(err)
 		return
 	}
-	h.logger.Infof("user %s authoirized via login and password", request.Login)
-	c.SetCookie(middleware.TokenCookieName, reply.Token, (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
-	c.SetCookie(middleware.RefreshCookieName, reply.Refreshtoken, (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
+	h.logger.Infof("user %s authoirized via login and password", request.GetLogin())
+	c.SetCookie(middleware.TokenCookieName, reply.GetToken(), (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
+	c.SetCookie(middleware.RefreshCookieName, reply.GetRefreshtoken(), (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
 
 	c.JSON(http.StatusOK, UserResponse{
-		Login: reply.Login,
-		Roles: reply.Roles,
+		Login: reply.GetLogin(),
+		Roles: reply.GetRoles(),
 	})
 }
 
@@ -131,7 +130,7 @@ func (h *handler) UserLogin(c *gin.Context) {
 // @Param        request body users_pb.RegistrationRequest true "Request body"
 // @Success      201  {object}  user.UserRegister.UserResponse "User registered and authorized"
 // @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Invalid request data"
-// @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Some internal error occured"
+// @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Some internal error occurred"
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Service does not responding (maybe crush)"
 // @Router       /users/signin [post]
 func (h *handler) UserRegister(c *gin.Context) {
@@ -149,12 +148,12 @@ func (h *handler) UserRegister(c *gin.Context) {
 		c.Error(err)
 		return
 	}
-	h.logger.Infof("user %s registered with email %s", reply.Login, request.Email)
-	c.SetCookie(middleware.TokenCookieName, reply.Token, (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
-	c.SetCookie(middleware.RefreshCookieName, reply.Refreshtoken, (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
+	h.logger.Infof("user %s registered with email %s", reply.GetLogin(), request.GetEmail())
+	c.SetCookie(middleware.TokenCookieName, reply.GetToken(), (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
+	c.SetCookie(middleware.RefreshCookieName, reply.GetRefreshtoken(), (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
 
 	c.JSON(http.StatusCreated, UserResponse{
-		Login: reply.Login,
-		Roles: reply.Roles,
+		Login: reply.GetLogin(),
+		Roles: reply.GetRoles(),
 	})
 }
