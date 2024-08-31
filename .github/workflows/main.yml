@@ -18,9 +18,12 @@ jobs:
       uses: actions/setup-go@v4
       with:
         go-version: '1.22.5'
+    
+    - name: Dependencies set up
+      run: make i
 
     - name: Lint
-      run: make check
+      run: make i check
 
     - name: Test
       run: make test-unit
