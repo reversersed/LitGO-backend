@@ -16,11 +16,13 @@ i:
 	@$(MAKE) clean
 
 check:
+	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 	@$(foreach directory,$(API_DIRECTORIES),\
 	cd ./$(directory)/ && echo checking $(directory)... && golangci-lint run && cd .. \
 	$(CMDSEP)) echo lint checks completed
 
 fix:
+	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 	@$(foreach directory,$(API_DIRECTORIES),\
 	cd ./$(directory)/ && echo checking $(directory)... && golangci-lint run --fix && cd .. \
 	$(CMDSEP)) echo lint check and fix completed
