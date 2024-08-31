@@ -2,25 +2,25 @@ name: lint-test
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
-
-  build:
+  lint-test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.22.5'
-    
-    - name: Dependencies set up
-      run: make i
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22.5"
+          cache: false
 
-    - name: Lint
-      run: make check
+      - name: Dependencies set up
+        run: make i
 
-    - name: Test
-      run: make test-unit
+      - name: Lint
+        run: make check
+
+      - name: Test
+        run: make test-unit
