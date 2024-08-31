@@ -27,7 +27,10 @@ func (s *genreServer) GetAll(ctx context.Context, _ *genres_pb.Empty) (*genres_p
 			return nil, err
 		}
 
-		bytes, _ := json.Marshal(&response)
+		bytes, err := json.Marshal(&response)
+		if err != nil {
+			return nil, err
+		}
 		if err := s.cache.Set([]byte("all_categories"), bytes, int(time.Hour*6)); err != nil {
 			return nil, err
 		}

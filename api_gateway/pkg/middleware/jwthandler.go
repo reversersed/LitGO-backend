@@ -153,9 +153,21 @@ func (j *jwtMiddleware) GetCredentialsFromContext(c *gin.Context) (*shared_pb.Us
 		erro, _ := status.New(codes.Unauthenticated, "no user credentials found").WithDetails(&shared_pb.ErrorDetail{Field: "User Roles", Description: "User roles was not found in context"})
 		return nil, erro.Err()
 	}
+	uId, ok := userId.(string)
+	if !ok {
+		return nil, fmt.Errorf("wrong format: %v, excepted string", userId)
+	}
+	uLogin, ok := userLogin.(string)
+	if !ok {
+		return nil, fmt.Errorf("wrong format: %v, excepted string", userLogin)
+	}
+	uRoles, ok := userRoles.([]string)
+	if !ok {
+		return nil, fmt.Errorf("wrong format: %v, excepted string", userRoles)
+	}
 	return &shared_pb.UserCredentials{
-		Id:    userId.(string),
-		Login: userLogin.(string),
-		Roles: userRoles.([]string),
+		Id:    uId,
+		Login: uLogin,
+		Roles: uRoles,
 	}, nil
 }

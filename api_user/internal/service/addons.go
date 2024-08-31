@@ -60,7 +60,10 @@ func (j *userServer) GenerateAccessToken(u *model.User) (string, string, error) 
 
 	j.logger.Info("creating refresh token...")
 	refreshTokenUuid := primitive.NewObjectID().Hex()
-	userBytes, _ := json.Marshal(u)
+	userBytes, err := json.Marshal(u)
+	if err != nil {
+		return "", "", err
+	}
 	if err := j.cache.Set([]byte(refreshTokenUuid), userBytes, int((7*24*time.Hour)/time.Second)); err != nil {
 		return "", "", err
 	}

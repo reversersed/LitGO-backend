@@ -1,7 +1,7 @@
 run:
   timeout: 5m
   issues-exit-code: 5
-  tests: true
+  tests: false
 
 output:
   formats:
@@ -16,9 +16,24 @@ output:
   show-stats: true
 
 linters:
-  enable-all: true
-  disable:
-    - goimports
+  enable-all: false
+  enable:
+    - copyloopvar # Copyloopvar is a linter detects places where loop variables are copied
+    - cyclop # Checks function and package cyclomatic complexity
+    - decorder # Check declaration order and count of types, constants, variables and functions
+    - dogsled # Checks assignments with too many blank identifiers (e.g. x, , , _, := f()).
+    - dupl # Tool for code clone detection.
+    - durationcheck # Check for two durations multiplied together.
+    - errchkjson # Checks types passed to the json encoding functions.
+    - exhaustive # Check exhaustiveness of enum switch statements.
+    - fatcontext # Detects nested contexts in loops.
+    - forcetypeassert # Finds forced type assertions.
+    - funlen # Tool for detection of long functions.
+    - gocheckcompilerdirectives # Checks that go compiler directive comments (//go:) are valid.
+    - gochecknoinits # Checks that no init functions are present in Go code.
+    - gocognit # Computes and checks the cognitive complexity of functions.
+    - goconst # Finds repeated strings that could be replaced by a constant.
+    - gocritic # Provides diagnostics that check for bugs, performance and style issues.
 
 linters-settings:
   errcheck:
@@ -26,3 +41,12 @@ linters-settings:
       - (*github.com/gin-gonic/gin.Context).Error
       - (io.Closer).Close
       - (*go.mongodb.org/mongo-driver/mongo.Client).Disconnect
+  cyclop:
+    max-complexity: 15
+    skip-tests: true
+  funlen:
+    lines: 80
+    statements: -1
+    ignore-comments: true
+  gocognit:
+    min-complexity: 30

@@ -35,19 +35,19 @@ func GetConfig() (*Config, error) {
 		if err := cleanenv.ReadConfig("config/.env", server); err != nil {
 			var header string = "Server part config"
 			desc, _ := cleanenv.GetDescription(server, &header)
-			e = fmt.Errorf("%v: %s", err, desc)
+			e = fmt.Errorf("%w: %s", err, desc)
 			return
 		}
 		if err := cleanenv.ReadConfig("config/.env", database); err != nil {
 			var header string = "Database part config"
 			desc, _ := cleanenv.GetDescription(database, &header)
-			e = fmt.Errorf("%v\n%s", err, desc)
+			e = fmt.Errorf("%w\n%s", err, desc)
 			return
 		}
 		if err := cleanenv.ReadConfig("config/.env", rabbit); err != nil {
 			var header string = "RabbitMQ part config"
 			desc, _ := cleanenv.GetDescription(database, &header)
-			e = fmt.Errorf("%v\n%s", err, desc)
+			e = fmt.Errorf("%w\n%s", err, desc)
 			return
 		}
 		config = &Config{

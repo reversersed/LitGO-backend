@@ -26,9 +26,8 @@ type LoginRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	 
-	Login    string `protobuf:"bytes,1,opt,name=login,proto3" json:"login,omitempty" validate:"required" example:"admin"`       // Can be presented as login or email
-	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty" validate:"required" example:"admin"`  
+	Login    string `protobuf:"bytes,1,opt,name=login,proto3" json:"login,omitempty" validate:"required" example:"admin"` // Can be presented as login or email
+	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty" validate:"required" example:"admin"`
 }
 
 func (x *LoginRequest) Reset() {
@@ -82,7 +81,7 @@ type TokenRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Refreshtoken string `protobuf:"bytes,1,opt,name=refreshtoken,proto3" json:"refreshtoken,omitempty" validate:"required"`  
+	Refreshtoken string `protobuf:"bytes,1,opt,name=refreshtoken,proto3" json:"refreshtoken,omitempty" validate:"required"`
 }
 
 func (x *TokenRequest) Reset() {
@@ -129,9 +128,9 @@ type UserRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id    string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty" validate:"primitiveid,required_without_all=Login Email" form:"id"`        
-	Login string `protobuf:"bytes,2,opt,name=login,proto3" json:"login,omitempty" validate:"onlyenglish,required_without_all=Id Email" form:"login"`  
-	Email string `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty" validate:"required_without_all=Id Login" form:"email"`  
+	Id    string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty" validate:"primitiveid,required_without_all=Login Email" form:"id"`
+	Login string `protobuf:"bytes,2,opt,name=login,proto3" json:"login,omitempty" validate:"onlyenglish,required_without_all=Id Email" form:"login"`
+	Email string `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty" validate:"required_without_all=Id Login" form:"email"`
 }
 
 func (x *UserRequest) Reset() {
@@ -192,10 +191,10 @@ type RegistrationRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Login          string `protobuf:"bytes,1,opt,name=login,proto3" json:"login,omitempty" validate:"required,min=4,max=16,onlyenglish"`                                          
-	Password       string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty" validate:"required,min=8,max=32,lowercase,uppercase,digitrequired,specialsymbol"`                                    
-	PasswordRepeat string `protobuf:"bytes,3,opt,name=password_repeat,json=passwordRepeat,proto3" json:"password_repeat,omitempty" validate:"required,eqfield=Password"`  
-	Email          string `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty" validate:"required,email"`                                          
+	Login          string `protobuf:"bytes,1,opt,name=login,proto3" json:"login,omitempty" validate:"required,min=4,max=16,onlyenglish"`
+	Password       string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty" validate:"required,min=8,max=32,lowercase,uppercase,digitrequired,specialsymbol"`
+	PasswordRepeat string `protobuf:"bytes,3,opt,name=password_repeat,json=passwordRepeat,proto3" json:"password_repeat,omitempty" validate:"required,eqfield=Password"`
+	Email          string `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty" validate:"required,email"`
 }
 
 func (x *RegistrationRequest) Reset() {
@@ -335,8 +334,8 @@ type TokenReply struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Token        string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty" example:"token"`                
-	Refreshtoken string `protobuf:"bytes,2,opt,name=refreshtoken,proto3" json:"refreshtoken,omitempty" example:"refresh token"`  
+	Token        string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty" example:"token"`
+	Refreshtoken string `protobuf:"bytes,2,opt,name=refreshtoken,proto3" json:"refreshtoken,omitempty" example:"refresh token"`
 }
 
 func (x *TokenReply) Reset() {

@@ -34,12 +34,12 @@ func GetConfig() (*Config, error) {
 
 		if err := cleanenv.ReadConfig("config/.env", server); err != nil {
 			desc, _ := cleanenv.GetDescription(server, nil)
-			e = fmt.Errorf("%v: %s", err, desc)
+			e = fmt.Errorf("%w: %s", err, desc)
 			return
 		}
 		if err := cleanenv.ReadConfig("config/.env", url); err != nil {
 			desc, _ := cleanenv.GetDescription(url, nil)
-			e = fmt.Errorf("%v: %s", err, desc)
+			e = fmt.Errorf("%w: %s", err, desc)
 			return
 		}
 		config = &Config{

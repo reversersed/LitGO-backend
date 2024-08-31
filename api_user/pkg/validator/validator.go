@@ -44,11 +44,16 @@ func (v *Validator) StructValidation(data any) error {
 	if result == nil {
 		return nil
 	}
+
 	if er, ok := result.(*validator.InvalidValidationError); ok {
 		return status.Error(codes.Internal, er.Error())
 	}
 	details := make([]protoadapt.MessageV1, 0)
-	for _, i := range result.(validator.ValidationErrors) {
+	errors, ok := result.(validator.ValidationErrors)
+	if !ok {
+		return status.Error(codes.Internal, "wrong errors format provided")
+	}
+	for _, i := range errors {
 		tag := i.Tag()
 		if len(i.Param()) > 0 {
 			tag = fmt.Sprintf("%s:%s", i.Tag(), i.Param())
@@ -72,45 +77,32 @@ func (v *Validator) StructValidation(data any) error {
 	return stat.Err()
 }
 func errorToStringByTag(err validator.FieldError) string {
-	switch err.Tag() {
-	case "required":
-		return fmt.Sprintf("%s: field is required", err.Field())
-	case "oneof":
-		return fmt.Sprintf("%s: field can only be: %s", err.Field(), err.Param())
-	case "min":
-		return fmt.Sprintf("%s: must be at least %s characters length", err.Field(), err.Param())
-	case "max":
-		return fmt.Sprintf("%s: can't be more than %s characters length", err.Field(), err.Param())
-	case "lte":
-		return fmt.Sprintf("%s: must be less or equal than %s", err.Field(), err.Param())
-	case "gte":
-		return fmt.Sprintf("%s: must be greater or equal than %s", err.Field(), err.Param())
-	case "lt":
-		return fmt.Sprintf("%s: must be less than %s", err.Field(), err.Param())
-	case "gt":
-		return fmt.Sprintf("%s: must be greater than %s", err.Field(), err.Param())
-	case "email":
-		return fmt.Sprintf("%s: must be a valid email", err.Field())
-	case "jwt":
-		return fmt.Sprintf("%s: must be a JWT token", err.Field())
-	case "lowercase":
-		return fmt.Sprintf("%s: must contain at least one lowercase character", err.Field())
-	case "uppercase":
-		return fmt.Sprintf("%s: must contain at least one uppercase character", err.Field())
-	case "digitrequired":
-		return fmt.Sprintf("%s: must contain at least one digit", err.Field())
-	case "specialsymbol":
-		return fmt.Sprintf("%s: must contain at least one special symbol", err.Field())
-	case "onlyenglish":
-		return fmt.Sprintf("%s: must contain only latin characters", err.Field())
-	case "primitiveid":
-		return fmt.Sprintf("%s: must be a primitive id type", err.Field())
-	case "eqfield":
-		return fmt.Sprintf("%s: field must be equal to %s field's value", err.Field(), err.Param())
-	case "required_without_all":
-		return fmt.Sprintf("%s: at least one field must be present", err.Field())
-	default:
+	mapListErrors := map[string]string{
+		"required":             "%s: field is required",
+		"oneof":                "%s: field can only be: %s",
+		"min":                  "%s: must be at least %s characters length",
+		"max":                  "%s: can't be more than %s characters length",
+		"lte":                  "%s: must be less or equal than %s",
+		"gte":                  "%s: must be greater or equal than %s",
+		"lt":                   "%s: must be less than %s",
+		"gt":                   "%s: must be greater than %s",
+		"email":                "%s: must be a valid email",
+		"jwt":                  "%s: must be a JWT token",
+		"lowercase":            "%s: must contain at least one lowercharacter",
+		"uppercase":            "%s: must contain at least one uppercharacter",
+		"digitrequired":        "%s: must contain at least one digit",
+		"specialsymbol":        "%s: must contain at least one special symbol",
+		"onlyenglish":          "%s: must contain only latin characters",
+		"primitiveid":          "%s: must be a primitive id type",
+		"eqfield":              "%s: field must be equal to %s field's value",
+		"required_without_all": "%s: at least one field must be present",
+	}
+	format, ok := mapListErrors[err.Tag()]
+
+	if !ok {
 		return err.Error()
+	} else {
+		return fmt.Sprintf(format, err.Field(), err.Param())
 	}
 }
 func validate_FieldsEqual(fl validator.FieldLevel) bool {
