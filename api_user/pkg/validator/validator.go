@@ -102,7 +102,11 @@ func errorToStringByTag(err validator.FieldError) string {
 	if !ok {
 		return err.Error()
 	} else {
-		return fmt.Sprintf(format, err.Field(), err.Param())
+		if strings.Count(format, "%s") == 2 {
+			return fmt.Sprintf(format, err.Field(), err.Param())
+		} else {
+			return fmt.Sprintf(format, err.Field())
+		}
 	}
 }
 func validate_FieldsEqual(fl validator.FieldLevel) bool {
