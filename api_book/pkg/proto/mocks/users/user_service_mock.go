@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	users "github.com/reversersed/go-grpc/tree/main/api_book/pkg/proto/users"
+	users_pb "github.com/reversersed/go-grpc/tree/main/api_book/pkg/proto/users"
 	grpc "google.golang.org/grpc"
 )
 
@@ -37,14 +37,14 @@ func (m *MockUserClient) EXPECT() *MockUserClientMockRecorder {
 }
 
 // GetUser mocks base method.
-func (m *MockUserClient) GetUser(ctx context.Context, in *users.UserRequest, opts ...grpc.CallOption) (*users.UserModel, error) {
+func (m *MockUserClient) GetUser(ctx context.Context, in *users_pb.UserRequest, opts ...grpc.CallOption) (*users_pb.UserModel, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "GetUser", varargs...)
-	ret0, _ := ret[0].(*users.UserModel)
+	ret0, _ := ret[0].(*users_pb.UserModel)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -57,14 +57,14 @@ func (mr *MockUserClientMockRecorder) GetUser(ctx, in interface{}, opts ...inter
 }
 
 // Login mocks base method.
-func (m *MockUserClient) Login(ctx context.Context, in *users.LoginRequest, opts ...grpc.CallOption) (*users.LoginResponse, error) {
+func (m *MockUserClient) Login(ctx context.Context, in *users_pb.LoginRequest, opts ...grpc.CallOption) (*users_pb.LoginResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "Login", varargs...)
-	ret0, _ := ret[0].(*users.LoginResponse)
+	ret0, _ := ret[0].(*users_pb.LoginResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -77,14 +77,14 @@ func (mr *MockUserClientMockRecorder) Login(ctx, in interface{}, opts ...interfa
 }
 
 // RegisterUser mocks base method.
-func (m *MockUserClient) RegisterUser(ctx context.Context, in *users.RegistrationRequest, opts ...grpc.CallOption) (*users.LoginResponse, error) {
+func (m *MockUserClient) RegisterUser(ctx context.Context, in *users_pb.RegistrationRequest, opts ...grpc.CallOption) (*users_pb.LoginResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "RegisterUser", varargs...)
-	ret0, _ := ret[0].(*users.LoginResponse)
+	ret0, _ := ret[0].(*users_pb.LoginResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -97,14 +97,14 @@ func (mr *MockUserClientMockRecorder) RegisterUser(ctx, in interface{}, opts ...
 }
 
 // UpdateToken mocks base method.
-func (m *MockUserClient) UpdateToken(ctx context.Context, in *users.TokenRequest, opts ...grpc.CallOption) (*users.TokenReply, error) {
+func (m *MockUserClient) UpdateToken(ctx context.Context, in *users_pb.TokenRequest, opts ...grpc.CallOption) (*users_pb.TokenReply, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "UpdateToken", varargs...)
-	ret0, _ := ret[0].(*users.TokenReply)
+	ret0, _ := ret[0].(*users_pb.TokenReply)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -140,10 +140,10 @@ func (m *MockUserServer) EXPECT() *MockUserServerMockRecorder {
 }
 
 // GetUser mocks base method.
-func (m *MockUserServer) GetUser(arg0 context.Context, arg1 *users.UserRequest) (*users.UserModel, error) {
+func (m *MockUserServer) GetUser(arg0 context.Context, arg1 *users_pb.UserRequest) (*users_pb.UserModel, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUser", arg0, arg1)
-	ret0, _ := ret[0].(*users.UserModel)
+	ret0, _ := ret[0].(*users_pb.UserModel)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -155,10 +155,10 @@ func (mr *MockUserServerMockRecorder) GetUser(arg0, arg1 interface{}) *gomock.Ca
 }
 
 // Login mocks base method.
-func (m *MockUserServer) Login(arg0 context.Context, arg1 *users.LoginRequest) (*users.LoginResponse, error) {
+func (m *MockUserServer) Login(arg0 context.Context, arg1 *users_pb.LoginRequest) (*users_pb.LoginResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Login", arg0, arg1)
-	ret0, _ := ret[0].(*users.LoginResponse)
+	ret0, _ := ret[0].(*users_pb.LoginResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -170,10 +170,10 @@ func (mr *MockUserServerMockRecorder) Login(arg0, arg1 interface{}) *gomock.Call
 }
 
 // RegisterUser mocks base method.
-func (m *MockUserServer) RegisterUser(arg0 context.Context, arg1 *users.RegistrationRequest) (*users.LoginResponse, error) {
+func (m *MockUserServer) RegisterUser(arg0 context.Context, arg1 *users_pb.RegistrationRequest) (*users_pb.LoginResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RegisterUser", arg0, arg1)
-	ret0, _ := ret[0].(*users.LoginResponse)
+	ret0, _ := ret[0].(*users_pb.LoginResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -185,10 +185,10 @@ func (mr *MockUserServerMockRecorder) RegisterUser(arg0, arg1 interface{}) *gomo
 }
 
 // UpdateToken mocks base method.
-func (m *MockUserServer) UpdateToken(arg0 context.Context, arg1 *users.TokenRequest) (*users.TokenReply, error) {
+func (m *MockUserServer) UpdateToken(arg0 context.Context, arg1 *users_pb.TokenRequest) (*users_pb.TokenReply, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateToken", arg0, arg1)
-	ret0, _ := ret[0].(*users.TokenReply)
+	ret0, _ := ret[0].(*users_pb.TokenReply)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

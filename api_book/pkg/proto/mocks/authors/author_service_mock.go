@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	authors "github.com/reversersed/go-grpc/tree/main/api_book/pkg/proto/authors"
+	authors_pb "github.com/reversersed/go-grpc/tree/main/api_book/pkg/proto/authors"
 	grpc "google.golang.org/grpc"
 )
 
@@ -37,14 +37,14 @@ func (m *MockAuthorClient) EXPECT() *MockAuthorClientMockRecorder {
 }
 
 // GetAuthorSuggestion mocks base method.
-func (m *MockAuthorClient) GetAuthorSuggestion(ctx context.Context, in *authors.GetSuggestionRequest, opts ...grpc.CallOption) (*authors.GetAuthorsResponse, error) {
+func (m *MockAuthorClient) GetAuthorSuggestion(ctx context.Context, in *authors_pb.GetSuggestionRequest, opts ...grpc.CallOption) (*authors_pb.GetAuthorsResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "GetAuthorSuggestion", varargs...)
-	ret0, _ := ret[0].(*authors.GetAuthorsResponse)
+	ret0, _ := ret[0].(*authors_pb.GetAuthorsResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -57,14 +57,14 @@ func (mr *MockAuthorClientMockRecorder) GetAuthorSuggestion(ctx, in interface{},
 }
 
 // GetAuthors mocks base method.
-func (m *MockAuthorClient) GetAuthors(ctx context.Context, in *authors.GetAuthorsRequest, opts ...grpc.CallOption) (*authors.GetAuthorsResponse, error) {
+func (m *MockAuthorClient) GetAuthors(ctx context.Context, in *authors_pb.GetAuthorsRequest, opts ...grpc.CallOption) (*authors_pb.GetAuthorsResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "GetAuthors", varargs...)
-	ret0, _ := ret[0].(*authors.GetAuthorsResponse)
+	ret0, _ := ret[0].(*authors_pb.GetAuthorsResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -100,10 +100,10 @@ func (m *MockAuthorServer) EXPECT() *MockAuthorServerMockRecorder {
 }
 
 // GetAuthorSuggestion mocks base method.
-func (m *MockAuthorServer) GetAuthorSuggestion(arg0 context.Context, arg1 *authors.GetSuggestionRequest) (*authors.GetAuthorsResponse, error) {
+func (m *MockAuthorServer) GetAuthorSuggestion(arg0 context.Context, arg1 *authors_pb.GetSuggestionRequest) (*authors_pb.GetAuthorsResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAuthorSuggestion", arg0, arg1)
-	ret0, _ := ret[0].(*authors.GetAuthorsResponse)
+	ret0, _ := ret[0].(*authors_pb.GetAuthorsResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -115,10 +115,10 @@ func (mr *MockAuthorServerMockRecorder) GetAuthorSuggestion(arg0, arg1 interface
 }
 
 // GetAuthors mocks base method.
-func (m *MockAuthorServer) GetAuthors(arg0 context.Context, arg1 *authors.GetAuthorsRequest) (*authors.GetAuthorsResponse, error) {
+func (m *MockAuthorServer) GetAuthors(arg0 context.Context, arg1 *authors_pb.GetAuthorsRequest) (*authors_pb.GetAuthorsResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAuthors", arg0, arg1)
-	ret0, _ := ret[0].(*authors.GetAuthorsResponse)
+	ret0, _ := ret[0].(*authors_pb.GetAuthorsResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

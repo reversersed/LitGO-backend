@@ -1,6 +1,9 @@
 package service
 
 import (
+	"context"
+
+	model "github.com/reversersed/go-grpc/tree/main/api_book/internal/storage"
 	books_pb "github.com/reversersed/go-grpc/tree/main/api_book/pkg/proto/books"
 	"google.golang.org/grpc"
 )
@@ -19,7 +22,9 @@ type logger interface {
 	Warn(...any)
 }
 type storage interface {
+	GetSuggestions(ctx context.Context, regex string, limit int64) ([]*model.Book, error)
 }
+
 type cache interface {
 	Get([]byte) ([]byte, error)
 	Set([]byte, []byte, int) error

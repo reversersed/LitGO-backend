@@ -29,7 +29,6 @@ func (h *handler) RegisterRouter(router *gin.Engine) {
 		{
 
 		}
-
 	}
 	h.logger.Info("book handler has been registered")
 }
