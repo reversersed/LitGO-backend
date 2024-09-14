@@ -2,6 +2,7 @@ syntax = "proto3";
 package authors;
 option go_package = "pkg/proto/authors;authors_pb";
 
+//go:generate mockgen -source=author_service_grpc.pb.go -destination=../mocks/authors/author_service_mock.go
 service Author {
     rpc GetAuthors(GetAuthorsRequest) returns (GetAuthorsResponse);
     rpc GetAuthorSuggestion(GetSuggestionRequest) returns (GetAuthorsResponse);

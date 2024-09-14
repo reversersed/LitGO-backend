@@ -9,11 +9,13 @@ import (
 	_ "github.com/reversersed/go-grpc/tree/main/api_gateway/docs"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/config"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers/author"
+	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers/book"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers/genre"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers/user"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/logging/logrus"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/middleware"
 	authors_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/authors"
+	books_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/books"
 	genres_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/genres"
 	users_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/users"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/shutdown"
@@ -85,6 +87,12 @@ func (a *app) Run() error {
 	}
 	authorClient := authors_pb.NewAuthorClient(authorConnection)
 
+	bookConnection, err := grpc.NewClient(a.config.Url.BookServiceUrl, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		return err
+	}
+	bookClient := books_pb.NewBookClient(bookConnection)
+
 	a.logger.Info("setting up middleware...")
 	jwt := middleware.NewJwtMiddleware(a.logger, a.config.Server.JwtSecret)
 
@@ -105,6 +113,11 @@ func (a *app) Run() error {
 	authorHandler := author.New(authorClient, a.logger, jwt)
 	a.handlers = append(a.handlers, authorHandler)
 	authorHandler.RegisterRouter(a.router)
+
+	// books
+	bookHandler := book.New(bookClient, a.logger, jwt)
+	a.handlers = append(a.handlers, bookHandler)
+	bookHandler.RegisterRouter(a.router)
 
 	if a.config.Server.Environment == "debug" {
 		a.router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

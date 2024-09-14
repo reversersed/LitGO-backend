@@ -25,6 +25,8 @@ const (
 // GenreClient is the client API for Genre service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+//go:generate mockgen -source=genre_service_grpc.pb.go -destination=../mocks/genres/genre_service_mock.go
 type GenreClient interface {
 	GetAll(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*GetAllResponse, error)
 }
@@ -50,6 +52,8 @@ func (c *genreClient) GetAll(ctx context.Context, in *Empty, opts ...grpc.CallOp
 // GenreServer is the server API for Genre service.
 // All implementations must embed UnimplementedGenreServer
 // for forward compatibility.
+//
+//go:generate mockgen -source=genre_service_grpc.pb.go -destination=../mocks/genres/genre_service_mock.go
 type GenreServer interface {
 	GetAll(context.Context, *Empty) (*GetAllResponse, error)
 	mustEmbedUnimplementedGenreServer()

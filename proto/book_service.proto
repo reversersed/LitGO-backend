@@ -1,0 +1,14 @@
+syntax = "proto3";
+package books;
+option go_package = "pkg/proto/books;books_pb";
+
+//go:generate mockgen -source=book_service_grpc.pb.go -destination=../mocks/books/book_service_mock.go
+service Book {
+
+}
+//Requests
+
+//Responses
+
+//Models
+message Empty {}

@@ -2,6 +2,7 @@ syntax = "proto3";
 package users;
 option go_package = "pkg/proto/users;users_pb";
 
+//go:generate mockgen -source=user_service_grpc.pb.go -destination=../mocks/users/user_service_mock.go
 service User {
   rpc Login (LoginRequest) returns (LoginResponse);
   rpc UpdateToken (TokenRequest) returns (TokenReply);
