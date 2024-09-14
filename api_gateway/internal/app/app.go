@@ -57,7 +57,7 @@ func New() (*app, error) {
 	server.router.Use(cors.New(cors.Config{
 		AllowAllOrigins:  false,
 		AllowCredentials: true,
-		AllowOrigins:     []string{("http://localhost:" + strconv.Itoa(server.config.Server.Port)), "http://localhost:7000"},
+		AllowOrigins:     []string{("http://localhost:" + strconv.Itoa(server.config.Server.Port)), "http://localhost:7000", "http://localhost:8080"},
 		AllowMethods:     []string{"GET", "POST", "PATCH", "DELETE"},
 		AllowHeaders:     []string{"Content-Type", "Accept", "Cookie", "Access-Control-Expose-Headers"},
 	}))
