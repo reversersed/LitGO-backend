@@ -8,5 +8,12 @@ type Book struct {
 	TranslitName string             `bson:"translit"`
 	Description  string             `bson:"description"`
 	Picture      string             `bson:"picture"`
-	FilePath     string             `bson:"filepath"`
+	Filepath     string             `bson:"filepath"`
+}
+
+var mocked_books []*Book = []*Book{
+	{
+		Name:        "Книга о книгопечатании",
+		Description: "Эта книга должна была быть о чем-то хорошем, но в итоге...",
+	},
 }

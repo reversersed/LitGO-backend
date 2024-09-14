@@ -2,6 +2,7 @@ package mongo
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"regexp"
 	"strings"
@@ -28,6 +29,9 @@ func NewClient(ctx context.Context, cfg *DatabaseConfig) (*mongo.Database, error
 	var mongoURL string
 	var anonymous bool
 
+	if cfg == nil {
+		return nil, errors.New("received nil config")
+	}
 	if cfg.User == "" || cfg.Password == "" {
 		anonymous = true
 		mongoURL = fmt.Sprintf("mongodb://%s:%d", cfg.Host, cfg.Port)

@@ -28,6 +28,7 @@ func (h *handler) RegisterRouter(router *gin.Engine) {
 		authorized := general.Group("/").Use(h.jwt.Middleware())
 		{
 			authorized.GET("/auth", h.UserAuthenticate)
+			authorized.POST("/logout", h.UserLogout)
 		}
 		general.GET("/", h.UserSearch)
 		general.POST("/login", h.UserLogin)

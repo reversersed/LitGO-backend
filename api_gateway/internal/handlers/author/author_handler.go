@@ -42,9 +42,9 @@ func (h *handler) GetAuthors(c *gin.Context) {
 // @Description  find authors by provided phares, keys or names
 // @Tags         authors
 // @Produce      json
-// @Param		 query      query     string 		true 		"Author Id, must be a primitive id hex"
+// @Param		 query      query     string 		true 		"Query with keywords"
 // @Param		 limit   query     int 		false 		"limit authors to display. default = 5 if not specified, min = 1, max = 10"
-// @Success      200  {array}   authors_pb.GetAuthorsResponse.Authors 		"Authors"
+// @Success      200  {array}   authors_pb.AuthorModel 		"Authors"
 // @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Query was empty"
 // @Failure      404  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Authors not found"
 // @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Some internal error"
@@ -66,5 +66,5 @@ func (h *handler) GetAuthorsSuggestion(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, reply)
+	c.JSON(http.StatusOK, reply.GetAuthors())
 }

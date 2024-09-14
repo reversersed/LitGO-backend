@@ -4,11 +4,26 @@ option go_package = "pkg/proto/books;books_pb";
 
 //go:generate mockgen -source=book_service_grpc.pb.go -destination=../mocks/books/book_service_mock.go
 service Book {
-
+    rpc GetBookSuggestions(GetSuggestionRequest) returns (GetBooksResponse);
 }
 //Requests
-
+message GetSuggestionRequest {
+    // query to find
+    string query = 1; // @gotags: form:"query" validate:"required"
+    // max objects to find
+    int64 limit = 2; // @gotags: form:"limit" validate:"required,gte=1,lte=10"
+}
 //Responses
-
+message GetBooksResponse {
+    repeated BookModel books = 1;
+}
 //Models
 message Empty {}
+message BookModel {
+    string id = 1;
+    string name = 2;
+    string translitname = 3;
+    string description = 4;
+    string picture = 5;
+    string filepath = 6;
+}

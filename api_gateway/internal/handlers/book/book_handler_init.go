@@ -29,6 +29,7 @@ func (h *handler) RegisterRouter(router *gin.Engine) {
 		{
 
 		}
+		general.GET("/suggest", h.GetBooksSuggestion)
 	}
 	h.logger.Info("book handler has been registered")
 }

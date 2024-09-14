@@ -3,8 +3,11 @@ package storage
 import (
 	"context"
 	"sync"
+	"time"
 
+	"github.com/reversersed/go-grpc/tree/main/api_book/pkg/mongo"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	mongodb "go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"google.golang.org/grpc/codes"
@@ -32,7 +35,39 @@ func NewStorage(storage *mongodb.Database, collection string, logger logger) *db
 		collection: storage.Collection(collection),
 		logger:     logger,
 	}
+	defer db.seedBooks()
 	return db
+}
+func (d *db) seedBooks() {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if count, _ := d.collection.CountDocuments(ctx, bson.D{}); count > 0 {
+		d.logger.Infof("there are %d books in base, seeding canceled", count)
+		return
+	}
+
+	for _, a := range mocked_books {
+		if _, err := d.CreateBook(ctx, a); err != nil {
+			d.logger.Fatalf("error seeding book %v: %v", a, err)
+		}
+	}
+	d.logger.Infof("seeded %d books", len(mocked_books))
+}
+func (d *db) CreateBook(ctx context.Context, author *Book) (*Book, error) {
+	author.Id = primitive.NewObjectID()
+	author.TranslitName = mongo.GenerateTranslitName(author.Name, author.Id)
+
+	result, err := d.collection.InsertOne(ctx, author)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	id, ok := result.InsertedID.(primitive.ObjectID)
+	if !ok || id != author.Id {
+		return nil, status.Error(codes.Internal, "error retrieving book id")
+	}
+
+	return author, nil
 }
 func (d *db) GetSuggestions(ctx context.Context, regex string, limit int64) ([]*Book, error) {
 	response, err := d.collection.Find(ctx, bson.M{"name": bson.M{"$regex": regex, "$options": "i"}}, &options.FindOptions{Limit: &limit})
@@ -45,7 +80,7 @@ func (d *db) GetSuggestions(ctx context.Context, regex string, limit int64) ([]*
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 	if len(books) == 0 {
-		return nil, status.Error(codes.NotFound, "no authors found")
+		return nil, status.Error(codes.NotFound, "no books found")
 	}
 	return books, nil
 }

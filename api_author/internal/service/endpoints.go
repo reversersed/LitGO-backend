@@ -69,7 +69,7 @@ func (s *authorServer) GetAuthorSuggestion(ctx context.Context, r *authors_pb.Ge
 	}
 	pattern = strings.Trim(pattern, "|")
 
-	authors, err := s.storage.GetSuggestions(ctx, pattern, int64(r.GetLimit()))
+	authors, err := s.storage.GetSuggestions(ctx, pattern, r.GetLimit())
 	if err != nil {
 		return nil, err
 	}

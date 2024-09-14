@@ -5,9 +5,12 @@
 package mock_books_pb
 
 import (
+	context "context"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	books_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/books"
+	grpc "google.golang.org/grpc"
 )
 
 // MockBookClient is a mock of BookClient interface.
@@ -33,6 +36,26 @@ func (m *MockBookClient) EXPECT() *MockBookClientMockRecorder {
 	return m.recorder
 }
 
+// GetBookSuggestions mocks base method.
+func (m *MockBookClient) GetBookSuggestions(ctx context.Context, in *books_pb.GetSuggestionRequest, opts ...grpc.CallOption) (*books_pb.GetBooksResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetBookSuggestions", varargs...)
+	ret0, _ := ret[0].(*books_pb.GetBooksResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBookSuggestions indicates an expected call of GetBookSuggestions.
+func (mr *MockBookClientMockRecorder) GetBookSuggestions(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBookSuggestions", reflect.TypeOf((*MockBookClient)(nil).GetBookSuggestions), varargs...)
+}
+
 // MockBookServer is a mock of BookServer interface.
 type MockBookServer struct {
 	ctrl     *gomock.Controller
@@ -54,6 +77,21 @@ func NewMockBookServer(ctrl *gomock.Controller) *MockBookServer {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockBookServer) EXPECT() *MockBookServerMockRecorder {
 	return m.recorder
+}
+
+// GetBookSuggestions mocks base method.
+func (m *MockBookServer) GetBookSuggestions(arg0 context.Context, arg1 *books_pb.GetSuggestionRequest) (*books_pb.GetBooksResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBookSuggestions", arg0, arg1)
+	ret0, _ := ret[0].(*books_pb.GetBooksResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBookSuggestions indicates an expected call of GetBookSuggestions.
+func (mr *MockBookServerMockRecorder) GetBookSuggestions(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBookSuggestions", reflect.TypeOf((*MockBookServer)(nil).GetBookSuggestions), arg0, arg1)
 }
 
 // mustEmbedUnimplementedBookServer mocks base method.

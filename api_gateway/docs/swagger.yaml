@@ -24,6 +24,21 @@ definitions:
           $ref: '#/definitions/authors_pb.AuthorModel'
         type: array
     type: object
+  books_pb.BookModel:
+    properties:
+      description:
+        type: string
+      filepath:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      picture:
+        type: string
+      translitname:
+        type: string
+    type: object
   genres_pb.CategoryModel:
     properties:
       genres:
@@ -255,7 +270,7 @@ paths:
     get:
       description: find authors by provided phares, keys or names
       parameters:
-      - description: Author Id, must be a primitive id hex
+      - description: Query with keywords
         in: query
         name: query
         required: true
@@ -272,7 +287,7 @@ paths:
           description: Authors
           schema:
             items:
-              $ref: '#/definitions/authors_pb.GetAuthorsResponse'
+              $ref: '#/definitions/authors_pb.AuthorModel'
             type: array
         "400":
           description: Query was empty
@@ -321,6 +336,76 @@ paths:
       summary: Find authors by keywords
       tags:
       - authors
+  /books/suggest:
+    get:
+      description: find books by provided phares, keys or names
+      parameters:
+      - description: Query with keywords
+        in: query
+        name: query
+        required: true
+        type: string
+      - description: limit books to display. default = 5 if not specified, min = 1,
+          max = 10
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Books
+          schema:
+            items:
+              $ref: '#/definitions/books_pb.BookModel'
+            type: array
+        "400":
+          description: Query was empty
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "404":
+          description: Books not found
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "500":
+          description: Some internal error
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "503":
+          description: Service does not responding (maybe crush)
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+      summary: Find books by keywords
+      tags:
+      - books
   /genres/all:
     get:
       description: Fetches all categories (with genres included)
@@ -519,6 +604,50 @@ paths:
                   type: array
               type: object
       summary: Authorizes user
+      tags:
+      - users
+  /users/logout:
+    post:
+      description: Removes user session if one exists
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: User logged out
+        "401":
+          description: User not authorized
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "500":
+          description: Some internal error occurred
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "503":
+          description: Service does not responding (maybe crush)
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+      summary: Logout user
       tags:
       - users
   /users/signin:

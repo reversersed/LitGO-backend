@@ -7,7 +7,10 @@
 package books_pb
 
 import (
+	context "context"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -15,12 +18,17 @@ import (
 // Requires gRPC-Go v1.64.0 or later.
 const _ = grpc.SupportPackageIsVersion9
 
+const (
+	Book_GetBookSuggestions_FullMethodName = "/books.Book/GetBookSuggestions"
+)
+
 // BookClient is the client API for Book service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 //go:generate mockgen -source=book_service_grpc.pb.go -destination=../mocks/books/book_service_mock.go
 type BookClient interface {
+	GetBookSuggestions(ctx context.Context, in *GetSuggestionRequest, opts ...grpc.CallOption) (*GetBooksResponse, error)
 }
 
 type bookClient struct {
@@ -31,12 +39,23 @@ func NewBookClient(cc grpc.ClientConnInterface) BookClient {
 	return &bookClient{cc}
 }
 
+func (c *bookClient) GetBookSuggestions(ctx context.Context, in *GetSuggestionRequest, opts ...grpc.CallOption) (*GetBooksResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetBooksResponse)
+	err := c.cc.Invoke(ctx, Book_GetBookSuggestions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BookServer is the server API for Book service.
 // All implementations must embed UnimplementedBookServer
 // for forward compatibility.
 //
 //go:generate mockgen -source=book_service_grpc.pb.go -destination=../mocks/books/book_service_mock.go
 type BookServer interface {
+	GetBookSuggestions(context.Context, *GetSuggestionRequest) (*GetBooksResponse, error)
 	mustEmbedUnimplementedBookServer()
 }
 
@@ -47,6 +66,9 @@ type BookServer interface {
 // pointer dereference when methods are called.
 type UnimplementedBookServer struct{}
 
+func (UnimplementedBookServer) GetBookSuggestions(context.Context, *GetSuggestionRequest) (*GetBooksResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBookSuggestions not implemented")
+}
 func (UnimplementedBookServer) mustEmbedUnimplementedBookServer() {}
 func (UnimplementedBookServer) testEmbeddedByValue()              {}
 
@@ -68,13 +90,36 @@ func RegisterBookServer(s grpc.ServiceRegistrar, srv BookServer) {
 	s.RegisterService(&Book_ServiceDesc, srv)
 }
 
+func _Book_GetBookSuggestions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSuggestionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BookServer).GetBookSuggestions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Book_GetBookSuggestions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BookServer).GetBookSuggestions(ctx, req.(*GetSuggestionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Book_ServiceDesc is the grpc.ServiceDesc for Book service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Book_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "books.Book",
 	HandlerType: (*BookServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams:     []grpc.StreamDesc{},
-	Metadata:    "book_service.proto",
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetBookSuggestions",
+			Handler:    _Book_GetBookSuggestions_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "book_service.proto",
 }

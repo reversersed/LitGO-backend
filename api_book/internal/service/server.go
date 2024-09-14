@@ -30,7 +30,7 @@ type cache interface {
 	Set([]byte, []byte, int) error
 	Delete([]byte) bool
 }
-type authorServer struct {
+type bookServer struct {
 	cache     cache
 	logger    logger
 	storage   storage
@@ -38,14 +38,14 @@ type authorServer struct {
 	books_pb.UnimplementedBookServer
 }
 
-func NewServer(logger logger, cache cache, storage storage, validator validator) *authorServer {
-	return &authorServer{
+func NewServer(logger logger, cache cache, storage storage, validator validator) *bookServer {
+	return &bookServer{
 		storage:   storage,
 		logger:    logger,
 		cache:     cache,
 		validator: validator,
 	}
 }
-func (u *authorServer) Register(s grpc.ServiceRegistrar) {
+func (u *bookServer) Register(s grpc.ServiceRegistrar) {
 	books_pb.RegisterBookServer(s, u)
 }

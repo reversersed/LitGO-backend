@@ -323,6 +323,45 @@ func TestHandlers(t *testing.T) {
 			ExceptedStatus: http.StatusNotFound,
 			ExceptedBody:   "{\"code\":5,\"type\":\"NotFound\",\"message\":\"refresh token not found\",\"details\":[]}",
 		},
+		{
+			Name:   "User logout checking",
+			Path:   "/api/v1/users/logout",
+			Method: http.MethodPost,
+			Body:   func() io.Reader { return nil },
+			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, muc *mock_users_pb.MockUserClient) {
+				ml.EXPECT().Info(gomock.Any()).AnyTimes()
+				ml.EXPECT().Infof(gomock.Any(), gomock.Any()).AnyTimes()
+				ml.EXPECT().Infof(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
+				mjm.EXPECT().Middleware(gomock.Any()).AnyTimes().Return(func(c *gin.Context) { c.Next() })
+			},
+			ExtraCheck: func(rr *httptest.ResponseRecorder, t *testing.T) {
+				cookie := rr.Result().Cookies()
+				token := false
+				refresh := false
+				for _, c := range cookie {
+					if c.Name == middleware.TokenCookieName {
+						if token == true {
+							assert.Fail(t, "found cookie duplicate: refresh token")
+						}
+						assert.Less(t, c.MaxAge, 0, "cookie must has MaxAge < 0 to be removed")
+						assert.Equal(t, "", c.Value)
+						token = true
+					}
+					if c.Name == middleware.RefreshCookieName {
+						if refresh == true {
+							assert.Fail(t, "found cookie duplicate: refresh token")
+						}
+						assert.Less(t, c.MaxAge, 0, "cookie must has MaxAge < 0 to be removed")
+						assert.Equal(t, "", c.Value)
+						refresh = true
+					}
+				}
+				assert.True(t, token, "excepted token in cookies")
+				assert.True(t, refresh, "excepted refresh token in cookies")
+			},
+			ExceptedStatus: http.StatusNoContent,
+			ExceptedBody:   "",
+		},
 	}
 
 	for _, v := range table {

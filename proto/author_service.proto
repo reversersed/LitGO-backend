@@ -18,7 +18,7 @@ message GetSuggestionRequest {
     // query to find
     string query = 1; // @gotags: form:"query" validate:"required"
     // max objects to find
-    int32 limit = 2; // @gotags: form:"limit" validate:"required,gte=1,lte=10"
+    int64 limit = 2; // @gotags: form:"limit" validate:"required,gte=1,lte=10"
 }
 //Responses
 message GetAuthorsResponse {

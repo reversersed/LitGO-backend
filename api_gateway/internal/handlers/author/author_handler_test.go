@@ -64,7 +64,7 @@ func TestHandlers(t *testing.T) {
 				mac.EXPECT().GetAuthorSuggestion(gomock.Any(), &authors_pb.GetSuggestionRequest{Query: "Сергей Есенин", Limit: 1}).Return(&authors_pb.GetAuthorsResponse{Authors: []*authors_pb.AuthorModel{{Name: "Сергей Есенин"}}}, nil)
 			},
 			ExceptedStatus: http.StatusOK,
-			ExceptedBody:   "{\"authors\":[{\"name\":\"Сергей Есенин\"}]}",
+			ExceptedBody:   "[{\"name\":\"Сергей Есенин\"}]",
 		},
 		{
 			Name:   "suggestion empty limit",
@@ -78,7 +78,7 @@ func TestHandlers(t *testing.T) {
 
 			},
 			ExceptedStatus: http.StatusOK,
-			ExceptedBody:   "{\"authors\":[{\"name\":\"Сергей Есенин\"}]}",
+			ExceptedBody:   "[{\"name\":\"Сергей Есенин\"}]",
 		},
 		{
 			Name:   "suggestion service error",

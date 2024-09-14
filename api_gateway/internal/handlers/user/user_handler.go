@@ -157,3 +157,20 @@ func (h *handler) UserRegister(c *gin.Context) {
 		Roles: reply.GetRoles(),
 	})
 }
+
+// @Summary      Logout user
+// @Description  Removes user session if one exists
+// @Tags         users
+// @Produce      json
+// @Success      204  "User logged out"
+// @Failure      401  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "User not authorized"
+// @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Some internal error occurred"
+// @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Service does not responding (maybe crush)"
+// @Security 	 ApiKeyAuth
+// @Router       /users/logout [post]
+func (h *handler) UserLogout(c *gin.Context) {
+	c.SetCookie(middleware.TokenCookieName, "", -1, "/", "", true, true)
+	c.SetCookie(middleware.RefreshCookieName, "", -1, "/", "", true, true)
+
+	c.Status(http.StatusNoContent)
+}
