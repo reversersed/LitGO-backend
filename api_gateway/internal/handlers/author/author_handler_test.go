@@ -38,7 +38,7 @@ func TestHandlers(t *testing.T) {
 				mac.EXPECT().GetAuthors(gomock.Any(), &authors_pb.GetAuthorsRequest{Id: []string{"123", "321"}, Translit: []string{"421", "23"}}).Return(&authors_pb.GetAuthorsResponse{Authors: []*authors_pb.AuthorModel{{Name: "Author"}}}, nil)
 			},
 			ExceptedStatus: http.StatusOK,
-			ExceptedBody:   "{\"authors\":[{\"name\":\"Author\"}]}",
+			ExceptedBody:   "[{\"name\":\"Author\"}]",
 		},
 		{
 			Name:   "Get authors error",

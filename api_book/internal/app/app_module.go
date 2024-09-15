@@ -26,8 +26,9 @@ type logger interface {
 	Fatalf(string, ...any)
 }
 type app struct {
-	config  *config.Config
-	logger  logger
-	service service
-	cache   cache
+	config      *config.Config
+	logger      logger
+	service     service
+	cache       cache
+	connections []*grpc.ClientConn
 }

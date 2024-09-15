@@ -2,6 +2,7 @@ package book
 
 import (
 	"io"
+	"net/http"
 	"net/http/httptest"
 	"testing"
 
@@ -12,10 +13,16 @@ import (
 	mocks "github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers/mocks"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/middleware"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+	books_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/books"
+>>>>>>> 4e07393 (added genre routes with tests)
 	mock_books_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/mocks/books"
 =======
 >>>>>>> 560fcec (separated projects and proto files)
 	"github.com/stretchr/testify/assert"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func TestHandlers(t *testing.T) {
@@ -27,7 +34,36 @@ func TestHandlers(t *testing.T) {
 		MockBehaviour  func(*mocks.MockLogger, *mocks.MockJwtMiddleware, *mock_books_pb.MockBookClient)
 		ExceptedStatus int
 		ExceptedBody   string
-	}{}
+	}{
+		{
+			Name:   "suggestion query",
+			Path:   "/api/v1/books/suggest",
+			Method: http.MethodGet,
+			Body:   func() io.Reader { return nil },
+			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mbc *mock_books_pb.MockBookClient) {
+				mjm.EXPECT().Middleware(gomock.Any()).Return(func(c *gin.Context) { c.Next() })
+				ml.EXPECT().Info(gomock.Any()).AnyTimes()
+
+				mbc.EXPECT().GetBookSuggestions(gomock.Any(), gomock.Any(), gomock.Any()).Return(&books_pb.GetBooksResponse{Books: []*books_pb.BookModel{{Name: "book name"}}}, nil)
+			},
+			ExceptedStatus: http.StatusOK,
+			ExceptedBody:   "[{\"name\":\"book name\"}]",
+		},
+		{
+			Name:   "suggestion query error",
+			Path:   "/api/v1/books/suggest",
+			Method: http.MethodGet,
+			Body:   func() io.Reader { return nil },
+			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mbc *mock_books_pb.MockBookClient) {
+				mjm.EXPECT().Middleware(gomock.Any()).Return(func(c *gin.Context) { c.Next() })
+				ml.EXPECT().Info(gomock.Any()).AnyTimes()
+
+				mbc.EXPECT().GetBookSuggestions(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, status.Error(codes.NotFound, "books not found"))
+			},
+			ExceptedStatus: http.StatusNotFound,
+			ExceptedBody:   "{\"code\":5,\"type\":\"NotFound\",\"message\":\"books not found\",\"details\":[]}",
+		},
+	}
 
 	for _, v := range table {
 		t.Run(v.Name, func(t *testing.T) {

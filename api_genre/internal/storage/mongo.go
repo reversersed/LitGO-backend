@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"errors"
 	"strings"
 	"sync"
 	"time"
@@ -146,4 +147,33 @@ func (d *db) GetAll(ctx context.Context) ([]*Category, error) {
 		return nil, status.Error(codes.NotFound, "there is no genres in database")
 	}
 	return response, nil
+}
+func (d *db) FindCategoryTree(ctx context.Context, query string) (*Category, error) {
+	id, err := primitive.ObjectIDFromHex(query)
+	if err != nil {
+		id = primitive.NilObjectID
+	}
+	filter := bson.M{
+		"$or": []bson.M{{
+			"genres": bson.M{
+				"$elemMatch": bson.M{
+					"$or": []bson.M{
+						{"_id": id},
+						{"translit": query},
+					},
+				},
+			}},
+			{"$or": []bson.M{{"_id": id}, {"translit": query}}},
+		},
+	}
+
+	var result Category
+	if err := d.collection.FindOne(ctx, filter).Decode(&result); err != nil {
+		if errors.Is(err, mongodb.ErrNoDocuments) {
+			return nil, status.Error(codes.NotFound, err.Error())
+		}
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &result, nil
 }

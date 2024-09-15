@@ -51,6 +51,8 @@ func (s *authorServer) GetAuthors(ctx context.Context, r *authors_pb.GetAuthorsR
 		Authors: authorModels,
 	}, nil
 }
+
+// TODO change to elastic search
 func (s *authorServer) GetAuthorSuggestion(ctx context.Context, r *authors_pb.GetSuggestionRequest) (*authors_pb.GetAuthorsResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()

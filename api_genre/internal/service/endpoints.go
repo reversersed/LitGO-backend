@@ -45,6 +45,7 @@ func (s *genreServer) GetAll(ctx context.Context, _ *genres_pb.Empty) (*genres_p
 	}, nil
 }
 
+// TODO make test for this method
 func (s *genreServer) GetOneOf(ctx context.Context, req *genres_pb.GetOneOfRequest) (*genres_pb.GetCategoryOrGenreResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, 1*time.Second)
 	defer cancel()
@@ -53,7 +54,7 @@ func (s *genreServer) GetOneOf(ctx context.Context, req *genres_pb.GetOneOfReque
 		return nil, err
 	}
 
-	if m, err := s.cache.Get([]byte("one_" + req.GetQuery())); len(m) > 0 && err == nil {
+	if m, err := s.cache.Get([]byte("one_" + req.GetQuery())); err == nil {
 		var model genres_pb.CategoryModel
 		err = json.Unmarshal(m, &model)
 		if err != nil {

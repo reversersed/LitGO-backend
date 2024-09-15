@@ -1,6 +1,9 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 package service
 =======
+=======
+>>>>>>> 4e07393 (added genre routes with tests)
 package service
 
 import (
@@ -8,11 +11,19 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+<<<<<<< HEAD
 	mock_authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors/mock"
 	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
 	mock_genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres/mock"
 	mock_service "github.com/reversersed/go-grpc/tree/main/api_book/internal/service/mocks"
 	model "github.com/reversersed/go-grpc/tree/main/api_book/internal/storage"
+=======
+	mock_service "github.com/reversersed/go-grpc/tree/main/api_book/internal/service/mocks"
+	model "github.com/reversersed/go-grpc/tree/main/api_book/internal/storage"
+	books_pb "github.com/reversersed/go-grpc/tree/main/api_book/pkg/proto/books"
+	mock_authors_pb "github.com/reversersed/go-grpc/tree/main/api_book/pkg/proto/mocks/authors"
+	mock_genres_pb "github.com/reversersed/go-grpc/tree/main/api_book/pkg/proto/mocks/genres"
+>>>>>>> 4e07393 (added genre routes with tests)
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"
@@ -119,4 +130,7 @@ func TestGetBookSuggestion(t *testing.T) {
 		})
 	}
 }
+<<<<<<< HEAD
 >>>>>>> 560fcec (separated projects and proto files)
+=======
+>>>>>>> 4e07393 (added genre routes with tests)

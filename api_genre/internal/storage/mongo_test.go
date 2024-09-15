@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/golang/mock/gomock"
 	mock_storage "github.com/reversersed/go-grpc/tree/main/api_genre/internal/storage/mocks"
@@ -89,4 +90,46 @@ func TestGetAll(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Len(t, cats, len(mocked_categories))
+}
+func TestFindCategoryTree(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	dba, err := mongo.NewClient(ctx, cfg)
+	defer dba.Client().Disconnect(ctx)
+	assert.NoError(t, err)
+
+	ctrl := gomock.NewController(t)
+	logger := mock_storage.NewMocklogger(ctrl)
+	logger.EXPECT().Info(gomock.Any()).AnyTimes()
+	logger.EXPECT().Infof(gomock.Any(), gomock.Any()).AnyTimes()
+
+	storage := NewStorage(dba, cfg.Base, logger)
+
+	cats, err := storage.GetAll(ctx)
+	assert.NoError(t, err)
+
+	result, err := storage.FindCategoryTree(ctx, cats[0].Genres[0].TranslitName)
+	if assert.NoError(t, err) {
+		assert.Equal(t, cats[0], result)
+	}
+
+	result, err = storage.FindCategoryTree(ctx, cats[0].Genres[2].Id.Hex())
+	if assert.NoError(t, err) {
+		assert.Equal(t, cats[0], result)
+	}
+
+	result, err = storage.FindCategoryTree(ctx, cats[0].TranslitName)
+	if assert.NoError(t, err) {
+		assert.Equal(t, cats[0], result)
+	}
+
+	result, err = storage.FindCategoryTree(ctx, cats[1].Id.Hex())
+	if assert.NoError(t, err) {
+		assert.Equal(t, cats[1], result)
+	}
+
+	result, err = storage.FindCategoryTree(ctx, "not existing")
+	assert.Nil(t, result)
+	assert.Error(t, err)
 }

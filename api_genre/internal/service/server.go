@@ -23,6 +23,7 @@ type logger interface {
 }
 type storage interface {
 	GetAll(context.Context) ([]*model.Category, error)
+	FindCategoryTree(context.Context, string) (*model.Category, error)
 }
 type cache interface {
 	Get([]byte) ([]byte, error)
