@@ -44,8 +44,6 @@ func (s *genreServer) GetAll(ctx context.Context, _ *genres_pb.Empty) (*genres_p
 		Categories: categories,
 	}, nil
 }
-<<<<<<< HEAD
-=======
 
 func (s *genreServer) GetOneOf(ctx context.Context, req *genres_pb.GetOneOfRequest) (*genres_pb.GetCategoryOrGenreResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, 1*time.Second)
@@ -151,4 +149,3 @@ func (s *genreServer) GetTree(ctx context.Context, req *genres_pb.GetOneOfReques
 	}
 	return &genres_pb.CategoryResponse{Category: &model}, nil
 }
->>>>>>> 560fcec (separated projects and proto files)

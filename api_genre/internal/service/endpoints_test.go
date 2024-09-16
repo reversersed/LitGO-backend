@@ -153,3 +153,133 @@ func TestGetAll(t *testing.T) {
 		})
 	}
 }
+func TestGetCategoryTree(t *testing.T) {
+	model := &model.Category{
+
+		Id:           primitive.NewObjectID(),
+		Name:         "test",
+		TranslitName: "test-213",
+		Genres: []*model.Genre{
+			{
+				Id:           primitive.NewObjectID(),
+				Name:         "genre",
+				TranslitName: "test-genre",
+				BookCount:    2,
+			},
+			{
+				Id:           primitive.NewObjectID(),
+				Name:         "genre2",
+				TranslitName: "test-genre2",
+				BookCount:    22,
+			},
+		},
+	}
+	response := &genres_pb.CategoryModel{
+		Id:           model.Id.Hex(),
+		Name:         "test",
+		TranslitName: "test-213",
+		Genres: []*genres_pb.GenreModel{
+			{
+				Id:           model.Genres[0].Id.Hex(),
+				Name:         "genre",
+				TranslitName: "test-genre",
+				BookCount:    2,
+			},
+			{
+				Id:           model.Genres[1].Id.Hex(),
+				Name:         "genre2",
+				TranslitName: "test-genre2",
+				BookCount:    22,
+			},
+		},
+	}
+
+	table := []struct {
+		Name             string
+		MockBehaviour    func(*mocks.Mockcache, *mocks.Mocklogger, *mocks.Mockstorage, *mocks.Mockvalidator)
+		Query            string
+		ExceptedError    string
+		ExceptedResponse *genres_pb.CategoryResponse
+	}{
+		{
+			Name: "get by genre translit name",
+			MockBehaviour: func(m1 *mocks.Mockcache, m2 *mocks.Mocklogger, m3 *mocks.Mockstorage, m4 *mocks.Mockvalidator) {
+				m4.EXPECT().StructValidation(gomock.Any()).Return(nil)
+				m1.EXPECT().Get([]byte("tree_"+model.Genres[0].TranslitName)).Return([]byte{}, nil)
+				m3.EXPECT().FindCategoryTree(gomock.Any(), gomock.Any()).Return(model, nil)
+				m1.EXPECT().Set([]byte("tree_"+model.Genres[0].TranslitName), gomock.Any(), gomock.Any())
+			},
+			Query:            model.Genres[0].TranslitName,
+			ExceptedError:    "",
+			ExceptedResponse: &genres_pb.CategoryResponse{Category: response},
+		},
+		{
+			Name: "get by genre id",
+			MockBehaviour: func(m1 *mocks.Mockcache, m2 *mocks.Mocklogger, m3 *mocks.Mockstorage, m4 *mocks.Mockvalidator) {
+				m4.EXPECT().StructValidation(gomock.Any()).Return(nil)
+				m1.EXPECT().Get([]byte("tree_"+model.Genres[0].Id.Hex())).Return([]byte{}, nil)
+				m3.EXPECT().FindCategoryTree(gomock.Any(), gomock.Any()).Return(model, nil)
+				m1.EXPECT().Set([]byte("tree_"+model.Genres[0].Id.Hex()), gomock.Any(), gomock.Any())
+			},
+			Query:            model.Genres[0].Id.Hex(),
+			ExceptedError:    "",
+			ExceptedResponse: &genres_pb.CategoryResponse{Category: response},
+		},
+		{
+			Name: "get by category translit name",
+			MockBehaviour: func(m1 *mocks.Mockcache, m2 *mocks.Mocklogger, m3 *mocks.Mockstorage, m4 *mocks.Mockvalidator) {
+				m4.EXPECT().StructValidation(gomock.Any()).Return(nil)
+				m1.EXPECT().Get([]byte("tree_"+model.TranslitName)).Return([]byte{}, nil)
+				m3.EXPECT().FindCategoryTree(gomock.Any(), gomock.Any()).Return(model, nil)
+				m1.EXPECT().Set([]byte("tree_"+model.TranslitName), gomock.Any(), gomock.Any())
+			},
+			Query:            model.TranslitName,
+			ExceptedError:    "",
+			ExceptedResponse: &genres_pb.CategoryResponse{Category: response},
+		},
+		{
+			Name: "get by category id",
+			MockBehaviour: func(m1 *mocks.Mockcache, m2 *mocks.Mocklogger, m3 *mocks.Mockstorage, m4 *mocks.Mockvalidator) {
+				m4.EXPECT().StructValidation(gomock.Any()).Return(nil)
+				m1.EXPECT().Get([]byte("tree_"+model.Id.Hex())).Return([]byte{}, nil)
+				m3.EXPECT().FindCategoryTree(gomock.Any(), gomock.Any()).Return(model, nil)
+				m1.EXPECT().Set([]byte("tree_"+model.Id.Hex()), gomock.Any(), gomock.Any())
+			},
+			Query:            model.Id.Hex(),
+			ExceptedError:    "",
+			ExceptedResponse: &genres_pb.CategoryResponse{Category: response},
+		},
+		{
+			Name: "get from cache",
+			MockBehaviour: func(m1 *mocks.Mockcache, m2 *mocks.Mocklogger, m3 *mocks.Mockstorage, m4 *mocks.Mockvalidator) {
+				m4.EXPECT().StructValidation(gomock.Any()).Return(nil)
+				bytes, _ := json.Marshal(&response)
+				m1.EXPECT().Get([]byte("tree_"+model.Id.Hex())).Return(bytes, nil)
+			},
+			Query:            model.Id.Hex(),
+			ExceptedError:    "",
+			ExceptedResponse: &genres_pb.CategoryResponse{Category: response},
+		},
+	}
+
+	for _, v := range table {
+		t.Run(v.Name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			m_cache := mocks.NewMockcache(ctrl)
+			m_logger := mocks.NewMocklogger(ctrl)
+			m_storage := mocks.NewMockstorage(ctrl)
+			m_validator := mocks.NewMockvalidator(ctrl)
+
+			server := NewServer(m_logger, m_cache, m_storage, m_validator)
+			v.MockBehaviour(m_cache, m_logger, m_storage, m_validator)
+
+			response, err := server.GetTree(context.Background(), &genres_pb.GetOneOfRequest{Query: v.Query})
+			if len(v.ExceptedError) > 0 {
+				assert.EqualError(t, err, v.ExceptedError)
+			} else {
+				assert.NoError(t, err)
+			}
+			assert.EqualValues(t, v.ExceptedResponse, response)
+		})
+	}
+}
