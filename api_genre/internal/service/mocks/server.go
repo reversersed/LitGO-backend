@@ -194,6 +194,21 @@ func (m *Mockstorage) EXPECT() *MockstorageMockRecorder {
 	return m.recorder
 }
 
+// FindCategoryTree mocks base method.
+func (m *Mockstorage) FindCategoryTree(arg0 context.Context, arg1 string) (*storage.Category, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindCategoryTree", arg0, arg1)
+	ret0, _ := ret[0].(*storage.Category)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindCategoryTree indicates an expected call of FindCategoryTree.
+func (mr *MockstorageMockRecorder) FindCategoryTree(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindCategoryTree", reflect.TypeOf((*Mockstorage)(nil).FindCategoryTree), arg0, arg1)
+}
+
 // GetAll mocks base method.
 func (m *Mockstorage) GetAll(arg0 context.Context) ([]*storage.Category, error) {
 	m.ctrl.T.Helper()

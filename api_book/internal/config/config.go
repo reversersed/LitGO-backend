@@ -16,9 +16,11 @@ type Config struct {
 }
 
 type ServerConfig struct {
-	Host        string `env:"SERVER_HOST" env-required:"true" env-description:"Server listening address"`
-	Port        int    `env:"SERVER_PORT" env-required:"true" env-description:"Server listening port"`
-	Environment string `env:"ENVIRONMENT" env-default:"debug" env-description:"Application environment"`
+	Host             string `env:"SERVER_HOST" env-required:"true" env-description:"Server listening address"`
+	Port             int    `env:"SERVER_PORT" env-required:"true" env-description:"Server listening port"`
+	Environment      string `env:"ENVIRONMENT" env-default:"debug" env-description:"Application environment"`
+	GenreServiceUrl  string `env:"SERVICE_GENRE_URL" env-required:"true" env-description:"External URL of genre service"`
+	AuthorServiceUrl string `env:"SERVICE_AUTHOR_URL" env-required:"true" env-description:"External URL of author service"`
 }
 
 var once sync.Once

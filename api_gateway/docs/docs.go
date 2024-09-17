@@ -48,7 +48,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/authors_pb.GetAuthorsResponse"
+                                "$ref": "#/definitions/authors_pb.AuthorModel"
                             }
                         }
                     },
@@ -383,6 +383,119 @@ const docTemplate = `{
                 }
             }
         },
+        "/genres": {
+            "get": {
+                "description": "Searches category or genre based on id or translit name\nQuery can be: category id, category translit name, genre id or genre translit name\nIf category found, it returns whole category with nested genre. Otherwise it returns a single genre",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "genres"
+                ],
+                "summary": "Get category or genre",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "query to find. can be hex id or translit name",
+                        "name": "query",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Response body. Only one field will be presented",
+                        "schema": {
+                            "$ref": "#/definitions/genre.GetOneOfGenre.HandleResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Received wrong query",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Category or genre not found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal error occurred",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "503": {
+                        "description": "Service does not responding (maybe crush)",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/genres/all": {
             "get": {
                 "description": "Fetches all categories (with genres included)",
@@ -405,6 +518,119 @@ const docTemplate = `{
                     },
                     "404": {
                         "description": "There's no genres in database",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal error occurred",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "503": {
+                        "description": "Service does not responding (maybe crush)",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/genres/tree": {
+            "get": {
+                "description": "Searches category tree based on category or genre id or translate name\nQuery can be: category id, category translit name, genre id or genre translit name\nIf genre id or name matches, it returns whole category that contains that genre",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "genres"
+                ],
+                "summary": "Get category tree",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "query to find. can be hex id or translit name",
+                        "name": "query",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category",
+                        "schema": {
+                            "$ref": "#/definitions/genres_pb.CategoryModel"
+                        }
+                    },
+                    "400": {
+                        "description": "Received wrong query",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Category not found",
                         "schema": {
                             "allOf": [
                                 {
@@ -736,6 +962,11 @@ const docTemplate = `{
         },
         "/users/logout": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Removes user session if one exists",
                 "produces": [
                     "application/json"
@@ -933,17 +1164,6 @@ const docTemplate = `{
                 }
             }
         },
-        "authors_pb.GetAuthorsResponse": {
-            "type": "object",
-            "properties": {
-                "authors": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/authors_pb.AuthorModel"
-                    }
-                }
-            }
-        },
         "books_pb.BookModel": {
             "type": "object",
             "properties": {
@@ -964,6 +1184,17 @@ const docTemplate = `{
                 },
                 "translitname": {
                     "type": "string"
+                }
+            }
+        },
+        "genre.GetOneOfGenre.HandleResponse": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "$ref": "#/definitions/genres_pb.CategoryModel"
+                },
+                "genre": {
+                    "$ref": "#/definitions/genres_pb.GenreModel"
                 }
             }
         },
@@ -1058,6 +1289,11 @@ const docTemplate = `{
                     "description": "Failed validation tag",
                     "type": "string",
                     "example": "jwt"
+                },
+                "tagValue": {
+                    "description": "Valitation tag value",
+                    "type": "string",
+                    "example": "5"
                 }
             }
         },

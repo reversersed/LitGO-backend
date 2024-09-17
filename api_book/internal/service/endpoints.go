@@ -7,14 +7,19 @@ import (
 	"strings"
 	"time"
 
+	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
 	"github.com/reversersed/go-grpc/tree/main/api_book/pkg/copier"
-	books_pb "github.com/reversersed/go-grpc/tree/main/api_book/pkg/proto/books"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func (s *bookServer) GetBookSuggestions(ctx context.Context, req *books_pb.GetSuggestionRequest) (*books_pb.GetBooksResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, 500*time.Millisecond)
 	defer cancel()
 
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "received nil request")
+	}
 	if err := s.validator.StructValidation(req); err != nil {
 		return nil, err
 	}

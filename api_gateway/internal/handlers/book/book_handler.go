@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	books_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/books"
+	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

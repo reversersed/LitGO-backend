@@ -8,10 +8,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
+	authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors"
+	mock_authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors/mock"
 	mocks "github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers/mocks"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/middleware"
-	authors_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/authors"
-	mock_authors_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/mocks/authors"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -38,7 +38,7 @@ func TestHandlers(t *testing.T) {
 				mac.EXPECT().GetAuthors(gomock.Any(), &authors_pb.GetAuthorsRequest{Id: []string{"123", "321"}, Translit: []string{"421", "23"}}).Return(&authors_pb.GetAuthorsResponse{Authors: []*authors_pb.AuthorModel{{Name: "Author"}}}, nil)
 			},
 			ExceptedStatus: http.StatusOK,
-			ExceptedBody:   "{\"authors\":[{\"name\":\"Author\"}]}",
+			ExceptedBody:   "[{\"name\":\"Author\"}]",
 		},
 		{
 			Name:   "Get authors error",

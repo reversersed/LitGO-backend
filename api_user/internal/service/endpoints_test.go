@@ -7,9 +7,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	users_pb "github.com/reversersed/LitGO-proto/gen/go/users"
 	mock_service "github.com/reversersed/go-grpc/tree/main/api_user/internal/service/mocks"
 	model "github.com/reversersed/go-grpc/tree/main/api_user/internal/storage"
-	users_pb "github.com/reversersed/go-grpc/tree/main/api_user/pkg/proto/users"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"

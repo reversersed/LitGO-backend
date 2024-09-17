@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	authors_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/authors"
+	authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -16,7 +16,7 @@ import (
 // @Produce      json
 // @Param		 id      query     string 		false 		"Author Id, must be a primitive id hex"
 // @Param		 translit   query     string 		false 		"Translit author name"
-// @Success      200  {array}   authors_pb.GetAuthorsResponse.Authors 		"Authors"
+// @Success      200  {array}   authors_pb.AuthorModel 		"Authors"
 // @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Field was not in a correct format"
 // @Failure      404  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Authors not found"
 // @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Some internal error"
@@ -35,7 +35,7 @@ func (h *handler) GetAuthors(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, reply)
+	c.JSON(http.StatusOK, reply.GetAuthors())
 }
 
 // @Summary      Find authors by keywords

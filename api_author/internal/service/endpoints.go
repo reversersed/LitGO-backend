@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
+	authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors"
+	shared_pb "github.com/reversersed/LitGO-proto/gen/go/shared"
 	"github.com/reversersed/go-grpc/tree/main/api_author/pkg/copier"
-	shared_pb "github.com/reversersed/go-grpc/tree/main/api_author/pkg/proto"
-	authors_pb "github.com/reversersed/go-grpc/tree/main/api_author/pkg/proto/authors"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -51,6 +51,7 @@ func (s *authorServer) GetAuthors(ctx context.Context, r *authors_pb.GetAuthorsR
 		Authors: authorModels,
 	}, nil
 }
+
 func (s *authorServer) GetAuthorSuggestion(ctx context.Context, r *authors_pb.GetSuggestionRequest) (*authors_pb.GetAuthorsResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()

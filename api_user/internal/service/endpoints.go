@@ -4,10 +4,10 @@ import (
 	"context"
 	"time"
 
+	shared_pb "github.com/reversersed/LitGO-proto/gen/go/shared"
+	users_pb "github.com/reversersed/LitGO-proto/gen/go/users"
 	model "github.com/reversersed/go-grpc/tree/main/api_user/internal/storage"
 	"github.com/reversersed/go-grpc/tree/main/api_user/pkg/copier"
-	shared_pb "github.com/reversersed/go-grpc/tree/main/api_user/pkg/proto"
-	users_pb "github.com/reversersed/go-grpc/tree/main/api_user/pkg/proto/users"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

@@ -3,8 +3,10 @@ package service
 import (
 	"context"
 
+	authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors"
+	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
+	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
 	model "github.com/reversersed/go-grpc/tree/main/api_book/internal/storage"
-	books_pb "github.com/reversersed/go-grpc/tree/main/api_book/pkg/proto/books"
 	"google.golang.org/grpc"
 )
 
@@ -31,19 +33,23 @@ type cache interface {
 	Delete([]byte) bool
 }
 type bookServer struct {
-	cache     cache
-	logger    logger
-	storage   storage
-	validator validator
+	cache         cache
+	logger        logger
+	storage       storage
+	validator     validator
+	authorService authors_pb.AuthorClient
+	genreService  genres_pb.GenreClient
 	books_pb.UnimplementedBookServer
 }
 
-func NewServer(logger logger, cache cache, storage storage, validator validator) *bookServer {
+func NewServer(logger logger, cache cache, storage storage, validator validator, genreService genres_pb.GenreClient, authorService authors_pb.AuthorClient) *bookServer {
 	return &bookServer{
-		storage:   storage,
-		logger:    logger,
-		cache:     cache,
-		validator: validator,
+		storage:       storage,
+		logger:        logger,
+		cache:         cache,
+		validator:     validator,
+		genreService:  genreService,
+		authorService: authorService,
 	}
 }
 func (u *bookServer) Register(s grpc.ServiceRegistrar) {

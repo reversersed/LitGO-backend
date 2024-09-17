@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/go-playground/validator/v10"
-	shared_pb "github.com/reversersed/go-grpc/tree/main/api_book/pkg/proto"
+	shared_pb "github.com/reversersed/LitGO-proto/gen/go/shared"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -53,10 +53,6 @@ func (v *Validator) StructValidation(data any) error {
 		return status.Error(codes.Internal, "wrong errors format provided")
 	}
 	for _, i := range errors {
-		tag := i.Tag()
-		if len(i.Param()) > 0 {
-			tag = fmt.Sprintf("%s:%s", i.Tag(), i.Param())
-		}
 		actual := fmt.Sprintf("%v", i.Value())
 		if strings.Contains(strings.ToLower(i.Field()), "password") {
 			actual = ""
@@ -64,7 +60,8 @@ func (v *Validator) StructValidation(data any) error {
 		details = append(details, &shared_pb.ErrorDetail{
 			Field:       i.Field(),
 			Struct:      i.StructNamespace(),
-			Tag:         tag,
+			Tag:         i.Tag(),
+			TagValue:    i.Param(),
 			Description: errorToStringByTag(i),
 			Actualvalue: actual,
 		})

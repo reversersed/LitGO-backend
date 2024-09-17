@@ -9,7 +9,7 @@ import (
 
 	gin "github.com/gin-gonic/gin"
 	gomock "github.com/golang/mock/gomock"
-	shared_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto"
+	shared_pb "github.com/reversersed/LitGO-proto/gen/go/shared"
 )
 
 // MockLogger is a mock of Logger interface.

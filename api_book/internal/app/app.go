@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net"
 
+	authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors"
+	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
 	"github.com/reversersed/go-grpc/tree/main/api_book/internal/config"
 	srv "github.com/reversersed/go-grpc/tree/main/api_book/internal/service"
 	"github.com/reversersed/go-grpc/tree/main/api_book/internal/storage"
@@ -14,6 +16,7 @@ import (
 	"github.com/reversersed/go-grpc/tree/main/api_book/pkg/shutdown"
 	"github.com/reversersed/go-grpc/tree/main/api_book/pkg/validator"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 func New() (*app, error) {
@@ -34,11 +37,25 @@ func New() (*app, error) {
 		return nil, err
 	}
 	storage := storage.NewStorage(dbClient, cfg.Database.Base, logger)
+
+	genreConnection, err := grpc.NewClient(cfg.Server.GenreServiceUrl, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		return nil, err
+	}
+	genreClient := genres_pb.NewGenreClient(genreConnection)
+
+	authorConnection, err := grpc.NewClient(cfg.Server.AuthorServiceUrl, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		return nil, err
+	}
+	authorClient := authors_pb.NewAuthorClient(authorConnection)
+
 	app := &app{
-		logger:  logger,
-		config:  cfg,
-		cache:   cache,
-		service: srv.NewServer(logger, cache, storage, validator),
+		logger:      logger,
+		config:      cfg,
+		cache:       cache,
+		service:     srv.NewServer(logger, cache, storage, validator, genreClient, authorClient),
+		connections: []*grpc.ClientConn{genreConnection, authorConnection},
 	}
 
 	return app, nil
@@ -62,5 +79,10 @@ func (a *app) Run() error {
 	return nil
 }
 func (a *app) Close() error {
+	for _, c := range a.connections {
+		if err := c.Close(); err != nil {
+			return err
+		}
+	}
 	return mongo.Close()
 }

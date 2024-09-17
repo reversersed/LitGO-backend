@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
-	shared_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto"
+	shared_pb "github.com/reversersed/LitGO-proto/gen/go/shared"
 )
 
 //go:generate mockgen -source=general.go -destination=mocks/general.go

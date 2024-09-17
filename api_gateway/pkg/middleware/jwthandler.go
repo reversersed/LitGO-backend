@@ -10,8 +10,8 @@ import (
 
 	"github.com/cristalhq/jwt/v3"
 	"github.com/gin-gonic/gin"
-	shared_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto"
-	users_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/users"
+	shared_pb "github.com/reversersed/LitGO-proto/gen/go/shared"
+	users_pb "github.com/reversersed/LitGO-proto/gen/go/users"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

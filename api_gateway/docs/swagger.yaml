@@ -17,13 +17,6 @@ definitions:
       translitname:
         type: string
     type: object
-  authors_pb.GetAuthorsResponse:
-    properties:
-      authors:
-        items:
-          $ref: '#/definitions/authors_pb.AuthorModel'
-        type: array
-    type: object
   books_pb.BookModel:
     properties:
       description:
@@ -38,6 +31,13 @@ definitions:
         type: string
       translitname:
         type: string
+    type: object
+  genre.GetOneOfGenre.HandleResponse:
+    properties:
+      category:
+        $ref: '#/definitions/genres_pb.CategoryModel'
+      genre:
+        $ref: '#/definitions/genres_pb.GenreModel'
     type: object
   genres_pb.CategoryModel:
     properties:
@@ -106,6 +106,10 @@ definitions:
       tag:
         description: Failed validation tag
         example: jwt
+        type: string
+      tagValue:
+        description: Valitation tag value
+        example: "5"
         type: string
     type: object
   user.UserAuthenticate.UserResponse:
@@ -217,7 +221,7 @@ paths:
           description: Authors
           schema:
             items:
-              $ref: '#/definitions/authors_pb.GetAuthorsResponse'
+              $ref: '#/definitions/authors_pb.AuthorModel'
             type: array
         "400":
           description: Field was not in a correct format
@@ -406,6 +410,72 @@ paths:
       summary: Find books by keywords
       tags:
       - books
+  /genres:
+    get:
+      description: |-
+        Searches category or genre based on id or translit name
+        Query can be: category id, category translit name, genre id or genre translit name
+        If category found, it returns whole category with nested genre. Otherwise it returns a single genre
+      parameters:
+      - description: query to find. can be hex id or translit name
+        in: query
+        name: query
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Response body. Only one field will be presented
+          schema:
+            $ref: '#/definitions/genre.GetOneOfGenre.HandleResponse'
+        "400":
+          description: Received wrong query
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "404":
+          description: Category or genre not found
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "500":
+          description: Internal error occurred
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "503":
+          description: Service does not responding (maybe crush)
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+      summary: Get category or genre
+      tags:
+      - genres
   /genres/all:
     get:
       description: Fetches all categories (with genres included)
@@ -452,6 +522,72 @@ paths:
                   type: array
               type: object
       summary: Get all genres
+      tags:
+      - genres
+  /genres/tree:
+    get:
+      description: |-
+        Searches category tree based on category or genre id or translate name
+        Query can be: category id, category translit name, genre id or genre translit name
+        If genre id or name matches, it returns whole category that contains that genre
+      parameters:
+      - description: query to find. can be hex id or translit name
+        in: query
+        name: query
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Category
+          schema:
+            $ref: '#/definitions/genres_pb.CategoryModel'
+        "400":
+          description: Received wrong query
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "404":
+          description: Category not found
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "500":
+          description: Internal error occurred
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "503":
+          description: Service does not responding (maybe crush)
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+      summary: Get category tree
       tags:
       - genres
   /users:
@@ -647,6 +783,8 @@ paths:
                     $ref: '#/definitions/shared_pb.ErrorDetail'
                   type: array
               type: object
+      security:
+      - ApiKeyAuth: []
       summary: Logout user
       tags:
       - users

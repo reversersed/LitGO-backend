@@ -8,10 +8,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
+	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
+	mock_genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres/mock"
 	mocks "github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers/mocks"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/middleware"
-	genres_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/genres"
-	mock_genres_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/mocks/genres"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -52,6 +52,71 @@ func TestHandlers(t *testing.T) {
 			},
 			ExceptedStatus: http.StatusNotFound,
 			ExceptedBody:   "{\"code\":5,\"type\":\"NotFound\",\"message\":\"no genres in database\",\"details\":[]}",
+		},
+		{
+			Name:   "Get category tree",
+			Path:   "/api/v1/genres/tree?query=query+request",
+			Method: http.MethodGet,
+			Body:   func() io.Reader { return nil },
+			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mac *mock_genres_pb.MockGenreClient) {
+				mjm.EXPECT().Middleware(gomock.Any()).AnyTimes()
+				ml.EXPECT().Info(gomock.Any()).AnyTimes()
+				mac.EXPECT().GetTree(gomock.Any(), &genres_pb.GetOneOfRequest{Query: "query request"}).Return(&genres_pb.CategoryResponse{Category: &genres_pb.CategoryModel{Name: "category", Genres: []*genres_pb.GenreModel{{Name: "genre nested"}}}}, nil)
+			},
+			ExceptedStatus: http.StatusOK,
+			ExceptedBody:   "{\"name\":\"category\",\"genres\":[{\"name\":\"genre nested\"}]}",
+		},
+		{
+			Name:   "Get category tree error",
+			Path:   "/api/v1/genres/tree?query=query+request",
+			Method: http.MethodGet,
+			Body:   func() io.Reader { return nil },
+			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mac *mock_genres_pb.MockGenreClient) {
+				mjm.EXPECT().Middleware(gomock.Any()).AnyTimes()
+				ml.EXPECT().Info(gomock.Any()).AnyTimes()
+				mac.EXPECT().GetTree(gomock.Any(), &genres_pb.GetOneOfRequest{Query: "query request"}).Return(nil, status.Error(codes.NotFound, "category not found"))
+			},
+			ExceptedStatus: http.StatusNotFound,
+			ExceptedBody:   "{\"code\":5,\"type\":\"NotFound\",\"message\":\"category not found\",\"details\":[]}",
+		},
+		{
+			Name:   "Search category",
+			Path:   "/api/v1/genres/?query=query+request",
+			Method: http.MethodGet,
+			Body:   func() io.Reader { return nil },
+			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mac *mock_genres_pb.MockGenreClient) {
+				mjm.EXPECT().Middleware(gomock.Any()).AnyTimes()
+				ml.EXPECT().Info(gomock.Any()).AnyTimes()
+				mac.EXPECT().GetOneOf(gomock.Any(), &genres_pb.GetOneOfRequest{Query: "query request"}).Return(&genres_pb.GetCategoryOrGenreResponse{Model: &genres_pb.GetCategoryOrGenreResponse_Category{Category: &genres_pb.CategoryModel{Name: "category", Genres: []*genres_pb.GenreModel{{Name: "genre nested"}}}}}, nil)
+			},
+			ExceptedStatus: http.StatusOK,
+			ExceptedBody:   "{\"category\":{\"name\":\"category\",\"genres\":[{\"name\":\"genre nested\"}]}}",
+		},
+		{
+			Name:   "Search genre",
+			Path:   "/api/v1/genres/?query=query+request",
+			Method: http.MethodGet,
+			Body:   func() io.Reader { return nil },
+			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mac *mock_genres_pb.MockGenreClient) {
+				mjm.EXPECT().Middleware(gomock.Any()).AnyTimes()
+				ml.EXPECT().Info(gomock.Any()).AnyTimes()
+				mac.EXPECT().GetOneOf(gomock.Any(), &genres_pb.GetOneOfRequest{Query: "query request"}).Return(&genres_pb.GetCategoryOrGenreResponse{Model: &genres_pb.GetCategoryOrGenreResponse_Genre{Genre: &genres_pb.GenreModel{Name: "category"}}}, nil)
+			},
+			ExceptedStatus: http.StatusOK,
+			ExceptedBody:   "{\"genre\":{\"name\":\"category\"}}",
+		},
+		{
+			Name:   "Search category error",
+			Path:   "/api/v1/genres/?query=query+request",
+			Method: http.MethodGet,
+			Body:   func() io.Reader { return nil },
+			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mac *mock_genres_pb.MockGenreClient) {
+				mjm.EXPECT().Middleware(gomock.Any()).AnyTimes()
+				ml.EXPECT().Info(gomock.Any()).AnyTimes()
+				mac.EXPECT().GetOneOf(gomock.Any(), &genres_pb.GetOneOfRequest{Query: "query request"}).Return(nil, status.Error(codes.NotFound, "category not found"))
+			},
+			ExceptedStatus: http.StatusNotFound,
+			ExceptedBody:   "{\"code\":5,\"type\":\"NotFound\",\"message\":\"category not found\",\"details\":[]}",
 		},
 	}
 
