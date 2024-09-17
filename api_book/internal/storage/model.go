@@ -2,7 +2,7 @@ package storage
 
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
-// TODO add authors and category+genre
+// TOD add authors and category+genre
 type Book struct {
 	Id           primitive.ObjectID `bson:"_id,omitempty"`
 	Name         string             `bson:"name"`
