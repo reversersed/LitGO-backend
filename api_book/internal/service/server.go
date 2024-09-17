@@ -7,16 +7,6 @@ import (
 	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
 	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
 	model "github.com/reversersed/go-grpc/tree/main/api_book/internal/storage"
-<<<<<<< HEAD
-<<<<<<< HEAD
-	books_pb "github.com/reversersed/go-grpc/tree/main/api_book/pkg/proto/books"
-=======
->>>>>>> 560fcec (separated projects and proto files)
-=======
-	authors_pb "github.com/reversersed/go-grpc/tree/main/api_book/pkg/proto/authors"
-	books_pb "github.com/reversersed/go-grpc/tree/main/api_book/pkg/proto/books"
-	genres_pb "github.com/reversersed/go-grpc/tree/main/api_book/pkg/proto/genres"
->>>>>>> 4e07393 (added genre routes with tests)
 	"google.golang.org/grpc"
 )
 

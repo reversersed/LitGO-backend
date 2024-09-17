@@ -9,20 +9,10 @@ import (
 
 	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
 	"github.com/reversersed/go-grpc/tree/main/api_book/pkg/copier"
-<<<<<<< HEAD
-	books_pb "github.com/reversersed/go-grpc/tree/main/api_book/pkg/proto/books"
-<<<<<<< HEAD
-=======
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
->>>>>>> 560fcec (separated projects and proto files)
-=======
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
->>>>>>> 4e07393 (added genre routes with tests)
 )
 
-// TODO change to elastic search
 func (s *bookServer) GetBookSuggestions(ctx context.Context, req *books_pb.GetSuggestionRequest) (*books_pb.GetBooksResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, 500*time.Millisecond)
 	defer cancel()

@@ -13,8 +13,6 @@ import (
 	freecache "github.com/reversersed/go-grpc/tree/main/api_book/pkg/cache"
 	"github.com/reversersed/go-grpc/tree/main/api_book/pkg/logging/logrus"
 	"github.com/reversersed/go-grpc/tree/main/api_book/pkg/mongo"
-	authors_pb "github.com/reversersed/go-grpc/tree/main/api_book/pkg/proto/authors"
-	genres_pb "github.com/reversersed/go-grpc/tree/main/api_book/pkg/proto/genres"
 	"github.com/reversersed/go-grpc/tree/main/api_book/pkg/shutdown"
 	"github.com/reversersed/go-grpc/tree/main/api_book/pkg/validator"
 	"google.golang.org/grpc"

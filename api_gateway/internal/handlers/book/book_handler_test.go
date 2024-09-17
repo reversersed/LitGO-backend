@@ -12,14 +12,6 @@ import (
 	mock_books_pb "github.com/reversersed/LitGO-proto/gen/go/books/mock"
 	mocks "github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers/mocks"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/middleware"
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-	books_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/books"
->>>>>>> 4e07393 (added genre routes with tests)
-	mock_books_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/mocks/books"
-=======
->>>>>>> 560fcec (separated projects and proto files)
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
