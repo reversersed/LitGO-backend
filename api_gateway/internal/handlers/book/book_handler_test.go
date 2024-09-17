@@ -7,9 +7,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
+	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
+	mock_books_pb "github.com/reversersed/LitGO-proto/gen/go/books/mock"
 	mocks "github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers/mocks"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/middleware"
+<<<<<<< HEAD
 	mock_books_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/mocks/books"
+=======
+>>>>>>> 560fcec (separated projects and proto files)
 	"github.com/stretchr/testify/assert"
 )
 

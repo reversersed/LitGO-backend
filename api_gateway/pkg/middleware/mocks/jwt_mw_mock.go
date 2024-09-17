@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	users_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/users"
+	users_pb "github.com/reversersed/LitGO-proto/gen/go/users"
 	grpc "google.golang.org/grpc"
 )
 

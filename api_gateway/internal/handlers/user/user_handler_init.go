@@ -2,8 +2,8 @@ package user
 
 import (
 	"github.com/gin-gonic/gin"
+	users_pb "github.com/reversersed/LitGO-proto/gen/go/users"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers"
-	users_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/users"
 )
 
 type handler struct {

@@ -2,8 +2,8 @@ package book
 
 import (
 	"github.com/gin-gonic/gin"
+	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers"
-	books_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/books"
 )
 
 type handler struct {

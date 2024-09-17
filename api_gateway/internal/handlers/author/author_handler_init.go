@@ -2,8 +2,8 @@ package author
 
 import (
 	"github.com/gin-gonic/gin"
+	authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers"
-	authors_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/authors"
 )
 
 type handler struct {

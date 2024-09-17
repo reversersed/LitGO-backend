@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net"
 
+	authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors"
+	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
 	"github.com/reversersed/go-grpc/tree/main/api_book/internal/config"
 	srv "github.com/reversersed/go-grpc/tree/main/api_book/internal/service"
 	"github.com/reversersed/go-grpc/tree/main/api_book/internal/storage"

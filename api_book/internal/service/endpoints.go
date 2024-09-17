@@ -7,8 +7,14 @@ import (
 	"strings"
 	"time"
 
+	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
 	"github.com/reversersed/go-grpc/tree/main/api_book/pkg/copier"
+<<<<<<< HEAD
 	books_pb "github.com/reversersed/go-grpc/tree/main/api_book/pkg/proto/books"
+=======
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+>>>>>>> 560fcec (separated projects and proto files)
 )
 
 func (s *bookServer) GetBookSuggestions(ctx context.Context, req *books_pb.GetSuggestionRequest) (*books_pb.GetBooksResponse, error) {

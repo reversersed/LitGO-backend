@@ -6,9 +6,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
 	mocks "github.com/reversersed/go-grpc/tree/main/api_genre/internal/service/mocks"
 	model "github.com/reversersed/go-grpc/tree/main/api_genre/internal/storage"
-	genres_pb "github.com/reversersed/go-grpc/tree/main/api_genre/pkg/proto/genres"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"

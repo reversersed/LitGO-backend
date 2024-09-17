@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	_ "github.com/reversersed/LitGO-proto/gen/go/shared"
+	users_pb "github.com/reversersed/LitGO-proto/gen/go/users"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/middleware"
-	_ "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto"
-	users_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/users"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

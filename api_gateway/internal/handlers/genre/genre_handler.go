@@ -4,7 +4,13 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+<<<<<<< HEAD
 	genres_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/genres"
+=======
+	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+>>>>>>> 560fcec (separated projects and proto files)
 )
 
 // @Summary      Get all genres

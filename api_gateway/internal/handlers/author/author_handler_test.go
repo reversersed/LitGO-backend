@@ -8,10 +8,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
+	authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors"
+	mock_authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors/mock"
 	mocks "github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers/mocks"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/middleware"
-	authors_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/authors"
-	mock_authors_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/mocks/authors"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

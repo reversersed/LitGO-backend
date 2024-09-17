@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	authors_pb "github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/proto/authors"
+	authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

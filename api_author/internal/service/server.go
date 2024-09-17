@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 
+	authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors"
 	model "github.com/reversersed/go-grpc/tree/main/api_author/internal/storage"
-	authors_pb "github.com/reversersed/go-grpc/tree/main/api_author/pkg/proto/authors"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc"
 )

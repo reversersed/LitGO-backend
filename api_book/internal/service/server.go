@@ -3,8 +3,14 @@ package service
 import (
 	"context"
 
+	authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors"
+	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
+	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
 	model "github.com/reversersed/go-grpc/tree/main/api_book/internal/storage"
+<<<<<<< HEAD
 	books_pb "github.com/reversersed/go-grpc/tree/main/api_book/pkg/proto/books"
+=======
+>>>>>>> 560fcec (separated projects and proto files)
 	"google.golang.org/grpc"
 )
 
