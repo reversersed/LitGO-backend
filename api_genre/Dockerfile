@@ -4,6 +4,7 @@ WORKDIR /usr/local/go/src/
 
 ADD . .
 
+RUN export GODEBUG=http2=0
 RUN go clean --modcache
 RUN go build -mod=readonly -o app cmd/genre/main.go
 

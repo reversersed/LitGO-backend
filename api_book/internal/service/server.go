@@ -24,7 +24,8 @@ type logger interface {
 	Warn(...any)
 }
 type storage interface {
-	GetSuggestions(ctx context.Context, regex string, limit int64) ([]*model.Book, error)
+	GetSuggestions(context.Context, string, int64) ([]*model.Book, error)
+	CreateBook(context.Context, *model.Book) (*model.Book, error)
 }
 
 type cache interface {

@@ -1164,14 +1164,40 @@ const docTemplate = `{
                 }
             }
         },
+        "books_pb.AuthorModel": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "translitname": {
+                    "type": "string"
+                }
+            }
+        },
         "books_pb.BookModel": {
             "type": "object",
             "properties": {
+                "authors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/books_pb.AuthorModel"
+                    }
+                },
+                "category": {
+                    "$ref": "#/definitions/books_pb.CategoryModel"
+                },
                 "description": {
                     "type": "string"
                 },
                 "filepath": {
                     "type": "string"
+                },
+                "genre": {
+                    "$ref": "#/definitions/books_pb.GenreModel"
                 },
                 "id": {
                     "type": "string"
@@ -1180,6 +1206,34 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "picture": {
+                    "type": "string"
+                },
+                "translitname": {
+                    "type": "string"
+                }
+            }
+        },
+        "books_pb.CategoryModel": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "translitname": {
+                    "type": "string"
+                }
+            }
+        },
+        "books_pb.GenreModel": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
                     "type": "string"
                 },
                 "translitname": {

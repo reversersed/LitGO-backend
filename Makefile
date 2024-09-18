@@ -33,12 +33,12 @@ gen:
 
 upgrade: clean i
 	@$(foreach directory,$(API_DIRECTORIES),\
-		@cd ./$(directory) && go get -u ./... && go mod tidy && cd ..\
+		@cd ./$(directory) && go get -v -u ./... && go mod tidy && cd ..\
 		$(CMDSEP)) echo packages upgraded
 
 clean:
 	@$(foreach directory,$(API_DIRECTORIES),\
-		cd ./$(directory) && go get -u github.com/reversersed/LitGO-proto/gen/go@latest && go mod tidy && cd ..\
+		cd ./$(directory) && go get -v -u github.com/reversersed/LitGO-proto/gen/go@latest && go mod tidy && cd ..\
 		$(CMDSEP)) echo mod files cleaned
 
 start:

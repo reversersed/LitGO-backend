@@ -85,5 +85,5 @@ func TestGetSuggestion(t *testing.T) {
 	assert.Equal(t, "Книга о книгопечатании", sugg[0].Name)
 
 	_, err = storage.GetSuggestions(ctx, "(КнигиНеСуществует)", 1)
-	assert.EqualError(t, err, "rpc error: code = NotFound desc = no authors found")
+	assert.EqualError(t, err, "rpc error: code = NotFound desc = no books found")
 }

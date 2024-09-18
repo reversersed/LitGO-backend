@@ -17,17 +17,52 @@ definitions:
       translitname:
         type: string
     type: object
+  books_pb.AuthorModel:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      translitname:
+        type: string
+    type: object
   books_pb.BookModel:
     properties:
+      authors:
+        items:
+          $ref: '#/definitions/books_pb.AuthorModel'
+        type: array
+      category:
+        $ref: '#/definitions/books_pb.CategoryModel'
       description:
         type: string
       filepath:
         type: string
+      genre:
+        $ref: '#/definitions/books_pb.GenreModel'
       id:
         type: string
       name:
         type: string
       picture:
+        type: string
+      translitname:
+        type: string
+    type: object
+  books_pb.CategoryModel:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      translitname:
+        type: string
+    type: object
+  books_pb.GenreModel:
+    properties:
+      id:
+        type: string
+      name:
         type: string
       translitname:
         type: string

@@ -54,20 +54,21 @@ func (d *db) seedBooks() {
 	}
 	d.logger.Infof("seeded %d books", len(mocked_books))
 }
-func (d *db) CreateBook(ctx context.Context, author *Book) (*Book, error) {
-	author.Id = primitive.NewObjectID()
-	author.TranslitName = mongo.GenerateTranslitName(author.Name, author.Id)
 
-	result, err := d.collection.InsertOne(ctx, author)
+func (d *db) CreateBook(ctx context.Context, book *Book) (*Book, error) {
+	book.Id = primitive.NewObjectID()
+	book.TranslitName = mongo.GenerateTranslitName(book.Name, book.Id)
+
+	result, err := d.collection.InsertOne(ctx, book)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 	id, ok := result.InsertedID.(primitive.ObjectID)
-	if !ok || id != author.Id {
+	if !ok || id != book.Id {
 		return nil, status.Error(codes.Internal, "error retrieving book id")
 	}
 
-	return author, nil
+	return book, nil
 }
 func (d *db) GetSuggestions(ctx context.Context, regex string, limit int64) ([]*Book, error) {
 	response, err := d.collection.Find(ctx, bson.M{"name": bson.M{"$regex": regex, "$options": "i"}}, &options.FindOptions{Limit: &limit})

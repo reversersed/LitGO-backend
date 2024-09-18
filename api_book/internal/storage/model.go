@@ -2,7 +2,6 @@ package storage
 
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
-// TODO add authors and category+genre
 type Book struct {
 	Id           primitive.ObjectID   `bson:"_id,omitempty"`
 	Name         string               `bson:"name"`
@@ -10,9 +9,8 @@ type Book struct {
 	Description  string               `bson:"description"`
 	Picture      string               `bson:"picture"`
 	Filepath     string               `bson:"filepath"`
-	GenreID      primitive.ObjectID   `bson:"genre"`
-	CategoryID   primitive.ObjectID   `bson:"category"`
-	AuthorsID    []primitive.ObjectID `bson:"authors"`
+	Genre        primitive.ObjectID   `bson:"genre"`
+	Authors      []primitive.ObjectID `bson:"authors"`
 }
 
 var mocked_books = []*Book{

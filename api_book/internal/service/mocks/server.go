@@ -194,19 +194,34 @@ func (m *Mockstorage) EXPECT() *MockstorageMockRecorder {
 	return m.recorder
 }
 
-// GetSuggestions mocks base method.
-func (m *Mockstorage) GetSuggestions(ctx context.Context, regex string, limit int64) ([]*storage.Book, error) {
+// CreateBook mocks base method.
+func (m *Mockstorage) CreateBook(arg0 context.Context, arg1 *storage.Book) (*storage.Book, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetSuggestions", ctx, regex, limit)
+	ret := m.ctrl.Call(m, "CreateBook", arg0, arg1)
+	ret0, _ := ret[0].(*storage.Book)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateBook indicates an expected call of CreateBook.
+func (mr *MockstorageMockRecorder) CreateBook(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBook", reflect.TypeOf((*Mockstorage)(nil).CreateBook), arg0, arg1)
+}
+
+// GetSuggestions mocks base method.
+func (m *Mockstorage) GetSuggestions(arg0 context.Context, arg1 string, arg2 int64) ([]*storage.Book, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSuggestions", arg0, arg1, arg2)
 	ret0, _ := ret[0].([]*storage.Book)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetSuggestions indicates an expected call of GetSuggestions.
-func (mr *MockstorageMockRecorder) GetSuggestions(ctx, regex, limit interface{}) *gomock.Call {
+func (mr *MockstorageMockRecorder) GetSuggestions(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSuggestions", reflect.TypeOf((*Mockstorage)(nil).GetSuggestions), ctx, regex, limit)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSuggestions", reflect.TypeOf((*Mockstorage)(nil).GetSuggestions), arg0, arg1, arg2)
 }
 
 // Mockcache is a mock of cache interface.
