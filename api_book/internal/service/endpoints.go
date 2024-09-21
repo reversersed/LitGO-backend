@@ -31,10 +31,13 @@ func (s *bookServer) GetBookSuggestions(ctx context.Context, req *books_pb.GetSu
 		pattern += fmt.Sprintf("(%s)|", regexp.QuoteMeta(word))
 	}
 	pattern = strings.Trim(pattern, "|")
+
+	s.logger.Infof("received book suggestion request %s, built pattern: %s", req.GetQuery(), pattern)
 	response, err := s.storage.GetSuggestions(ctx, pattern, req.GetLimit())
 	if err != nil {
 		return nil, err
 	}
+	s.logger.Infof("got %d books by pattern %s, limit it %d", len(response), pattern, req.GetLimit())
 	data := make([]*books_pb.BookModel, len(response))
 	for i, v := range response {
 		model, err := s.bookMapper(ctx, v)
@@ -47,7 +50,7 @@ func (s *bookServer) GetBookSuggestions(ctx context.Context, req *books_pb.GetSu
 	return &books_pb.GetBooksResponse{Books: data}, nil
 }
 
-// TOD write test for createbook method
+// TODO write test for createbook method
 func (s *bookServer) CreateBook(ctx context.Context, req *books_pb.CreateBookRequest) (*books_pb.CreateBookResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, 2500*time.Millisecond)
 	defer cancel()
@@ -63,7 +66,7 @@ func (s *bookServer) CreateBook(ctx context.Context, req *books_pb.CreateBookReq
 	if err := copier.Copy(&book, req, copier.WithPrimitiveToStringConverter); err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
-
+	s.logger.Infof("received create book request: %v", book)
 	response, err := s.storage.CreateBook(ctx, &book)
 	if err != nil {
 		return nil, err
@@ -72,5 +75,6 @@ func (s *bookServer) CreateBook(ctx context.Context, req *books_pb.CreateBookReq
 	if err != nil {
 		return nil, err
 	}
+	s.logger.Infof("created book mapped to: %v", responseModel)
 	return &books_pb.CreateBookResponse{Book: responseModel}, nil
 }

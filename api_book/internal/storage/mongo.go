@@ -67,7 +67,6 @@ func (d *db) CreateBook(ctx context.Context, book *Book) (*Book, error) {
 	if !ok || id != book.Id {
 		return nil, status.Error(codes.Internal, "error retrieving book id")
 	}
-
 	return book, nil
 }
 func (d *db) GetSuggestions(ctx context.Context, regex string, limit int64) ([]*Book, error) {

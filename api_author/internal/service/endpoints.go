@@ -25,6 +25,7 @@ func (s *authorServer) GetAuthors(ctx context.Context, r *authors_pb.GetAuthorsR
 	if err := s.validator.StructValidation(r); err != nil {
 		return nil, err
 	}
+	s.logger.Infof("received get authors with request id=%v, name=%v", r.GetId(), r.GetTranslit())
 	var id []primitive.ObjectID
 	for _, i := range r.GetId() {
 		v, err := primitive.ObjectIDFromHex(i)
@@ -43,6 +44,7 @@ func (s *authorServer) GetAuthors(ctx context.Context, r *authors_pb.GetAuthorsR
 	if err != nil {
 		return nil, err
 	}
+	s.logger.Infof("found %d authors: %v", len(authors), authors)
 	authorModels := make([]*authors_pb.AuthorModel, len(authors))
 	if err := copier.Copy(&authorModels, &authors, copier.WithPrimitiveToStringConverter); err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
@@ -70,6 +72,7 @@ func (s *authorServer) GetAuthorSuggestion(ctx context.Context, r *authors_pb.Ge
 	}
 	pattern = strings.Trim(pattern, "|")
 
+	s.logger.Infof("received authors suggestion request %s with pattern %s", r.GetQuery(), pattern)
 	authors, err := s.storage.GetSuggestions(ctx, pattern, r.GetLimit())
 	if err != nil {
 		return nil, err

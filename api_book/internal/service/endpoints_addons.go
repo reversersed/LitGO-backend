@@ -13,12 +13,14 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+// TODO add caching to this method
 func (s *bookServer) bookMapper(ctx context.Context, src *model.Book) (*books_pb.BookModel, error) {
 	var book books_pb.BookModel
 	if err := copier.Copy(&book, src, copier.WithPrimitiveToStringConverter); err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
+	s.logger.Infof("received mapping book %v, genre zero: %v", src, src.Genre.IsZero())
 	if !src.Genre.IsZero() {
 		response, err := s.genreService.GetTree(ctx, &genres_pb.GetOneOfRequest{Query: src.Genre.Hex()})
 		if err != nil {
@@ -41,10 +43,12 @@ func (s *bookServer) bookMapper(ctx context.Context, src *model.Book) (*books_pb
 		if book.GetGenre() == nil {
 			return nil, status.Error(codes.NotFound, fmt.Sprintf("genre %s not found", src.Genre.Hex()))
 		}
+		s.logger.Infof("mapped genres: %v", book.GetGenre())
 	} else {
 		book.Genre = nil
 		book.Category = nil
 	}
+	s.logger.Infof("authors: %v (len=%d)", src.Authors, len(src.Authors))
 	if len(src.Authors) > 0 {
 		authorsId := make([]string, len(src.Authors))
 		for i, v := range src.Authors {
@@ -57,6 +61,7 @@ func (s *bookServer) bookMapper(ctx context.Context, src *model.Book) (*books_pb
 		if err := copier.Copy(&book.Authors, authorResponse.GetAuthors(), copier.WithPrimitiveToStringConverter); err != nil {
 			return nil, status.Error(codes.Internal, err.Error())
 		}
+		s.logger.Infof("mapped authors: %v", book.GetAuthors())
 	} else {
 		book.Authors = nil
 	}

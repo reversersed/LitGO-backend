@@ -125,6 +125,9 @@ func TestGetAuthors(t *testing.T) {
 			cache := mock_service.NewMockcache(ctrl)
 			storage := mock_service.NewMockstorage(ctrl)
 			validator := mock_service.NewMockvalidator(ctrl)
+			logger.EXPECT().Info(gomock.Any()).AnyTimes()
+			logger.EXPECT().Infof(gomock.Any(), gomock.Any()).AnyTimes()
+			logger.EXPECT().Infof(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
 
 			service := NewServer(logger, cache, storage, validator)
 			if v.MockBehaviour != nil {
@@ -241,6 +244,9 @@ func TestGetAuthorSuggestion(t *testing.T) {
 			cache := mock_service.NewMockcache(ctrl)
 			storage := mock_service.NewMockstorage(ctrl)
 			validator := mock_service.NewMockvalidator(ctrl)
+			logger.EXPECT().Info(gomock.Any()).AnyTimes()
+			logger.EXPECT().Infof(gomock.Any(), gomock.Any()).AnyTimes()
+			logger.EXPECT().Infof(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
 
 			service := NewServer(logger, cache, storage, validator)
 			if v.MockBehaviour != nil {

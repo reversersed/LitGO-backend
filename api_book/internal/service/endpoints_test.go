@@ -145,6 +145,9 @@ func TestGetBookSuggestion(t *testing.T) {
 			validator := mock_service.NewMockvalidator(ctrl)
 			genreService := mock_genres_pb.NewMockGenreClient(ctrl)
 			authorService := mock_authors_pb.NewMockAuthorClient(ctrl)
+			logger.EXPECT().Info(gomock.Any()).AnyTimes()
+			logger.EXPECT().Infof(gomock.Any(), gomock.Any()).AnyTimes()
+			logger.EXPECT().Infof(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
 
 			service := NewServer(logger, cache, storage, validator, genreService, authorService)
 			if v.MockBehaviour != nil {
@@ -183,6 +186,9 @@ func TestCreateBook(t *testing.T) {
 			validator := mock_service.NewMockvalidator(ctrl)
 			genreService := mock_genres_pb.NewMockGenreClient(ctrl)
 			authorService := mock_authors_pb.NewMockAuthorClient(ctrl)
+			logger.EXPECT().Info(gomock.Any()).AnyTimes()
+			logger.EXPECT().Infof(gomock.Any(), gomock.Any()).AnyTimes()
+			logger.EXPECT().Infof(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
 
 			service := NewServer(logger, cache, storage, validator, genreService, authorService)
 			if v.MockBehaviour != nil {

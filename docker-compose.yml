@@ -6,7 +6,7 @@ services:
     container_name: mongo
     restart: always
     volumes:
-      - ./data/mongodb:/data/db
+      - ../data/mongodb:/data/db
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: d9aeb352a9c668e8793b2412e895dc72a9260ae4d0e00e0cf624a209f3fff983
@@ -28,7 +28,7 @@ services:
       - RABBITMQ_DEFAULT_PASS=rabbitPassword
       - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit log_levels [{connection,error},{default,error}] disk_free_limit 2147483648
     volumes:
-      - ./data/rabbitmq:/var/lib/rabbitmq/cookie
+      - ../data/rabbitmq:/var/lib/rabbitmq/cookie
     logging:
       options:
         max-size: 256m
