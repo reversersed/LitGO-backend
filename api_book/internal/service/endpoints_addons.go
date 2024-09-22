@@ -2,7 +2,9 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"time"
 
 	authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors"
 	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
@@ -13,7 +15,6 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// TODO add caching to this method
 func (s *bookServer) bookMapper(ctx context.Context, src *model.Book) (*books_pb.BookModel, error) {
 	var book books_pb.BookModel
 	if err := copier.Copy(&book, src, copier.WithPrimitiveToStringConverter); err != nil {
@@ -22,9 +23,20 @@ func (s *bookServer) bookMapper(ctx context.Context, src *model.Book) (*books_pb
 
 	s.logger.Infof("received mapping book %v, genre zero: %v", src, src.Genre.IsZero())
 	if !src.Genre.IsZero() {
-		response, err := s.genreService.GetTree(ctx, &genres_pb.GetOneOfRequest{Query: src.Genre.Hex()})
-		if err != nil {
-			return nil, err
+		var response *genres_pb.CategoryResponse
+		genre, err := s.cache.Get([]byte("category_" + src.Genre.Hex()))
+		if jsonErr := json.Unmarshal(genre, &response); err != nil || jsonErr != nil {
+			response, err = s.genreService.GetTree(ctx, &genres_pb.GetOneOfRequest{Query: src.Genre.Hex()})
+			if err != nil {
+				return nil, err
+			}
+			responseJson, err := json.Marshal(response)
+			if err != nil {
+				return nil, status.Error(codes.Internal, err.Error())
+			}
+			if err := s.cache.Set([]byte("category_"+response.GetCategory().GetId()), responseJson, int(time.Hour*2)); err != nil {
+				return nil, status.Error(codes.Internal, err.Error())
+			}
 		}
 		book.Category = new(books_pb.CategoryModel)
 		if err := copier.Copy(book.GetCategory(), response.GetCategory(), copier.WithPrimitiveToStringConverter); err != nil {

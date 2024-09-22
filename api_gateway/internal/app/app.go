@@ -33,6 +33,7 @@ import (
 
 // @scheme http
 // @accept json
+// @accept x-www-form-urlencoded
 
 // @securityDefinitions.apiKey ApiKeyAuth
 // @in Cookie
@@ -63,6 +64,7 @@ func New() (*app, error) {
 	}))
 	server.router.Use(gin.LoggerWithWriter(logger.Writer()))
 	server.router.Use(middleware.ErrorHandler)
+	server.router.Use(gin.CustomRecoveryWithWriter(logger.Writer(), middleware.RecoveryMiddleware))
 	server.logger.Info("router has been set up")
 
 	return server, nil

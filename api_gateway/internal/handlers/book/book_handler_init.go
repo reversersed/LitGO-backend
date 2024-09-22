@@ -29,6 +29,10 @@ func (h *handler) RegisterRouter(router *gin.Engine) {
 		{
 
 		}
+		admin := general.Group("/").Use(h.jwt.Middleware("admin"))
+		{
+			admin.POST("/", h.CreateBook)
+		}
 		general.GET("/suggest", h.GetBooksSuggestion)
 	}
 	h.logger.Info("book handler has been registered")

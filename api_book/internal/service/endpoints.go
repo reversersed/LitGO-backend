@@ -50,7 +50,6 @@ func (s *bookServer) GetBookSuggestions(ctx context.Context, req *books_pb.GetSu
 	return &books_pb.GetBooksResponse{Books: data}, nil
 }
 
-// TODO write test for createbook method
 func (s *bookServer) CreateBook(ctx context.Context, req *books_pb.CreateBookRequest) (*books_pb.CreateBookResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, 2500*time.Millisecond)
 	defer cancel()
