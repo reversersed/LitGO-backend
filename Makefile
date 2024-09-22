@@ -62,13 +62,15 @@ test-verbose:
 
 test: test-folder-creation gen
 	@$(foreach directory,$(API_DIRECTORIES),\
-		cd ./$(directory) && go test ./... -coverprofile=tests/coverage -coverpkg=./... && go tool cover -func=tests/coverage -o tests/coverage.func && go tool cover -html=tests/coverage -o tests/coverage.html && cd ..\
+		cd ./$(directory) && go test ./... -coverprofile=../../data/tests/$(directory)/coverage -coverpkg=./... && go tool cover -func=../../data/tests/$(directory)/coverage -o ../../data/tests/$(directory)/coverage.func && go tool cover -html=../../data/tests/$(directory)/coverage -o ../../data/tests/$(directory)/coverage.html && cd ..\
 		$(CMDSEP)) echo tests completed successfully
 
 test-folder-creation:
 ifeq ($(OS),Windows_NT)
-	-@$(foreach directory,$(API_DIRECTORIES),\
-		cd ./$(directory) & mkdir tests & cd ..\
+	-@cd .. & mkdir data
+	-@cd ../data & mkdir tests
+	-@cd ../data/tests & $(foreach directory,$(API_DIRECTORIES),\
+		mkdir $(directory)\
 		$(CMDSEP)) echo test directories has been created
 else
 	-@$(foreach directory,$(API_DIRECTORIES),\

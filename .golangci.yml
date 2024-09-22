@@ -5,8 +5,6 @@ run:
 
 output:
   formats:
-    - format: html
-      path: ./tests/lint-report.html
     - format: colored-line-number
   sort-results: true
   sort-order:

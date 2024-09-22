@@ -42,7 +42,7 @@ services:
     image: api_gateway
     container_name: api_gateway
     volumes:
-      - ./api_gateway/logs:/logs
+      - ../data/logs/gateway:/logs
       - ./api_gateway/config:/config
       - ../data/files:/files
     user: root
@@ -61,7 +61,7 @@ services:
     image: api_user
     container_name: api_user
     volumes:
-      - ./api_user/logs:/logs
+      - ../data/logs/user:/logs
       - ./api_user/config:/config
     user: root
     build:
@@ -75,7 +75,7 @@ services:
     image: api_genre
     container_name: api_genre
     volumes:
-      - ./api_genre/logs:/logs
+      - ../data/logs/genre:/logs
       - ./api_genre/config:/config
     user: root
     build:
@@ -89,7 +89,7 @@ services:
     image: api_author
     container_name: api_author
     volumes:
-      - ./api_author/logs:/logs
+      - ../data/logs/author:/logs
       - ./api_author/config:/config
     user: root
     build:
@@ -103,7 +103,7 @@ services:
     image: api_book
     container_name: api_book
     volumes:
-      - ./api_book/logs:/logs
+      - ../data/logs/book:/logs
       - ./api_book/config:/config
     user: root
     build:

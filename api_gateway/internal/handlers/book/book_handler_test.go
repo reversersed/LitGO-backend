@@ -33,7 +33,7 @@ func TestHandlers(t *testing.T) {
 			Method: http.MethodGet,
 			Body:   func() io.Reader { return nil },
 			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mbc *mock_books_pb.MockBookClient) {
-				mjm.EXPECT().Middleware(gomock.Any()).Return(func(c *gin.Context) { c.Next() })
+				mjm.EXPECT().Middleware(gomock.Any()).Return(func(c *gin.Context) { c.Next() }).AnyTimes()
 				ml.EXPECT().Info(gomock.Any()).AnyTimes()
 
 				mbc.EXPECT().GetBookSuggestions(gomock.Any(), gomock.Any(), gomock.Any()).Return(&books_pb.GetBooksResponse{Books: []*books_pb.BookModel{{Name: "book name"}}}, nil)
@@ -47,7 +47,7 @@ func TestHandlers(t *testing.T) {
 			Method: http.MethodGet,
 			Body:   func() io.Reader { return nil },
 			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mbc *mock_books_pb.MockBookClient) {
-				mjm.EXPECT().Middleware(gomock.Any()).Return(func(c *gin.Context) { c.Next() })
+				mjm.EXPECT().Middleware(gomock.Any()).Return(func(c *gin.Context) { c.Next() }).AnyTimes()
 				ml.EXPECT().Info(gomock.Any()).AnyTimes()
 
 				mbc.EXPECT().GetBookSuggestions(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, status.Error(codes.NotFound, "books not found"))
