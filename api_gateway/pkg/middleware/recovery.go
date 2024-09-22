@@ -9,6 +9,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+// TODO write test for middleware
 func RecoveryMiddleware(c *gin.Context, err any) {
 	stat, er := status.New(codes.Internal, "service recovered from panic status").WithDetails(&shared_pb.ErrorDetail{
 		Description: fmt.Sprintf("%v", err),

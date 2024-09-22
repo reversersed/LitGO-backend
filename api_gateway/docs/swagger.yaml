@@ -24,6 +24,8 @@ definitions:
         type: string
       name:
         type: string
+      profilepicture:
+        type: string
       translitname:
         type: string
     type: object
@@ -376,7 +378,7 @@ paths:
       summary: Find authors by keywords
       tags:
       - authors
-  /books/:
+  /books:
     post:
       consumes:
       - application/x-www-form-urlencoded
@@ -413,12 +415,12 @@ paths:
         type: string
       - description: epub format book file
         in: formData
-        name: File
+        name: Book
         required: true
         type: file
       - description: book cover picture
         in: formData
-        name: Picture
+        name: Cover
         required: true
         type: file
       produces:

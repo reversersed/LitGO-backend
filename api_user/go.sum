@@ -121,8 +121,8 @@ github.com/power-devops/perfstat v0.0.0-20210106213030-5aafc221ea8c h1:ncq/mPwQF
 github.com/power-devops/perfstat v0.0.0-20210106213030-5aafc221ea8c/go.mod h1:OmDBASR4679mdNQnz2pUhc2G8CO2JrUAVFDRBDP/hJE=
 github.com/rabbitmq/amqp091-go v1.10.0 h1:STpn5XsHlHGcecLmMFCtg7mqq0RnD+zFr4uzukfVhBw=
 github.com/rabbitmq/amqp091-go v1.10.0/go.mod h1:Hy4jKW5kQART1u+JkDTF9YYOQUHXqMuhrgxOEeS7G4o=
-github.com/reversersed/LitGO-proto/gen/go v0.0.0-20240922110213-d01965ddbc5f h1:oUehiK9PbaZkOpL2t/hKfIQGcznWu0lA6mIVHGq8cdo=
-github.com/reversersed/LitGO-proto/gen/go v0.0.0-20240922110213-d01965ddbc5f/go.mod h1:Gp9jQVxpVV9ZWBJZTyX11S9gS2HZQ9NmfYKGM0REzBQ=
+github.com/reversersed/LitGO-proto/gen/go v0.0.0-20240922170528-1e7921470a90 h1:CiSsDO0cqHsjLLGXFHA0LHEPeJ+Aln3pwZ57jWrHET8=
+github.com/reversersed/LitGO-proto/gen/go v0.0.0-20240922170528-1e7921470a90/go.mod h1:Gp9jQVxpVV9ZWBJZTyX11S9gS2HZQ9NmfYKGM0REzBQ=
 github.com/rogpeppe/go-internal v1.8.1 h1:geMPLpDpQOgVyCg5z5GoRwLHepNdb71NXb67XFkP+Eg=
 github.com/rogpeppe/go-internal v1.8.1/go.mod h1:JeRgkft04UBgHMgCIwADu4Pn6Mtm5d4nPKWu0nJ5d+o=
 github.com/shirou/gopsutil/v3 v3.23.12 h1:z90NtUkp3bMtmICZKpC4+WaknU1eXtp5vtbQ11DgpE4=

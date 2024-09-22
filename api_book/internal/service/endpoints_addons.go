@@ -28,7 +28,7 @@ func (s *bookServer) bookMapper(ctx context.Context, src *model.Book) (*books_pb
 		if jsonErr := json.Unmarshal(genre, &response); err != nil || jsonErr != nil {
 			response, err = s.genreService.GetTree(ctx, &genres_pb.GetOneOfRequest{Query: src.Genre.Hex()})
 			if err != nil {
-				return nil, err
+				return nil, status.Error(codes.NotFound, "genre not found: "+err.Error())
 			}
 			responseJson, err := json.Marshal(response)
 			if err != nil {
@@ -52,7 +52,7 @@ func (s *bookServer) bookMapper(ctx context.Context, src *model.Book) (*books_pb
 				break
 			}
 		}
-		if book.GetGenre() == nil {
+		if len(book.GetGenre().Id) == 0 {
 			return nil, status.Error(codes.NotFound, fmt.Sprintf("genre %s not found", src.Genre.Hex()))
 		}
 		s.logger.Infof("mapped genres: %v", book.GetGenre())
@@ -71,7 +71,7 @@ func (s *bookServer) bookMapper(ctx context.Context, src *model.Book) (*books_pb
 			return nil, err
 		}
 		if err := copier.Copy(&book.Authors, authorResponse.GetAuthors(), copier.WithPrimitiveToStringConverter); err != nil {
-			return nil, status.Error(codes.Internal, err.Error())
+			return nil, status.Error(codes.Internal, "authors not found: "+err.Error())
 		}
 		s.logger.Infof("mapped authors: %v", book.GetAuthors())
 	} else {

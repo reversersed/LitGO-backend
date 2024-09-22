@@ -262,7 +262,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/books/": {
+        "/books": {
             "post": {
                 "security": [
                     {
@@ -320,14 +320,14 @@ const docTemplate = `{
                     {
                         "type": "file",
                         "description": "epub format book file",
-                        "name": "File",
+                        "name": "Book",
                         "in": "formData",
                         "required": true
                     },
                     {
                         "type": "file",
                         "description": "book cover picture",
-                        "name": "Picture",
+                        "name": "Cover",
                         "in": "formData",
                         "required": true
                     }
@@ -1339,6 +1339,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "profilepicture": {
                     "type": "string"
                 },
                 "translitname": {

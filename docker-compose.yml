@@ -44,6 +44,7 @@ services:
     volumes:
       - ./api_gateway/logs:/logs
       - ./api_gateway/config:/config
+      - ../data/files:/files
     user: root
     build:
       context: ./api_gateway

@@ -66,6 +66,10 @@ func (s *bookServer) CreateBook(ctx context.Context, req *books_pb.CreateBookReq
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 	s.logger.Infof("received create book request: %v", book)
+	if _, err := s.bookMapper(ctx, &book); err != nil {
+		return nil, err
+	}
+
 	response, err := s.storage.CreateBook(ctx, &book)
 	if err != nil {
 		return nil, err
