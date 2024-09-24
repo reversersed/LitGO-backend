@@ -199,10 +199,13 @@ func TestCreateBook(t *testing.T) {
 			},
 		},
 	}
-	author := &authors_pb.AuthorModel{
+	authors := []*authors_pb.AuthorModel{{
 		Id:   primitive.NewObjectID().Hex(),
 		Name: "Author",
-	}
+	}, {
+		Id:   primitive.NewObjectID().Hex(),
+		Name: "Author2",
+	}}
 	book := &books_pb.BookModel{
 		Id:          primitive.NilObjectID.Hex(),
 		Name:        "book name",
@@ -211,9 +214,10 @@ func TestCreateBook(t *testing.T) {
 		Filepath:    "book.epub",
 		Category:    &books_pb.CategoryModel{Id: category.GetId(), Name: "category"},
 		Genre:       &books_pb.GenreModel{Id: category.GetGenres()[0].GetId(), Name: "genre"},
-		Authors:     []*books_pb.AuthorModel{{Id: author.GetId(), Name: "Author"}},
+		Authors:     []*books_pb.AuthorModel{{Id: authors[0].GetId(), Name: "Author"}, {Id: authors[1].GetId(), Name: "Author2"}},
 	}
-	authorId, _ := primitive.ObjectIDFromHex(author.GetId())
+	authorId, _ := primitive.ObjectIDFromHex(authors[0].GetId())
+	authorId2, _ := primitive.ObjectIDFromHex(authors[1].GetId())
 	genreId, _ := primitive.ObjectIDFromHex(category.GetGenres()[0].GetId())
 	model := &model.Book{
 		Id:          primitive.NilObjectID,
@@ -222,7 +226,7 @@ func TestCreateBook(t *testing.T) {
 		Picture:     "picture.jpg",
 		Filepath:    "book.epub",
 		Genre:       genreId,
-		Authors:     []primitive.ObjectID{authorId},
+		Authors:     []primitive.ObjectID{authorId, authorId2},
 	}
 	table := []struct {
 		Name             string
@@ -239,7 +243,7 @@ func TestCreateBook(t *testing.T) {
 				Picture:     "picture.jpg",
 				Filepath:    "book.epub",
 				Genre:       category.GetGenres()[0].GetId(),
-				Authors:     []string{author.GetId()},
+				Authors:     []string{authors[0].GetId(), authors[1].GetId()},
 			},
 			ExceptedResponse: &books_pb.CreateBookResponse{Book: book},
 			MockBehaviour: func(m1 *mock_service.Mockcache, mac *mock_authors_pb.MockAuthorClient, mgc *mock_genres_pb.MockGenreClient, m2 *mock_service.Mocklogger, m3 *mock_service.Mockstorage, m4 *mock_service.Mockvalidator) {
@@ -248,7 +252,7 @@ func TestCreateBook(t *testing.T) {
 				m1.EXPECT().Set(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
 				m3.EXPECT().CreateBook(gomock.Any(), model).Return(model, nil)
 				mgc.EXPECT().GetTree(gomock.Any(), gomock.Any()).Return(&genres_pb.CategoryResponse{Category: category}, nil).AnyTimes()
-				mac.EXPECT().GetAuthors(gomock.Any(), gomock.Any()).Return(&authors_pb.GetAuthorsResponse{Authors: []*authors_pb.AuthorModel{author}}, nil).AnyTimes()
+				mac.EXPECT().GetAuthors(gomock.Any(), gomock.Any()).Return(&authors_pb.GetAuthorsResponse{Authors: []*authors_pb.AuthorModel{authors[0], authors[1]}}, nil).AnyTimes()
 			},
 		},
 	}

@@ -8,6 +8,7 @@ require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/golang/mock v1.6.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
+	github.com/mdigger/translit v0.2.0
 	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20240922170528-1e7921470a90
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.9.0

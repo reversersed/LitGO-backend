@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 var cases = []struct {
@@ -51,6 +52,14 @@ type fieldStruct struct {
 	Field string `json:"field" validate:"required,digitrequired"`
 }
 
+func TestPrimitiveArray(t *testing.T) {
+	valid := New()
+
+	array := []string{primitive.NewObjectID().Hex(), primitive.NewObjectID().Hex(), primitive.NewObjectID().Hex()}
+
+	err := valid.Var(array, "primitiveid")
+	assert.NoError(t, err)
+}
 func TestFieldName(t *testing.T) {
 	str := &fieldStruct{Field: "there is supposed to be an error"}
 	valid := New()

@@ -2,11 +2,13 @@ package book
 
 import (
 	"net/http"
+	"regexp"
 	"slices"
 	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mdigger/translit"
 	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
 	shared_pb "github.com/reversersed/LitGO-proto/gen/go/shared"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -106,16 +108,20 @@ func (h *handler) CreateBook(c *gin.Context) {
 			Field:       "Book",
 			Tag:         "format",
 			Description: "file must be in .epub format",
+			TagValue:    "epub",
+			Actualvalue: a[len(a)-1],
 		})
 	}
 
 	a = strings.Split(picture.Filename, ".")
-	allowedPictureFormat := []string{"jpg", "jped", "png"}
+	allowedPictureFormat := []string{"jpg", "jpeg", "png"}
 	if !slices.Contains(allowedPictureFormat, a[len(a)-1]) {
 		fileDetail = append(fileDetail, &shared_pb.ErrorDetail{
 			Field:       "Cover",
 			Tag:         "format",
 			Description: "available formats: " + strings.Join(allowedPictureFormat, " | "),
+			TagValue:    strings.Join(allowedPictureFormat, " | "),
+			Actualvalue: a[len(a)-1],
 		})
 	}
 	const MB = 1 << 20
@@ -125,6 +131,8 @@ func (h *handler) CreateBook(c *gin.Context) {
 			Field:       "Cover",
 			Tag:         "size",
 			Description: "picture must be less than 5 MB size",
+			TagValue:    strconv.Itoa(5 * MB),
+			Actualvalue: strconv.FormatInt(picture.Size, 10),
 		})
 	}
 	if file.Size > 15*MB {
@@ -132,6 +140,8 @@ func (h *handler) CreateBook(c *gin.Context) {
 			Field:       "Book",
 			Tag:         "size",
 			Description: "file must be less than 15 MB size",
+			TagValue:    strconv.Itoa(15 * MB),
+			Actualvalue: strconv.FormatInt(picture.Size, 10),
 		})
 	}
 	if len(fileDetail) > 0 {
@@ -156,8 +166,22 @@ func (h *handler) CreateBook(c *gin.Context) {
 		c.Error(status.Error(codes.InvalidArgument, err.Error()))
 		return
 	}
-	req.Filepath = req.GetName() + "_" + primitive.NewObjectID().Hex() + "." + strings.Split(file.Filename, ".")[len(strings.Split(file.Filename, "."))-1]
-	req.Picture = req.GetName() + "_" + primitive.NewObjectID().Hex() + "." + strings.Split(picture.Filename, ".")[len(strings.Split(picture.Filename, "."))-1]
+	rxSpaces := regexp.MustCompile(`\s+`)
+	reg := regexp.MustCompile(`[^\p{L}\s]`)
+
+	const MAX_NAME_LENGTH = 24 //max length of book name that goes to filename
+
+	var fileName string = strings.Split(req.GetName(), ".")[0]
+	if len(fileName) > MAX_NAME_LENGTH {
+		fileName = fileName[:MAX_NAME_LENGTH]
+	}
+	req.Filepath = strings.ReplaceAll(strings.TrimSpace(rxSpaces.ReplaceAllString(translit.Ru(reg.ReplaceAllString(strings.ToLower(strings.ReplaceAll(fileName, "_", " ")), "")), " ")), " ", "_") + "_" + primitive.NewObjectID().Hex() + "." + strings.Split(file.Filename, ".")[len(strings.Split(file.Filename, "."))-1]
+	fileName = strings.Split(req.GetName(), ".")[0]
+	if len(fileName) > MAX_NAME_LENGTH {
+		fileName = fileName[:MAX_NAME_LENGTH]
+	}
+	req.Picture = strings.ReplaceAll(strings.TrimSpace(rxSpaces.ReplaceAllString(translit.Ru(reg.ReplaceAllString(strings.ToLower(strings.ReplaceAll(fileName, "_", " ")), "")), " ")), " ", "_") + "_" + primitive.NewObjectID().Hex() + "." + strings.Split(picture.Filename, ".")[len(strings.Split(picture.Filename, "."))-1]
+	req.Authors = strings.Split(req.GetAuthors()[0], ",") // bcz Bind is making array of length 1 with all values joined with , instead of array
 	response, err := h.client.CreateBook(c.Request.Context(), &req)
 	if err != nil {
 		c.Error(err)
