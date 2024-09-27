@@ -169,7 +169,7 @@ func (h *handler) CreateBook(c *gin.Context) {
 	rxSpaces := regexp.MustCompile(`\s+`)
 	reg := regexp.MustCompile(`[^\p{L}\s]`)
 
-	const MAX_NAME_LENGTH = 24 //max length of book name that goes to filename
+	const MAX_NAME_LENGTH = 24 // max length of book name that goes to filename
 
 	var fileName string = strings.Split(req.GetName(), ".")[0]
 	if len(fileName) > MAX_NAME_LENGTH {
