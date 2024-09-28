@@ -21,6 +21,7 @@ func (c *CustomError) Error() string {
 	return c.Message
 }
 func ErrorHandler(c *gin.Context) {
+	c.SetSameSite(http.SameSiteNoneMode)
 	c.Next()
 
 	if lastError := c.Errors.Last(); lastError != nil {

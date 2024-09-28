@@ -56,10 +56,11 @@ func New() (*app, error) {
 	server.logger.Info("setting up gin router...")
 	gin.SetMode(server.config.Server.Environment)
 	server.router.Use(cors.New(cors.Config{
+		AllowWildcard:    true,
 		AllowAllOrigins:  false,
 		AllowCredentials: true,
-		AllowOrigins:     []string{("http://localhost:" + strconv.Itoa(server.config.Server.Port)), "http://localhost:7000", "http://localhost:8080"},
-		AllowMethods:     []string{"GET", "POST", "PATCH", "DELETE"},
+		AllowOrigins:     []string{"https://*.ngrok-free.app", ("http://localhost:" + strconv.Itoa(server.config.Server.Port)), "http://localhost:7000", "http://localhost:8080"},
+		AllowMethods:     []string{"GET", "POST", "PATCH", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Content-Type", "Accept", "Cookie", "Access-Control-Expose-Headers"},
 	}))
 	server.router.Use(gin.LoggerWithWriter(logger.Writer()))
