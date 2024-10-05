@@ -114,8 +114,13 @@ func (h *handler) UserLogin(c *gin.Context) {
 		return
 	}
 	h.logger.Infof("user %s authoirized via login and password", request.GetLogin())
-	c.SetCookie(middleware.TokenCookieName, reply.GetToken(), (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
-	c.SetCookie(middleware.RefreshCookieName, reply.GetRefreshtoken(), (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
+
+	if request.RememberMe {
+		c.SetCookie(middleware.TokenCookieName, reply.GetToken(), (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
+		c.SetCookie(middleware.RefreshCookieName, reply.GetRefreshtoken(), (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
+	} else {
+		c.SetCookie(middleware.TokenCookieName, reply.GetToken(), 0, "/", "", true, true)
+	}
 
 	c.JSON(http.StatusOK, UserResponse{
 		Login: reply.GetLogin(),
@@ -130,6 +135,7 @@ func (h *handler) UserLogin(c *gin.Context) {
 // @Param        request body users_pb.RegistrationRequest true "Request body"
 // @Success      201  {object}  user.UserRegister.UserResponse "User registered and authorized"
 // @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Invalid request data"
+// @Failure      409  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Data confict (some values already taken)"
 // @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Some internal error occurred"
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Service does not responding (maybe crush)"
 // @Router       /users/signin [post]
@@ -149,8 +155,13 @@ func (h *handler) UserRegister(c *gin.Context) {
 		return
 	}
 	h.logger.Infof("user %s registered with email %s", reply.GetLogin(), request.GetEmail())
-	c.SetCookie(middleware.TokenCookieName, reply.GetToken(), (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
-	c.SetCookie(middleware.RefreshCookieName, reply.GetRefreshtoken(), (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
+
+	if request.RememberMe {
+		c.SetCookie(middleware.TokenCookieName, reply.GetToken(), (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
+		c.SetCookie(middleware.RefreshCookieName, reply.GetRefreshtoken(), (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
+	} else {
+		c.SetCookie(middleware.TokenCookieName, reply.GetToken(), 0, "/", "", true, true)
+	}
 
 	c.JSON(http.StatusCreated, UserResponse{
 		Login: reply.GetLogin(),

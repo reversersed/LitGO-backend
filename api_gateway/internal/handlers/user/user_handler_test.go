@@ -58,7 +58,7 @@ func TestHandlers(t *testing.T) {
 			ExceptedBody:   "{\"code\":3,\"type\":\"InvalidArgument\",\"message\":\"wrong request\",\"details\":[]}",
 		},
 		{
-			Name:   "User register success",
+			Name:   "User register success without remember me",
 			Path:   "/api/v1/users/signin",
 			Method: http.MethodPost,
 			Body: func() io.Reader {
@@ -70,6 +70,71 @@ func TestHandlers(t *testing.T) {
 				ml.EXPECT().Infof(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
 				mjm.EXPECT().Middleware(gomock.Any()).AnyTimes()
 				muc.EXPECT().RegisterUser(gomock.Any(), &users_pb.RegistrationRequest{Login: "user", Password: "password", PasswordRepeat: "password", Email: "user@example.com"}).Return(&users_pb.LoginResponse{Login: "user", Roles: []string{"user"}, Token: "token", Refreshtoken: "rtoken"}, nil)
+			},
+			ExtraCheck: func(rr *httptest.ResponseRecorder, t *testing.T) {
+				cookie := rr.Result().Cookies()
+				token := false
+				refresh := false
+				for _, c := range cookie {
+					if c.Name == middleware.TokenCookieName {
+						if token == true {
+							assert.Fail(t, "found cookie duplicate: refresh token")
+						}
+						assert.Equal(t, c.MaxAge, 0)
+						assert.Equal(t, c.Value, "token")
+						token = true
+					}
+					if c.Name == middleware.RefreshCookieName {
+						if refresh == true {
+							assert.Fail(t, "found cookie duplicate: refresh token")
+						}
+						refresh = true
+					}
+				}
+				assert.True(t, token, "excepted token in cookies")
+				assert.False(t, refresh, "excepted no refresh token in cookies")
+			},
+			ExceptedStatus: http.StatusCreated,
+			ExceptedBody:   "{\"login\":\"user\",\"roles\":[\"user\"]}",
+		},
+		{
+			Name:   "User register success with remember me",
+			Path:   "/api/v1/users/signin",
+			Method: http.MethodPost,
+			Body: func() io.Reader {
+				byts, _ := json.Marshal(&users_pb.RegistrationRequest{Login: "user", Password: "password", PasswordRepeat: "password", Email: "user@example.com", RememberMe: true})
+				return bytes.NewReader(byts)
+			},
+			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, muc *mock_users_pb.MockUserClient) {
+				ml.EXPECT().Info(gomock.Any()).AnyTimes()
+				ml.EXPECT().Infof(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
+				mjm.EXPECT().Middleware(gomock.Any()).AnyTimes()
+				muc.EXPECT().RegisterUser(gomock.Any(), &users_pb.RegistrationRequest{Login: "user", Password: "password", PasswordRepeat: "password", Email: "user@example.com", RememberMe: true}).Return(&users_pb.LoginResponse{Login: "user", Roles: []string{"user"}, Token: "token", Refreshtoken: "rtoken"}, nil)
+			},
+			ExtraCheck: func(rr *httptest.ResponseRecorder, t *testing.T) {
+				cookie := rr.Result().Cookies()
+				token := false
+				refresh := false
+				for _, c := range cookie {
+					if c.Name == middleware.TokenCookieName {
+						if token == true {
+							assert.Fail(t, "found cookie duplicate: refresh token")
+						}
+						assert.Greater(t, c.MaxAge, 0)
+						assert.Equal(t, c.Value, "token")
+						token = true
+					}
+					if c.Name == middleware.RefreshCookieName {
+						if refresh == true {
+							assert.Fail(t, "found cookie duplicate: refresh token")
+						}
+						assert.Greater(t, c.MaxAge, 0)
+						assert.Equal(t, c.Value, "rtoken")
+						refresh = true
+					}
+				}
+				assert.True(t, token, "excepted token in cookies")
+				assert.True(t, refresh, "excepted refresh token in cookies")
 			},
 			ExceptedStatus: http.StatusCreated,
 			ExceptedBody:   "{\"login\":\"user\",\"roles\":[\"user\"]}",
@@ -92,11 +157,11 @@ func TestHandlers(t *testing.T) {
 			ExceptedBody:   "{\"code\":3,\"type\":\"InvalidArgument\",\"message\":\"wrong request\",\"details\":[]}",
 		},
 		{
-			Name:   "User login success",
+			Name:   "User login success without remember me",
 			Path:   "/api/v1/users/login",
 			Method: http.MethodPost,
 			Body: func() io.Reader {
-				byts, _ := json.Marshal(&users_pb.LoginRequest{Login: "user", Password: "password"})
+				byts, _ := json.Marshal(&users_pb.LoginRequest{Login: "user", Password: "password", RememberMe: false})
 				return bytes.NewReader(byts)
 			},
 			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, muc *mock_users_pb.MockUserClient) {
@@ -104,6 +169,46 @@ func TestHandlers(t *testing.T) {
 				ml.EXPECT().Infof(gomock.Any(), gomock.Any()).AnyTimes()
 				mjm.EXPECT().Middleware(gomock.Any()).AnyTimes()
 				muc.EXPECT().Login(gomock.Any(), &users_pb.LoginRequest{Login: "user", Password: "password"}).Return(&users_pb.LoginResponse{Login: "user", Roles: []string{"user"}, Token: "token", Refreshtoken: "rtoken"}, nil)
+			},
+			ExtraCheck: func(rr *httptest.ResponseRecorder, t *testing.T) {
+				cookie := rr.Result().Cookies()
+				token := false
+				refresh := false
+				for _, c := range cookie {
+					if c.Name == middleware.TokenCookieName {
+						if token == true {
+							assert.Fail(t, "found cookie duplicate: refresh token")
+						}
+						assert.Equal(t, c.MaxAge, 0)
+						assert.Equal(t, c.Value, "token")
+						token = true
+					}
+					if c.Name == middleware.RefreshCookieName {
+						if refresh == true {
+							assert.Fail(t, "found cookie duplicate: refresh token")
+						}
+						refresh = true
+					}
+				}
+				assert.True(t, token, "excepted token in cookies")
+				assert.False(t, refresh, "excepted no refresh token in cookies")
+			},
+			ExceptedStatus: http.StatusOK,
+			ExceptedBody:   "{\"login\":\"user\",\"roles\":[\"user\"]}",
+		},
+		{
+			Name:   "User login success with remember me",
+			Path:   "/api/v1/users/login",
+			Method: http.MethodPost,
+			Body: func() io.Reader {
+				byts, _ := json.Marshal(&users_pb.LoginRequest{Login: "user", Password: "password", RememberMe: true})
+				return bytes.NewReader(byts)
+			},
+			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, muc *mock_users_pb.MockUserClient) {
+				ml.EXPECT().Info(gomock.Any()).AnyTimes()
+				ml.EXPECT().Infof(gomock.Any(), gomock.Any()).AnyTimes()
+				mjm.EXPECT().Middleware(gomock.Any()).AnyTimes()
+				muc.EXPECT().Login(gomock.Any(), &users_pb.LoginRequest{Login: "user", Password: "password", RememberMe: true}).Return(&users_pb.LoginResponse{Login: "user", Roles: []string{"user"}, Token: "token", Refreshtoken: "rtoken"}, nil)
 			},
 			ExtraCheck: func(rr *httptest.ResponseRecorder, t *testing.T) {
 				cookie := rr.Result().Cookies()

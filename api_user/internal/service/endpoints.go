@@ -124,12 +124,14 @@ func (u *userServer) RegisterUser(c context.Context, usr *users_pb.RegistrationR
 	_, err = u.storage.FindByLogin(cntx, user.Login)
 	if err == nil {
 		u.logger.Warnf("user %s couldn't register because of login collision", user.Login)
-		return nil, status.Error(codes.AlreadyExists, "user with provided login already exist")
+		stat, _ := status.New(codes.AlreadyExists, "user with provided login already exist").WithDetails(&shared_pb.ErrorDetail{Field: "login", Actualvalue: user.Login})
+		return nil, stat.Err()
 	}
 	_, err = u.storage.FindByEmail(cntx, user.Email)
 	if err == nil {
 		u.logger.Warnf("user %s couldn't register because of email (%s) collision", user.Login, user.Email)
-		return nil, status.Error(codes.AlreadyExists, "email already taken")
+		stat, _ := status.New(codes.AlreadyExists, "email already taken").WithDetails(&shared_pb.ErrorDetail{Field: "email", Actualvalue: user.Email})
+		return nil, stat.Err()
 	}
 	result, err := u.storage.CreateUser(cntx, &user)
 	if err != nil {
