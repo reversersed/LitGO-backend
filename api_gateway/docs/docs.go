@@ -1262,6 +1262,27 @@ const docTemplate = `{
                             ]
                         }
                     },
+                    "409": {
+                        "description": "Data confict (some values already taken)",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
                     "500": {
                         "description": "Some internal error occurred",
                         "schema": {
@@ -1591,6 +1612,9 @@ const docTemplate = `{
                 "password": {
                     "type": "string",
                     "example": "admin"
+                },
+                "rememberMe": {
+                    "type": "boolean"
                 }
             }
         },
@@ -1618,6 +1642,9 @@ const docTemplate = `{
                 },
                 "password_repeat": {
                     "type": "string"
+                },
+                "rememberMe": {
+                    "type": "boolean"
                 }
             }
         },

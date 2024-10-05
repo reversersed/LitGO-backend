@@ -37,9 +37,11 @@ upgrade: clean i
 		$(CMDSEP)) echo packages upgraded
 
 clean:
+	@go env -w GOPROXY=direct
 	@$(foreach directory,$(API_DIRECTORIES),\
 		cd ./$(directory) && go get -v -u github.com/reversersed/LitGO-proto/gen/go@latest && go mod tidy && cd ..\
 		$(CMDSEP)) echo mod files cleaned
+	@go env -w GOPROXY=https://proxy.golang.org,direct
 
 start:
 	@docker compose up --build --timestamps --wait --wait-timeout 1800 --remove-orphans -d

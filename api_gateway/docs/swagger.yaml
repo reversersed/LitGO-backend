@@ -195,6 +195,8 @@ definitions:
       password:
         example: admin
         type: string
+      rememberMe:
+        type: boolean
     required:
     - login
     - password
@@ -213,6 +215,8 @@ definitions:
         type: string
       password_repeat:
         type: string
+      rememberMe:
+        type: boolean
     required:
     - email
     - login
@@ -948,6 +952,17 @@ paths:
             $ref: '#/definitions/user.UserRegister.UserResponse'
         "400":
           description: Invalid request data
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "409":
+          description: Data confict (some values already taken)
           schema:
             allOf:
             - $ref: '#/definitions/middleware.CustomError'
