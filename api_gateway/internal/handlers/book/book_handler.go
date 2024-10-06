@@ -47,7 +47,6 @@ func (h *handler) GetBooksSuggestion(c *gin.Context) {
 	c.JSON(http.StatusOK, reply.GetBooks())
 }
 
-// TODO write tests for this handler
 // @Summary      Create new book
 // @Description  Creates new book by request
 // @Description  Request must be multipart/form data only
@@ -78,7 +77,7 @@ func (h *handler) CreateBook(c *gin.Context) {
 	}
 	pictureArray, exist := form.File["Cover"]
 	if !exist {
-		c.Error(status.Error(codes.InvalidArgument, "Cover is required"))
+		c.Error(status.Error(codes.InvalidArgument, "cover is required"))
 		return
 	}
 	if len(fileArray) != 1 || len(pictureArray) != 1 {
@@ -176,12 +175,11 @@ func (h *handler) CreateBook(c *gin.Context) {
 		fileName = fileName[:MAX_NAME_LENGTH]
 	}
 	req.Filepath = strings.ReplaceAll(strings.TrimSpace(rxSpaces.ReplaceAllString(translit.Ru(reg.ReplaceAllString(strings.ToLower(strings.ReplaceAll(fileName, "_", " ")), "")), " ")), " ", "_") + "_" + primitive.NewObjectID().Hex() + "." + strings.Split(file.Filename, ".")[len(strings.Split(file.Filename, "."))-1]
-	fileName = strings.Split(req.GetName(), ".")[0]
-	if len(fileName) > MAX_NAME_LENGTH {
-		fileName = fileName[:MAX_NAME_LENGTH]
-	}
 	req.Picture = strings.ReplaceAll(strings.TrimSpace(rxSpaces.ReplaceAllString(translit.Ru(reg.ReplaceAllString(strings.ToLower(strings.ReplaceAll(fileName, "_", " ")), "")), " ")), " ", "_") + "_" + primitive.NewObjectID().Hex() + "." + strings.Split(picture.Filename, ".")[len(strings.Split(picture.Filename, "."))-1]
-	req.Authors = strings.Split(req.GetAuthors()[0], ",") // bcz Bind is making array of length 1 with all values joined with , instead of array
+
+	if len(req.GetAuthors()) == 1 {
+		req.Authors = strings.Split(req.GetAuthors()[0], ",") // bcz Bind is making array of length 1 with all values joined with , instead of array
+	}
 	response, err := h.client.CreateBook(c.Request.Context(), &req)
 	if err != nil {
 		c.Error(err)

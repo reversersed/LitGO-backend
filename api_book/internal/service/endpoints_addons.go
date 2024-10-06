@@ -52,7 +52,7 @@ func (s *bookServer) bookMapper(ctx context.Context, src *model.Book) (*books_pb
 				break
 			}
 		}
-		if len(book.GetGenre().Id) == 0 {
+		if len(book.GetGenre().GetId()) == 0 {
 			return nil, status.Error(codes.NotFound, fmt.Sprintf("genre %s not found", src.Genre.Hex()))
 		}
 		s.logger.Infof("mapped genres: %v", book.GetGenre())

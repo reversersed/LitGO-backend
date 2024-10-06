@@ -115,7 +115,7 @@ func (h *handler) UserLogin(c *gin.Context) {
 	}
 	h.logger.Infof("user %s authoirized via login and password", request.GetLogin())
 
-	if request.RememberMe {
+	if request.GetRememberMe() {
 		c.SetCookie(middleware.TokenCookieName, reply.GetToken(), (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
 		c.SetCookie(middleware.RefreshCookieName, reply.GetRefreshtoken(), (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
 	} else {
@@ -156,7 +156,7 @@ func (h *handler) UserRegister(c *gin.Context) {
 	}
 	h.logger.Infof("user %s registered with email %s", reply.GetLogin(), request.GetEmail())
 
-	if request.RememberMe {
+	if request.GetRememberMe() {
 		c.SetCookie(middleware.TokenCookieName, reply.GetToken(), (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
 		c.SetCookie(middleware.RefreshCookieName, reply.GetRefreshtoken(), (int)((31*24*time.Hour)/time.Second), "/", "", true, true)
 	} else {
