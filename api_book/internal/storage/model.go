@@ -12,10 +12,3 @@ type Book struct {
 	Genre        primitive.ObjectID   `bson:"genre"`
 	Authors      []primitive.ObjectID `bson:"authors"`
 }
-
-var mocked_books = []*Book{
-	{
-		Name:        "Книга о книгопечатании",
-		Description: "Эта книга должна была быть о чем-то хорошем, но в итоге...",
-	},
-}

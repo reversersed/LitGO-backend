@@ -34,7 +34,7 @@ func (s *bookServer) bookMapper(ctx context.Context, src *model.Book) (*books_pb
 			if err != nil {
 				return nil, status.Error(codes.Internal, err.Error())
 			}
-			if err := s.cache.Set([]byte("category_"+response.GetCategory().GetId()), responseJson, int(time.Hour*2)); err != nil {
+			if err := s.cache.Set([]byte("category_"+response.GetCategory().GetId()), responseJson, int(time.Hour*1)); err != nil {
 				return nil, status.Error(codes.Internal, err.Error())
 			}
 		}

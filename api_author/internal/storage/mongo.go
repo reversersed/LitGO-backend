@@ -3,7 +3,6 @@ package storage
 import (
 	"context"
 	"strings"
-	"sync"
 	"time"
 
 	shared_pb "github.com/reversersed/LitGO-proto/gen/go/shared"
@@ -27,7 +26,6 @@ type logger interface {
 	Fatal(...any)
 }
 type db struct {
-	sync.RWMutex
 	logger     logger
 	collection *mongodb.Collection
 }

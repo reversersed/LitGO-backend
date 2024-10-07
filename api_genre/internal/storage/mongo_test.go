@@ -14,6 +14,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 var cfg *mongo.DatabaseConfig
@@ -131,5 +132,35 @@ func TestFindCategoryTree(t *testing.T) {
 
 	result, err = storage.FindCategoryTree(ctx, "not existing")
 	assert.Nil(t, result)
+	assert.Error(t, err)
+}
+func TestIncreaseBookCount(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	dba, err := mongo.NewClient(ctx, cfg)
+	defer dba.Client().Disconnect(ctx)
+	assert.NoError(t, err)
+
+	ctrl := gomock.NewController(t)
+	logger := mock_storage.NewMocklogger(ctrl)
+	logger.EXPECT().Info(gomock.Any()).AnyTimes()
+	logger.EXPECT().Infof(gomock.Any(), gomock.Any()).AnyTimes()
+
+	storage := NewStorage(dba, cfg.Base, logger)
+
+	genres, err := storage.GetAll(ctx)
+	assert.NoError(t, err)
+
+	count := genres[0].Genres[0].BookCount
+	err = storage.IncreateBookCount(ctx, genres[0].Genres[0].Id)
+	assert.NoError(t, err)
+
+	genres, err = storage.GetAll(ctx)
+	assert.NoError(t, err)
+
+	assert.Equal(t, count+1, genres[0].Genres[0].BookCount)
+
+	err = storage.IncreateBookCount(ctx, primitive.NewObjectID())
 	assert.Error(t, err)
 }

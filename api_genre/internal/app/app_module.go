@@ -1,6 +1,8 @@
 package app
 
 import (
+	"io"
+
 	"github.com/reversersed/go-grpc/tree/main/api_genre/internal/config"
 	"google.golang.org/grpc"
 )
@@ -25,9 +27,14 @@ type logger interface {
 	Warnf(string, ...any)
 	Fatalf(string, ...any)
 }
+type RabbitListenerService interface {
+	InitiateBookCreatedReceived() error
+}
 type app struct {
-	config  *config.Config
-	logger  logger
-	service service
-	cache   cache
+	config                *config.Config
+	logger                logger
+	service               service
+	cache                 cache
+	RabbitListenerService RabbitListenerService
+	closers               []io.Closer
 }

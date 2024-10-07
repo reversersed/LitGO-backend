@@ -8,8 +8,6 @@ import (
 	"google.golang.org/grpc"
 )
 
-// TODO write rabbit mq service receiver
-//
 //go:generate mockgen -source=server.go -destination=mocks/server.go
 type validator interface {
 	StructValidation(any) error
@@ -31,20 +29,24 @@ type cache interface {
 	Set([]byte, []byte, int) error
 	Delete([]byte) bool
 }
+type rabbitservice interface {
+}
 type genreServer struct {
 	cache     cache
 	logger    logger
 	storage   storage
 	validator validator
+	rabbit    rabbitservice
 	genres_pb.UnimplementedGenreServer
 }
 
-func NewServer(logger logger, cache cache, storage storage, validator validator) *genreServer {
+func NewServer(logger logger, cache cache, storage storage, validator validator, rabbit rabbitservice) *genreServer {
 	return &genreServer{
 		storage:   storage,
 		logger:    logger,
 		cache:     cache,
 		validator: validator,
+		rabbit:    rabbit,
 	}
 }
 func (u *genreServer) Register(s grpc.ServiceRegistrar) {

@@ -2,7 +2,6 @@ package storage
 
 import (
 	"context"
-	"sync"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -24,7 +23,6 @@ type logger interface {
 	Fatal(...any)
 }
 type db struct {
-	sync.RWMutex
 	logger     logger
 	collection *mongo.Collection
 }
@@ -38,9 +36,6 @@ func NewStorage(storage *mongo.Database, collection string, logger logger) *db {
 	return db
 }
 func (d *db) seedAdminAccount() {
-	d.Lock()
-	defer d.Unlock()
-
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -64,9 +59,6 @@ func (d *db) seedAdminAccount() {
 }
 
 func (d *db) FindById(ctx context.Context, id string) (*User, error) {
-	d.RLock()
-	defer d.RUnlock()
-
 	primitive_id, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return nil, err
@@ -88,9 +80,6 @@ func (d *db) FindById(ctx context.Context, id string) (*User, error) {
 	return &u, nil
 }
 func (d *db) FindByLogin(ctx context.Context, login string) (*User, error) {
-	d.RLock()
-	defer d.RUnlock()
-
 	filter := bson.M{"login": login}
 
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
@@ -108,9 +97,6 @@ func (d *db) FindByLogin(ctx context.Context, login string) (*User, error) {
 	return &u, nil
 }
 func (d *db) FindByEmail(ctx context.Context, email string) (*User, error) {
-	d.RLock()
-	defer d.RUnlock()
-
 	filter := bson.M{"email": email}
 
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
@@ -128,9 +114,6 @@ func (d *db) FindByEmail(ctx context.Context, email string) (*User, error) {
 	return &u, nil
 }
 func (d *db) CreateUser(ctx context.Context, model *User) (primitive.ObjectID, error) {
-	d.Lock()
-	defer d.Unlock()
-
 	contx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
 

@@ -139,8 +139,9 @@ func TestGetAll(t *testing.T) {
 			m_logger := mocks.NewMocklogger(ctrl)
 			m_storage := mocks.NewMockstorage(ctrl)
 			m_validator := mocks.NewMockvalidator(ctrl)
+			m_rabbit := mocks.NewMockrabbitservice(ctrl)
 
-			server := NewServer(m_logger, m_cache, m_storage, m_validator)
+			server := NewServer(m_logger, m_cache, m_storage, m_validator, m_rabbit)
 			v.MockBehaviour(m_cache, m_logger, m_storage, m_validator)
 
 			response, err := server.GetAll(context.Background(), &genres_pb.Empty{})
@@ -269,8 +270,9 @@ func TestGetCategoryTree(t *testing.T) {
 			m_logger := mocks.NewMocklogger(ctrl)
 			m_storage := mocks.NewMockstorage(ctrl)
 			m_validator := mocks.NewMockvalidator(ctrl)
+			m_rabbit := mocks.NewMockrabbitservice(ctrl)
 
-			server := NewServer(m_logger, m_cache, m_storage, m_validator)
+			server := NewServer(m_logger, m_cache, m_storage, m_validator, m_rabbit)
 			v.MockBehaviour(m_cache, m_logger, m_storage, m_validator)
 
 			response, err := server.GetTree(context.Background(), &genres_pb.GetOneOfRequest{Query: v.Query})
@@ -432,8 +434,9 @@ func TestGetOneOf(t *testing.T) {
 			m_logger := mocks.NewMocklogger(ctrl)
 			m_storage := mocks.NewMockstorage(ctrl)
 			m_validator := mocks.NewMockvalidator(ctrl)
+			m_rabbit := mocks.NewMockrabbitservice(ctrl)
 
-			server := NewServer(m_logger, m_cache, m_storage, m_validator)
+			server := NewServer(m_logger, m_cache, m_storage, m_validator, m_rabbit)
 			v.MockBehaviour(m_cache, m_logger, m_storage, m_validator)
 
 			response, err := server.GetOneOf(context.Background(), &genres_pb.GetOneOfRequest{Query: v.Query})

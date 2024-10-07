@@ -28,7 +28,6 @@ type logger interface {
 	Fatal(...any)
 }
 type db struct {
-	sync.RWMutex
 	logger     logger
 	collection *mongodb.Collection
 }
@@ -42,9 +41,6 @@ func NewStorage(storage *mongodb.Database, collection string, logger logger) *db
 	return db
 }
 func (d *db) seedGenres() {
-	d.Lock()
-	defer d.Unlock()
-
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -176,4 +172,18 @@ func (d *db) FindCategoryTree(ctx context.Context, query string) (*Category, err
 	}
 
 	return &result, nil
+}
+
+func (d *db) IncreateBookCount(ctx context.Context, genre primitive.ObjectID) error {
+	result, err := d.collection.UpdateOne(ctx, bson.M{"genres._id": genre}, bson.M{"$inc": bson.M{"genres.$.bookCount": 1}})
+	if err != nil {
+		return status.Error(codes.NotFound, err.Error())
+	}
+	if result.MatchedCount == 0 {
+		return status.Error(codes.NotFound, "no genre found")
+	}
+	if result.ModifiedCount == 0 {
+		return status.Error(codes.Aborted, "no genre modified")
+	}
+	return nil
 }

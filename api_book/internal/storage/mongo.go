@@ -2,8 +2,6 @@ package storage
 
 import (
 	"context"
-	"sync"
-	"time"
 
 	"github.com/reversersed/go-grpc/tree/main/api_book/pkg/mongo"
 	"go.mongodb.org/mongo-driver/bson"
@@ -25,7 +23,6 @@ type logger interface {
 	Fatal(...any)
 }
 type db struct {
-	sync.RWMutex
 	logger     logger
 	collection *mongodb.Collection
 }
@@ -35,26 +32,10 @@ func NewStorage(storage *mongodb.Database, collection string, logger logger) *db
 		collection: storage.Collection(collection),
 		logger:     logger,
 	}
-	defer db.seedBooks()
 	return db
 }
-func (d *db) seedBooks() {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
 
-	if count, _ := d.collection.CountDocuments(ctx, bson.D{}); count > 0 {
-		d.logger.Infof("there are %d books in base, seeding canceled", count)
-		return
-	}
-
-	for _, a := range mocked_books {
-		if _, err := d.CreateBook(ctx, a); err != nil {
-			d.logger.Fatalf("error seeding book %v: %v", a, err)
-		}
-	}
-	d.logger.Infof("seeded %d books", len(mocked_books))
-}
-
+// TODO write test for create book
 func (d *db) CreateBook(ctx context.Context, book *Book) (*Book, error) {
 	book.Id = primitive.NewObjectID()
 	book.TranslitName = mongo.GenerateTranslitName(book.Name, book.Id)

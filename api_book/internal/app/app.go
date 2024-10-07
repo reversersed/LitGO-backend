@@ -57,12 +57,13 @@ func New() (*app, error) {
 	if err != nil {
 		return nil, err
 	}
+	rabbit := rabbitService.New(rabbitMqServer.Connection, logger, storage)
 
 	app := &app{
 		logger:      logger,
 		config:      cfg,
 		cache:       cache,
-		service:     srv.NewServer(logger, cache, storage, validator, genreClient, authorClient, rabbitService.New(rabbitMqServer.Connection, logger)),
+		service:     srv.NewServer(logger, cache, storage, validator, genreClient, authorClient, rabbit),
 		connections: []*grpc.ClientConn{genreConnection, authorConnection},
 		closers:     []io.Closer{rabbitMqServer},
 	}
