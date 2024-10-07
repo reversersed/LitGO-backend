@@ -1,6 +1,8 @@
 package app
 
 import (
+	"io"
+
 	"github.com/reversersed/go-grpc/tree/main/api_book/internal/config"
 	"google.golang.org/grpc"
 )
@@ -31,4 +33,5 @@ type app struct {
 	service     service
 	cache       cache
 	connections []*grpc.ClientConn
+	closers     []io.Closer
 }

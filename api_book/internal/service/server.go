@@ -33,6 +33,9 @@ type cache interface {
 	Set([]byte, []byte, int) error
 	Delete([]byte) bool
 }
+type rabbitservice interface {
+	SendBookCreatedMessage(context.Context, *books_pb.BookModel) error
+}
 type bookServer struct {
 	cache         cache
 	logger        logger
@@ -40,10 +43,11 @@ type bookServer struct {
 	validator     validator
 	authorService authors_pb.AuthorClient
 	genreService  genres_pb.GenreClient
+	rabbitService rabbitservice
 	books_pb.UnimplementedBookServer
 }
 
-func NewServer(logger logger, cache cache, storage storage, validator validator, genreService genres_pb.GenreClient, authorService authors_pb.AuthorClient) *bookServer {
+func NewServer(logger logger, cache cache, storage storage, validator validator, genreService genres_pb.GenreClient, authorService authors_pb.AuthorClient, rabbit rabbitservice) *bookServer {
 	return &bookServer{
 		storage:       storage,
 		logger:        logger,
@@ -51,6 +55,7 @@ func NewServer(logger logger, cache cache, storage storage, validator validator,
 		validator:     validator,
 		genreService:  genreService,
 		authorService: authorService,
+		rabbitService: rabbit,
 	}
 }
 func (u *bookServer) Register(s grpc.ServiceRegistrar) {

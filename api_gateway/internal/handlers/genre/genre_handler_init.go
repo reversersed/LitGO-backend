@@ -25,13 +25,13 @@ func (h *handler) Close() error {
 func (h *handler) RegisterRouter(router *gin.Engine) {
 	general := router.Group("/api/v1/genres")
 	{
-		_ = general.Group("/").Use(h.jwt.Middleware())
+		_ = general.Group("").Use(h.jwt.Middleware())
 		{
 
 		}
 		general.GET("/all", h.GetAll)
 		general.GET("/tree", h.GetGenreTree)
-		general.GET("/", h.GetOneOfGenre)
+		general.GET("", h.GetOneOfGenre)
 	}
 	h.logger.Info("genre handler has been registered")
 }

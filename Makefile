@@ -2,7 +2,7 @@ API_DIRECTORIES = api_gateway api_user api_author api_genre api_book
 PROTO_PKG_FOLDERS = users genres authors books
 CMDSEP = &&
 
-run: clean gen test-verbose check start
+run: i clean gen test-verbose check start
 
 install: i
 

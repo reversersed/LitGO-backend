@@ -29,7 +29,7 @@ func TestHandlers(t *testing.T) {
 	}{
 		{
 			Name:   "Get authors success",
-			Path:   "/api/v1/authors/?id=123&id=321&translit=421&translit=23",
+			Path:   "/api/v1/authors?id=123&id=321&translit=421&translit=23",
 			Method: http.MethodGet,
 			Body:   func() io.Reader { return nil },
 			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mac *mock_authors_pb.MockAuthorClient) {
@@ -42,7 +42,7 @@ func TestHandlers(t *testing.T) {
 		},
 		{
 			Name:   "Get authors error",
-			Path:   "/api/v1/authors/",
+			Path:   "/api/v1/authors",
 			Method: http.MethodGet,
 			Body:   func() io.Reader { return nil },
 			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mac *mock_authors_pb.MockAuthorClient) {

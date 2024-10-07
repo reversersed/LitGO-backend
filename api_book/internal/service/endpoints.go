@@ -79,5 +79,9 @@ func (s *bookServer) CreateBook(ctx context.Context, req *books_pb.CreateBookReq
 		return nil, err
 	}
 	s.logger.Infof("created book mapped to: %v", responseModel)
+	err = s.rabbitService.SendBookCreatedMessage(ctx, responseModel)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
 	return &books_pb.CreateBookResponse{Book: responseModel}, nil
 }

@@ -81,7 +81,7 @@ func TestHandlers(t *testing.T) {
 		},
 		{
 			Name:   "Search category",
-			Path:   "/api/v1/genres/?query=query+request",
+			Path:   "/api/v1/genres?query=query+request",
 			Method: http.MethodGet,
 			Body:   func() io.Reader { return nil },
 			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mac *mock_genres_pb.MockGenreClient) {
@@ -94,7 +94,7 @@ func TestHandlers(t *testing.T) {
 		},
 		{
 			Name:   "Search genre",
-			Path:   "/api/v1/genres/?query=query+request",
+			Path:   "/api/v1/genres?query=query+request",
 			Method: http.MethodGet,
 			Body:   func() io.Reader { return nil },
 			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mac *mock_genres_pb.MockGenreClient) {
@@ -107,7 +107,7 @@ func TestHandlers(t *testing.T) {
 		},
 		{
 			Name:   "Search category error",
-			Path:   "/api/v1/genres/?query=query+request",
+			Path:   "/api/v1/genres?query=query+request",
 			Method: http.MethodGet,
 			Body:   func() io.Reader { return nil },
 			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mac *mock_genres_pb.MockGenreClient) {

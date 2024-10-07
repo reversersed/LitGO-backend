@@ -9,6 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
 	storage "github.com/reversersed/go-grpc/tree/main/api_book/internal/storage"
 )
 
@@ -288,4 +289,41 @@ func (m *Mockcache) Set(arg0, arg1 []byte, arg2 int) error {
 func (mr *MockcacheMockRecorder) Set(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Set", reflect.TypeOf((*Mockcache)(nil).Set), arg0, arg1, arg2)
+}
+
+// Mockrabbitservice is a mock of rabbitservice interface.
+type Mockrabbitservice struct {
+	ctrl     *gomock.Controller
+	recorder *MockrabbitserviceMockRecorder
+}
+
+// MockrabbitserviceMockRecorder is the mock recorder for Mockrabbitservice.
+type MockrabbitserviceMockRecorder struct {
+	mock *Mockrabbitservice
+}
+
+// NewMockrabbitservice creates a new mock instance.
+func NewMockrabbitservice(ctrl *gomock.Controller) *Mockrabbitservice {
+	mock := &Mockrabbitservice{ctrl: ctrl}
+	mock.recorder = &MockrabbitserviceMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *Mockrabbitservice) EXPECT() *MockrabbitserviceMockRecorder {
+	return m.recorder
+}
+
+// SendBookCreatedMessage mocks base method.
+func (m *Mockrabbitservice) SendBookCreatedMessage(arg0 context.Context, arg1 *books_pb.BookModel) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SendBookCreatedMessage", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SendBookCreatedMessage indicates an expected call of SendBookCreatedMessage.
+func (mr *MockrabbitserviceMockRecorder) SendBookCreatedMessage(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendBookCreatedMessage", reflect.TypeOf((*Mockrabbitservice)(nil).SendBookCreatedMessage), arg0, arg1)
 }

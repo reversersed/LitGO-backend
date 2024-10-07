@@ -8,8 +8,9 @@ import (
 	"google.golang.org/grpc"
 )
 
+// TODO write rabbit mq service receiver
+//
 //go:generate mockgen -source=server.go -destination=mocks/server.go
-
 type validator interface {
 	StructValidation(any) error
 }

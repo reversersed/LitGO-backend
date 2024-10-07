@@ -3,16 +3,19 @@ package app
 import (
 	"context"
 	"fmt"
+	"io"
 	"net"
 
 	authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors"
 	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
 	"github.com/reversersed/go-grpc/tree/main/api_book/internal/config"
+	rabbitService "github.com/reversersed/go-grpc/tree/main/api_book/internal/rabbitmq"
 	srv "github.com/reversersed/go-grpc/tree/main/api_book/internal/service"
 	"github.com/reversersed/go-grpc/tree/main/api_book/internal/storage"
 	freecache "github.com/reversersed/go-grpc/tree/main/api_book/pkg/cache"
 	"github.com/reversersed/go-grpc/tree/main/api_book/pkg/logging/logrus"
 	"github.com/reversersed/go-grpc/tree/main/api_book/pkg/mongo"
+	"github.com/reversersed/go-grpc/tree/main/api_book/pkg/rabbitmq"
 	"github.com/reversersed/go-grpc/tree/main/api_book/pkg/shutdown"
 	"github.com/reversersed/go-grpc/tree/main/api_book/pkg/validator"
 	"google.golang.org/grpc"
@@ -50,12 +53,18 @@ func New() (*app, error) {
 	}
 	authorClient := authors_pb.NewAuthorClient(authorConnection)
 
+	rabbitMqServer, err := rabbitmq.New(cfg.Rabbit)
+	if err != nil {
+		return nil, err
+	}
+
 	app := &app{
 		logger:      logger,
 		config:      cfg,
 		cache:       cache,
-		service:     srv.NewServer(logger, cache, storage, validator, genreClient, authorClient),
+		service:     srv.NewServer(logger, cache, storage, validator, genreClient, authorClient, rabbitService.New(rabbitMqServer.Connection, logger)),
 		connections: []*grpc.ClientConn{genreConnection, authorConnection},
+		closers:     []io.Closer{rabbitMqServer},
 	}
 
 	return app, nil
@@ -80,6 +89,11 @@ func (a *app) Run() error {
 }
 func (a *app) Close() error {
 	for _, c := range a.connections {
+		if err := c.Close(); err != nil {
+			return err
+		}
+	}
+	for _, c := range a.closers {
 		if err := c.Close(); err != nil {
 			return err
 		}

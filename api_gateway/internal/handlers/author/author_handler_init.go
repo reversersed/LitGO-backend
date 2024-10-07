@@ -25,11 +25,11 @@ func (h *handler) Close() error {
 func (h *handler) RegisterRouter(router *gin.Engine) {
 	general := router.Group("/api/v1/authors")
 	{
-		_ = general.Group("/").Use(h.jwt.Middleware())
+		_ = general.Group("").Use(h.jwt.Middleware())
 		{
 
 		}
-		general.GET("/", h.GetAuthors)
+		general.GET("", h.GetAuthors)
 		general.GET("/suggest", h.GetAuthorsSuggestion)
 	}
 	h.logger.Info("author handler has been registered")

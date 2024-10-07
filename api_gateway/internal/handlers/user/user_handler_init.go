@@ -25,12 +25,12 @@ func (h *handler) Close() error {
 func (h *handler) RegisterRouter(router *gin.Engine) {
 	general := router.Group("/api/v1/users")
 	{
-		authorized := general.Group("/").Use(h.jwt.Middleware())
+		authorized := general.Group("").Use(h.jwt.Middleware())
 		{
 			authorized.GET("/auth", h.UserAuthenticate)
 			authorized.POST("/logout", h.UserLogout)
 		}
-		general.GET("/", h.UserSearch)
+		general.GET("", h.UserSearch)
 		general.POST("/login", h.UserLogin)
 		general.POST("/signin", h.UserRegister)
 	}

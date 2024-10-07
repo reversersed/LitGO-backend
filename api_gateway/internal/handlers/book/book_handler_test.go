@@ -277,7 +277,7 @@ func TestCreateBookHandler(t *testing.T) {
 			w.Close()
 
 			wr := httptest.NewRecorder()
-			req, err := http.NewRequest(http.MethodPost, "/api/v1/books/", &buf)
+			req, err := http.NewRequest(http.MethodPost, "/api/v1/books", &buf)
 			assert.NoError(t, err)
 			req.Header.Set("Content-Type", w.FormDataContentType())
 			e.ServeHTTP(wr, req)

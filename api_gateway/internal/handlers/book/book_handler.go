@@ -2,6 +2,7 @@ package book
 
 import (
 	"net/http"
+	"os"
 	"regexp"
 	"slices"
 	"strconv"
@@ -178,7 +179,7 @@ func (h *handler) CreateBook(c *gin.Context) {
 	req.Picture = strings.ReplaceAll(strings.TrimSpace(rxSpaces.ReplaceAllString(translit.Ru(reg.ReplaceAllString(strings.ToLower(strings.ReplaceAll(fileName, "_", " ")), "")), " ")), " ", "_") + "_" + primitive.NewObjectID().Hex() + "." + strings.Split(picture.Filename, ".")[len(strings.Split(picture.Filename, "."))-1]
 
 	if len(req.GetAuthors()) == 1 {
-		req.Authors = strings.Split(req.GetAuthors()[0], ",") // bcz Bind is making array of length 1 with all values joined with , instead of array
+		req.Authors = strings.Split(req.GetAuthors()[0], ",") // bcz curl from swagger sending arrays as values joined by ,
 	}
 	response, err := h.client.CreateBook(c.Request.Context(), &req)
 	if err != nil {
@@ -194,6 +195,7 @@ func (h *handler) CreateBook(c *gin.Context) {
 		c.Error(status.Error(codes.Internal, "error saving cover: "+err.Error()))
 		return
 	}
-
+	_ = os.Chmod("files/book_covers", os.FileMode(0007))
+	_ = os.Chmod("files/books", os.FileMode(0007))
 	c.JSON(http.StatusCreated, response)
 }

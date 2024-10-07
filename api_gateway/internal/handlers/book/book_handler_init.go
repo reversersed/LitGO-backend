@@ -25,13 +25,13 @@ func (h *handler) Close() error {
 func (h *handler) RegisterRouter(router *gin.Engine) {
 	general := router.Group("/api/v1/books")
 	{
-		_ = general.Group("/").Use(h.jwt.Middleware())
+		_ = general.Group("").Use(h.jwt.Middleware())
 		{
 
 		}
-		admin := general.Group("/").Use(h.jwt.Middleware("admin"))
+		admin := general.Group("").Use(h.jwt.Middleware("admin"))
 		{
-			admin.POST("/", h.CreateBook)
+			admin.POST("", h.CreateBook)
 		}
 		general.GET("/suggest", h.GetBooksSuggestion)
 	}

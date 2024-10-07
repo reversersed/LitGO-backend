@@ -33,7 +33,7 @@ func TestHandlers(t *testing.T) {
 	}{
 		{
 			Name:   "User search success",
-			Path:   "/api/v1/users/?id=123&login=456&email=789",
+			Path:   "/api/v1/users?id=123&login=456&email=789",
 			Method: http.MethodGet,
 			Body:   func() io.Reader { return nil },
 			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, muc *mock_users_pb.MockUserClient) {
@@ -46,7 +46,7 @@ func TestHandlers(t *testing.T) {
 		},
 		{
 			Name:   "User search error",
-			Path:   "/api/v1/users/",
+			Path:   "/api/v1/users",
 			Method: http.MethodGet,
 			Body:   func() io.Reader { return nil },
 			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, muc *mock_users_pb.MockUserClient) {
