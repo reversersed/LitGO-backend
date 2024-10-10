@@ -289,26 +289,3 @@ func (mr *MockcacheMockRecorder) Set(arg0, arg1, arg2 interface{}) *gomock.Call 
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Set", reflect.TypeOf((*Mockcache)(nil).Set), arg0, arg1, arg2)
 }
-
-// Mockrabbitservice is a mock of rabbitservice interface.
-type Mockrabbitservice struct {
-	ctrl     *gomock.Controller
-	recorder *MockrabbitserviceMockRecorder
-}
-
-// MockrabbitserviceMockRecorder is the mock recorder for Mockrabbitservice.
-type MockrabbitserviceMockRecorder struct {
-	mock *Mockrabbitservice
-}
-
-// NewMockrabbitservice creates a new mock instance.
-func NewMockrabbitservice(ctrl *gomock.Controller) *Mockrabbitservice {
-	mock := &Mockrabbitservice{ctrl: ctrl}
-	mock.recorder = &MockrabbitserviceMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *Mockrabbitservice) EXPECT() *MockrabbitserviceMockRecorder {
-	return m.recorder
-}
