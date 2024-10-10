@@ -29,8 +29,8 @@ type cache interface {
 	Set([]byte, []byte, int) error
 	Delete([]byte) bool
 }
-type rabbitservice interface {
-}
+type rabbitservice any
+
 type genreServer struct {
 	cache     cache
 	logger    logger

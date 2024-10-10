@@ -9,7 +9,8 @@ import (
 )
 
 // TODO write tests for receivers
-// go:generate mockgen -source=init.go -destination=mocks/rabbit.go
+//
+//go:generate mockgen -source=init.go -destination=mocks/rabbit.go
 type logger interface {
 	Info(...any)
 	Infof(string, ...any)

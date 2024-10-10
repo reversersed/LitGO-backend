@@ -2,7 +2,7 @@ package rabbitmq
 
 import amqp "github.com/rabbitmq/amqp091-go"
 
-// go:generate mockgen -source=init.go -destination=mocks/rabbit.go
+//go:generate mockgen -source=init.go -destination=mocks/rabbit.go
 type logger interface {
 	Info(...any)
 	Infof(string, ...any)
