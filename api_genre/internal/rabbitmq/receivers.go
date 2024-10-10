@@ -10,7 +10,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// TODO write tests for receiver
 func (r *RabbitService) InitiateBookCreatedReceived() error {
 	ch, err := r.conn.Channel()
 	if err != nil {

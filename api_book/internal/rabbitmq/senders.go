@@ -10,7 +10,7 @@ import (
 	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
 )
 
-// TODO write tests
+// TODDO write tests
 func (r *RabbitService) SendBookCreatedMessage(ctx context.Context, book *books_pb.BookModel) error {
 	if book == nil {
 		r.logger.Errorf("received nil book: %v", book)
@@ -43,7 +43,10 @@ func (r *RabbitService) SendBookCreatedMessage(ctx context.Context, book *books_
 	ctx, cancel := context.WithTimeout(ctx, 500*time.Second)
 	defer cancel()
 
-	body, _ := json.Marshal(book)
+	body, err := json.Marshal(book)
+	if err != nil {
+		return err
+	}
 	err = channel.PublishWithContext(ctx, bookCreatedExchange, "#", false, false, amqp091.Publishing{
 		ContentType: "application/json",
 		Body:        body,

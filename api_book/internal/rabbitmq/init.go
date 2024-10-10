@@ -8,8 +8,8 @@ type logger interface {
 	Infof(string, ...any)
 	Errorf(string, ...any)
 }
-type storage interface {
-}
+type storage any
+
 type RabbitService struct {
 	conn    *amqp.Connection
 	logger  logger
