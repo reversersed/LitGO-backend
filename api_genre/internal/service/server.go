@@ -29,7 +29,9 @@ type cache interface {
 	Set([]byte, []byte, int) error
 	Delete([]byte) bool
 }
-type rabbitservice any
+type rabbitservice interface {
+	// comment to avoid lint issues
+}
 
 type genreServer struct {
 	cache     cache
