@@ -289,6 +289,7 @@ func TestCreateBookHandler(t *testing.T) {
 			}
 
 			if v.ExceptedStatus == http.StatusCreated {
+				os.MkdirAll("./files", os.FileMode(777))
 				err = os.RemoveAll("./files")
 				assert.NoError(t, err)
 			}
