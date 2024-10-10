@@ -10,7 +10,7 @@ import (
 	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
 )
 
-// TODDO write tests
+// TODO write tests
 func (r *RabbitService) SendBookCreatedMessage(ctx context.Context, book *books_pb.BookModel) error {
 	if book == nil {
 		r.logger.Errorf("received nil book: %v", book)
