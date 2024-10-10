@@ -5,10 +5,12 @@ import (
 	"context"
 	"crypto/rand"
 	"io"
+	"io/fs"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -289,7 +291,16 @@ func TestCreateBookHandler(t *testing.T) {
 			}
 
 			if v.ExceptedStatus == http.StatusCreated {
-				os.MkdirAll("./files", os.FileMode(777))
+				err = filepath.WalkDir("./files", func(path string, d fs.DirEntry, errs error) error {
+					if errs != nil {
+						return errs
+					}
+					if err = os.Chmod(path, os.FileMode(0777)); err != nil {
+						return err
+					}
+					return nil
+				})
+				assert.NoError(t, err)
 				err = os.RemoveAll("./files")
 				assert.NoError(t, err)
 			}
