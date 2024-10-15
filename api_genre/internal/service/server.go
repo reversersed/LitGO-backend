@@ -30,7 +30,7 @@ type cache interface {
 	Delete([]byte) bool
 }
 type rabbitservice interface {
-	// comment to avoid lint issues
+	Close() error
 }
 
 type genreServer struct {

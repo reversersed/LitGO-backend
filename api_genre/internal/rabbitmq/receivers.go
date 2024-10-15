@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func (r *RabbitService) InitiateBookCreatedReceived() error {
+func (r *RabbitService) InitiateBookCreatedReceiver() error {
 	ch, err := r.conn.Channel()
 	if err != nil {
 		r.logger.Errorf("error while opening channel: %v", err)

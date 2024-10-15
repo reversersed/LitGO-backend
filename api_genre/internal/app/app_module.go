@@ -28,7 +28,7 @@ type logger interface {
 	Fatalf(string, ...any)
 }
 type RabbitListenerService interface {
-	InitiateBookCreatedReceived() error
+	InitiateBookCreatedReceiver() error
 }
 type app struct {
 	config                *config.Config

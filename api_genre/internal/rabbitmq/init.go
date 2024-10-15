@@ -8,8 +8,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// TODO write tests for receivers
-//
 //go:generate mockgen -source=init.go -destination=mocks/rabbit.go
 type logger interface {
 	Info(...any)

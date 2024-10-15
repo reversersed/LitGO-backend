@@ -35,7 +35,6 @@ func NewStorage(storage *mongodb.Database, collection string, logger logger) *db
 	return db
 }
 
-// TODO write test for create book
 func (d *db) CreateBook(ctx context.Context, book *Book) (*Book, error) {
 	book.Id = primitive.NewObjectID()
 	book.TranslitName = mongo.GenerateTranslitName(book.Name, book.Id)

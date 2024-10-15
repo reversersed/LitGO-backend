@@ -33,4 +33,4 @@ jobs:
           cache: false
 
       - name: Test
-        run: make test-unit
+        run: make test-verbose

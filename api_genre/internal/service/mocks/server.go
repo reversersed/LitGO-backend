@@ -312,3 +312,17 @@ func NewMockrabbitservice(ctrl *gomock.Controller) *Mockrabbitservice {
 func (m *Mockrabbitservice) EXPECT() *MockrabbitserviceMockRecorder {
 	return m.recorder
 }
+
+// Close mocks base method.
+func (m *Mockrabbitservice) Close() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Close")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Close indicates an expected call of Close.
+func (mr *MockrabbitserviceMockRecorder) Close() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Close", reflect.TypeOf((*Mockrabbitservice)(nil).Close))
+}

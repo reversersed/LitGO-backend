@@ -67,7 +67,7 @@ func (a *app) Run() error {
 	server := grpc.NewServer()
 	a.service.Register(server)
 
-	if err := a.RabbitListenerService.InitiateBookCreatedReceived(); err != nil {
+	if err := a.RabbitListenerService.InitiateBookCreatedReceiver(); err != nil {
 		return err
 	}
 

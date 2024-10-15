@@ -63,9 +63,15 @@ test-verbose:
 		$(CMDSEP)) echo tests completed successfully
 
 test: test-folder-creation gen
+ifeq ($(OS),Windows_NT)
 	@$(foreach directory,$(API_DIRECTORIES),\
-		cd ./$(directory) && go test ./... -coverprofile=../../data/tests/$(directory)/coverage -coverpkg=./... && go tool cover -func=../../data/tests/$(directory)/coverage -o ../../data/tests/$(directory)/coverage.func && go tool cover -html=../../data/tests/$(directory)/coverage -o ../../data/tests/$(directory)/coverage.html && cd ..\
+		cd ./$(directory) && go test -coverprofile=../../data/tests/$(directory)/coverage -coverpkg=./... ./... | findstr /V mocks && go tool cover -func=../../data/tests/$(directory)/coverage -o ../../data/tests/$(directory)/coverage.func && go tool cover -html=../../data/tests/$(directory)/coverage -o ../../data/tests/$(directory)/coverage.html && cd ..\
 		$(CMDSEP)) echo tests completed successfully
+else
+	@$(foreach directory,$(API_DIRECTORIES),\
+		cd ./$(directory) && go test -coverprofile=../../data/tests/$(directory)/coverage -coverpkg=./... ./... | grep -v mocks && go tool cover -func=../../data/tests/$(directory)/coverage -o ../../data/tests/$(directory)/coverage.func && go tool cover -html=../../data/tests/$(directory)/coverage -o ../../data/tests/$(directory)/coverage.html && cd ..\
+		$(CMDSEP)) echo tests completed successfully
+endif
 
 test-folder-creation:
 ifeq ($(OS),Windows_NT)

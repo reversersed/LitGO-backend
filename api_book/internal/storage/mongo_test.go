@@ -6,13 +6,17 @@ import (
 	"log"
 	"os"
 	"testing"
+	"time"
 
+	"github.com/docker/docker/api/types/container"
+	"github.com/docker/go-connections/nat"
 	"github.com/golang/mock/gomock"
 	mock_storage "github.com/reversersed/go-grpc/tree/main/api_book/internal/storage/mocks"
 	"github.com/reversersed/go-grpc/tree/main/api_book/pkg/mongo"
 	"github.com/stretchr/testify/assert"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 var cfg *mongo.DatabaseConfig
@@ -25,19 +29,35 @@ func TestMain(m *testing.M) {
 	}
 
 	ctx := context.Background()
-	req := testcontainers.ContainerRequest{
-		Image:        "mongo",
-		ExposedPorts: []string{"27017/tcp"},
-		WaitingFor:   wait.ForListeningPort("27017/tcp"),
-		Env: map[string]string{
-			"MONGO_INITDB_ROOT_USERNAME": "root",
-			"MONGO_INITDB_ROOT_PASSWORD": "root",
-		},
+	var err error
+	var mongoContainer testcontainers.Container
+	for i := 0; i < 5; i++ {
+		req := testcontainers.ContainerRequest{
+			Name:         "book_mongo",
+			Image:        "mongo",
+			ExposedPorts: []string{"27017/tcp"},
+			WaitingFor:   wait.ForListeningPort("27017/tcp"),
+			Env: map[string]string{
+				"MONGO_INITDB_ROOT_USERNAME": "root",
+				"MONGO_INITDB_ROOT_PASSWORD": "root",
+			},
+			SkipReaper: true,
+			HostConfigModifier: func(hc *container.HostConfig) {
+				hc.AutoRemove = true
+				hc.PortBindings = nat.PortMap{"27017/tcp": []nat.PortBinding{{HostIP: "0.0.0.0", HostPort: "54002"}}}
+			},
+		}
+		mongoContainer, err = testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
+			ContainerRequest: req,
+			Started:          true,
+			Reuse:            true,
+		})
+		if err == nil {
+			break
+		}
+		log.Printf("failed to create container: %v, retry %d/5", err, i+1)
+		<-time.After(2 * time.Second)
 	}
-	mongoContainer, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
-		ContainerRequest: req,
-		Started:          true,
-	})
 	if err != nil {
 		log.Fatalf("Could not start mongo: %s", err)
 	}
@@ -78,11 +98,13 @@ func TestGetSuggestion(t *testing.T) {
 
 	storage := NewStorage(dba, cfg.Base, logger)
 
+	book, err := storage.CreateBook(ctx, &Book{Name: "Книга о книгопечатании", Description: "Описание книги", Picture: "picture.png", Filepath: "book.epub", Genre: primitive.NewObjectID(), Authors: []primitive.ObjectID{primitive.NewObjectID(), primitive.NewObjectID()}})
+	assert.NoError(t, err)
 	sugg, err := storage.GetSuggestions(ctx, "(Книга)|(книгопечатании)", 1)
 
 	assert.NoError(t, err)
 	assert.Len(t, sugg, 1)
-	assert.Equal(t, "Книга о книгопечатании", sugg[0].Name)
+	assert.Equal(t, book, sugg[0])
 
 	_, err = storage.GetSuggestions(ctx, "(КнигиНеСуществует)", 1)
 	assert.EqualError(t, err, "rpc error: code = NotFound desc = no books found")
