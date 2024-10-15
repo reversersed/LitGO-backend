@@ -10,8 +10,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/docker/docker/api/types/container"
-	"github.com/docker/go-connections/nat"
 	"github.com/golang/mock/gomock"
 	"github.com/rabbitmq/amqp091-go"
 	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
@@ -36,21 +34,15 @@ func TestMain(m *testing.M) {
 	ctx := context.Background()
 	for i := 0; i < 5; i++ {
 		req := testcontainers.ContainerRequest{
-			Name:         "genre_rabbit_receiver",
 			Image:        "rabbitmq:3.10.7-management",
 			ExposedPorts: []string{"5672/tcp"},
 			SkipReaper:   true,
 			WaitingFor:   wait.ForLog("Server startup complete"),
-			Env:          map[string]string{"RABBITMQ_DEFAULT_USER": "user", "RABBITMQ_DEFAULT_PASS": "password", "TESTCONTAINERS_RYUK_DISABLED": "true"},
-			HostConfigModifier: func(hc *container.HostConfig) {
-				hc.AutoRemove = true
-				hc.PortBindings = nat.PortMap{"5672/tcp": []nat.PortBinding{{HostIP: "0.0.0.0", HostPort: "54005"}}}
-			},
+			Env:          map[string]string{"RABBITMQ_DEFAULT_USER": "user", "RABBITMQ_DEFAULT_PASS": "password"},
 		}
 		cont, err = testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
 			ContainerRequest: req,
 			Started:          true,
-			Reuse:            true,
 		})
 		if err == nil {
 			break

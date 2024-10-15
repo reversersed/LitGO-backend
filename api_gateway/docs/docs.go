@@ -318,6 +318,13 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+                        "minimum": 0,
+                        "type": "integer",
+                        "name": "Price",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
                         "type": "file",
                         "description": "epub format book file",
                         "name": "Book",
@@ -1399,6 +1406,15 @@ const docTemplate = `{
                 },
                 "picture": {
                     "type": "string"
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "rating": {
+                    "type": "number"
+                },
+                "reviews": {
+                    "type": "integer"
                 },
                 "translitname": {
                     "type": "string"

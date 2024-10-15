@@ -4,15 +4,13 @@ go 1.22.5
 
 require (
 	github.com/coocood/freecache v1.2.4
-	github.com/docker/docker v27.1.1+incompatible
-	github.com/docker/go-connections v0.5.0
 	github.com/go-playground/validator/v10 v10.22.1
 	github.com/golang/mock v1.6.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/jinzhu/copier v0.4.0
 	github.com/mdigger/translit v0.2.0
 	github.com/rabbitmq/amqp091-go v1.10.0
-	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20241015164752-9a6c3fe99d50
+	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20241015225426-e7762fbc4b87
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.9.0
 	github.com/testcontainers/testcontainers-go v0.33.0
@@ -34,6 +32,8 @@ require (
 	github.com/cpuguy83/dockercfg v0.3.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/distribution/reference v0.6.0 // indirect
+	github.com/docker/docker v27.1.1+incompatible // indirect
+	github.com/docker/go-connections v0.5.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.6 // indirect

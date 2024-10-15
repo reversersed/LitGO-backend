@@ -11,4 +11,7 @@ type Book struct {
 	Filepath     string               `bson:"filepath"`
 	Genre        primitive.ObjectID   `bson:"genre"`
 	Authors      []primitive.ObjectID `bson:"authors"`
+	Rating       float64              `bson:"rating"`
+	Reviews      int                  `bson:"reviews"`
+	Price        int                  `bson:"price"`
 }

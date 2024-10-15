@@ -8,8 +8,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/docker/docker/api/types/container"
-	"github.com/docker/go-connections/nat"
 	"github.com/golang/mock/gomock"
 	mock_storage "github.com/reversersed/go-grpc/tree/main/api_author/internal/storage/mocks"
 	"github.com/reversersed/go-grpc/tree/main/api_author/pkg/mongo"
@@ -33,7 +31,6 @@ func TestMain(m *testing.M) {
 	var mongoContainer testcontainers.Container
 	for i := 0; i < 5; i++ {
 		req := testcontainers.ContainerRequest{
-			Name:         "author_mongo",
 			Image:        "mongo",
 			ExposedPorts: []string{"27017/tcp"},
 			WaitingFor:   wait.ForListeningPort("27017/tcp"),
@@ -41,16 +38,10 @@ func TestMain(m *testing.M) {
 				"MONGO_INITDB_ROOT_USERNAME": "root",
 				"MONGO_INITDB_ROOT_PASSWORD": "root",
 			},
-			SkipReaper: true,
-			HostConfigModifier: func(hc *container.HostConfig) {
-				hc.AutoRemove = true
-				hc.PortBindings = nat.PortMap{"27017/tcp": []nat.PortBinding{{HostIP: "0.0.0.0", HostPort: "54001"}}}
-			},
 		}
 		mongoContainer, err = testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
 			ContainerRequest: req,
 			Started:          true,
-			Reuse:            true,
 		})
 		if err == nil {
 			break

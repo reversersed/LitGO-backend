@@ -36,7 +36,6 @@ func TestMain(m *testing.M) {
 
 	for i := 0; i < 5; i++ {
 		req := testcontainers.ContainerRequest{
-			Name:         "book_rabbit_sender",
 			Image:        "rabbitmq:3.10.7-management",
 			ExposedPorts: []string{"5672/tcp"},
 			WaitingFor:   wait.ForLog("Server startup complete"),

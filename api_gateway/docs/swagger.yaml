@@ -49,6 +49,12 @@ definitions:
         type: string
       picture:
         type: string
+      price:
+        type: integer
+      rating:
+        type: number
+      reviews:
+        type: integer
       translitname:
         type: string
     type: object
@@ -417,6 +423,11 @@ paths:
         name: Name
         required: true
         type: string
+      - in: formData
+        minimum: 0
+        name: Price
+        required: true
+        type: integer
       - description: epub format book file
         in: formData
         name: Book
