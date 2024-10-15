@@ -8,10 +8,10 @@ import (
 
 	"github.com/golang/mock/gomock"
 	authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors"
-	mock_authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors/mock"
+	mock_authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors/mocks"
 	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
 	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
-	mock_genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres/mock"
+	mock_genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres/mocks"
 	mock_service "github.com/reversersed/go-grpc/tree/main/api_book/internal/service/mocks"
 	model "github.com/reversersed/go-grpc/tree/main/api_book/internal/storage"
 	"github.com/stretchr/testify/assert"

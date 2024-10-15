@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors"
-	mock_authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors/mock"
+	mock_authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors/mocks"
 	mocks "github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers/mocks"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/middleware"
 	"github.com/stretchr/testify/assert"

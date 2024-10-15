@@ -12,7 +12,7 @@ import (
 	"github.com/golang/mock/gomock"
 	shared_pb "github.com/reversersed/LitGO-proto/gen/go/shared"
 	users_pb "github.com/reversersed/LitGO-proto/gen/go/users"
-	mock_users_pb "github.com/reversersed/LitGO-proto/gen/go/users/mock"
+	mock_users_pb "github.com/reversersed/LitGO-proto/gen/go/users/mocks"
 	mocks "github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers/mocks"
 	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/middleware"
 	"github.com/stretchr/testify/assert"
