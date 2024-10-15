@@ -53,14 +53,26 @@ up:
 	@docker compose up --timestamps --wait --wait-timeout 1800 --remove-orphans -d
 
 test-unit:
+ifeq ($(OS),Windows_NT)
 	@$(foreach directory,$(API_DIRECTORIES),\
-		cd ./$(directory) && go test ./... -v -short && cd ..\
+		cd ./$(directory) && go test -v -short ./... | findstr /V mocks && cd ..\
 		$(CMDSEP)) echo tests completed successfully
+else
+	@$(foreach directory,$(API_DIRECTORIES),\
+		cd ./$(directory) && go test -v -short ./... | grep -v mocks && cd ..\
+		$(CMDSEP)) echo tests completed successfully
+endif
 
 test-verbose:
+ifeq ($(OS),Windows_NT)
 	@$(foreach directory,$(API_DIRECTORIES),\
-		cd ./$(directory) && go test ./... -v && cd ..\
+		cd ./$(directory) && go test -v ./... | findstr /V mocks && cd ..\
 		$(CMDSEP)) echo tests completed successfully
+else
+	@$(foreach directory,$(API_DIRECTORIES),\
+		cd ./$(directory) && go test -v ./... | grep -v mocks && cd ..\
+		$(CMDSEP)) echo tests completed successfully
+endif
 
 test: test-folder-creation gen
 ifeq ($(OS),Windows_NT)
