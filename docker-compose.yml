@@ -112,3 +112,17 @@ services:
     depends_on:
       api_gateway:
         condition: service_started
+
+  api_review:
+    image: api_review
+    container_name: api_review
+    volumes:
+      - ../data/logs/review:/logs
+      - ./api_review/config:/config
+    user: root
+    build:
+      context: ./api_review
+      dockerfile: ./Dockerfile
+    depends_on:
+      api_gateway:
+        condition: service_started
