@@ -1,6 +1,5 @@
 package book
 
-// TODO add get book request
 import (
 	"net/http"
 	"os"
@@ -199,4 +198,32 @@ func (h *handler) CreateBook(c *gin.Context) {
 	_ = os.Chmod("files/book_covers", os.FileMode(0007))
 	_ = os.Chmod("files/books", os.FileMode(0007))
 	c.JSON(http.StatusCreated, response)
+}
+
+// @Summary      Get book
+// @Description  get one book by exact id or translit name
+// @Description  query can be primitive id (hex) or translit name
+// @Tags         books
+// @Produce      json
+// @Param		 query      query     string 		true 		"Query request"
+// @Success      200  {object}   books_pb.BookModel 		"Book"
+// @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Invalid body"
+// @Failure      404  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Book not found"
+// @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Some internal error"
+// @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Service does not responding (maybe crush)"
+// @Router       /books [get]
+func (h *handler) GetBook(c *gin.Context) {
+	var request books_pb.GetBookRequest
+	if err := c.BindQuery(&request); err != nil {
+		c.Error(status.Error(codes.InvalidArgument, err.Error()))
+		return
+	}
+
+	reply, err := h.client.GetBook(c.Request.Context(), &request)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, reply.GetBook())
 }

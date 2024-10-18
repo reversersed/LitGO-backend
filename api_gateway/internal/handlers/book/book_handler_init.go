@@ -34,6 +34,7 @@ func (h *handler) RegisterRouter(router *gin.Engine) {
 			admin.POST("", h.CreateBook)
 		}
 		general.GET("/suggest", h.GetBooksSuggestion)
+		general.GET("", h.GetBook)
 	}
 	h.logger.Info("book handler has been registered")
 }

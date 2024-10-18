@@ -26,6 +26,7 @@ type logger interface {
 type storage interface {
 	GetSuggestions(context.Context, string, int64) ([]*model.Book, error)
 	CreateBook(context.Context, *model.Book) (*model.Book, error)
+	GetBook(context.Context, string) (*model.Book, error)
 }
 
 type cache interface {

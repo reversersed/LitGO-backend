@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"regexp"
 	"strings"
@@ -84,4 +85,38 @@ func (s *bookServer) CreateBook(ctx context.Context, req *books_pb.CreateBookReq
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 	return &books_pb.CreateBookResponse{Book: responseModel}, nil
+}
+func (s *bookServer) GetBook(ctx context.Context, req *books_pb.GetBookRequest) (*books_pb.GetBookResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 500*time.Millisecond)
+	defer cancel()
+
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "received nil request")
+	}
+	if err := s.validator.StructValidation(req); err != nil {
+		return nil, err
+	}
+	book := new(model.Book)
+	if bytes, err := s.cache.Get([]byte("book_" + req.GetQuery())); err == nil {
+		if err = json.Unmarshal(bytes, book); err != nil {
+			return nil, status.Error(codes.Internal, "error decoding book: "+err.Error())
+		}
+	} else {
+		book, err = s.storage.GetBook(ctx, req.GetQuery())
+		if err != nil {
+			return nil, err
+		}
+		bytes, err := json.Marshal(book)
+		if err != nil {
+			return nil, status.Error(codes.Internal, "error encoding book: "+err.Error())
+		}
+		if err = s.cache.Set([]byte("book_"+req.GetQuery()), bytes, int(time.Hour)); err != nil {
+			return nil, status.Error(codes.Internal, "error saving book to cache: "+err.Error())
+		}
+	}
+	responseModel, err := s.bookMapper(ctx, book)
+	if err != nil {
+		return nil, err
+	}
+	return &books_pb.GetBookResponse{Book: responseModel}, nil
 }

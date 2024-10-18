@@ -64,3 +64,28 @@ func (d *db) GetSuggestions(ctx context.Context, regex string, limit int64) ([]*
 	}
 	return books, nil
 }
+
+// Query can be ID or translit name. Id has higher priority
+func (d *db) GetBook(ctx context.Context, query string) (*Book, error) {
+	id, err := primitive.ObjectIDFromHex(query)
+
+	var response *mongodb.SingleResult
+
+	if err == nil {
+		response = d.collection.FindOne(ctx, bson.M{"_id": id})
+	} else {
+		response = d.collection.FindOne(ctx, bson.M{"translit": query})
+	}
+	if response == nil {
+		return nil, status.Error(codes.NotFound, "response was nil")
+	}
+	if response.Err() != nil {
+		return nil, status.Error(codes.NotFound, response.Err().Error())
+	}
+
+	var book Book
+	if err = response.Decode(&book); err != nil {
+		return nil, status.Error(codes.Internal, "error decoding response: "+err.Error())
+	}
+	return &book, nil
+}

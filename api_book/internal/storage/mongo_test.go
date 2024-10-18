@@ -100,3 +100,40 @@ func TestGetSuggestion(t *testing.T) {
 	_, err = storage.GetSuggestions(ctx, "(КнигиНеСуществует)", 1)
 	assert.EqualError(t, err, "rpc error: code = NotFound desc = no books found")
 }
+func TestGetBook(t *testing.T) {
+	ctx := context.Background()
+	dba, err := mongo.NewClient(context.Background(), cfg)
+	defer dba.Client().Disconnect(ctx)
+	assert.NoError(t, err)
+
+	ctrl := gomock.NewController(t)
+	logger := mock_storage.NewMocklogger(ctrl)
+	logger.EXPECT().Info(gomock.Any()).AnyTimes()
+	logger.EXPECT().Infof(gomock.Any(), gomock.Any()).AnyTimes()
+
+	storage := NewStorage(dba, cfg.Base, logger)
+
+	book, err := storage.CreateBook(ctx, &Book{Name: "Книга о книгопечатании", Description: "Описание книги", Picture: "picture.png", Filepath: "book.epub", Genre: primitive.NewObjectID(), Authors: []primitive.ObjectID{primitive.NewObjectID(), primitive.NewObjectID()}})
+	assert.NoError(t, err)
+
+	t.Run("get by translit", func(t *testing.T) {
+		response, err := storage.GetBook(ctx, book.TranslitName)
+		if assert.NoError(t, err) {
+			assert.Equal(t, book, response)
+		}
+	})
+	t.Run("get by id", func(t *testing.T) {
+		response, err := storage.GetBook(ctx, book.Id.Hex())
+		if assert.NoError(t, err) {
+			assert.Equal(t, book, response, book.Id.Hex())
+		}
+	})
+	t.Run("not found error by translit", func(t *testing.T) {
+		_, err := storage.GetBook(ctx, "not-found-name")
+		assert.EqualError(t, err, "rpc error: code = NotFound desc = mongo: no documents in result")
+	})
+	t.Run("not found error by id", func(t *testing.T) {
+		_, err := storage.GetBook(ctx, primitive.NewObjectID().Hex())
+		assert.EqualError(t, err, "rpc error: code = NotFound desc = mongo: no documents in result")
+	})
+}

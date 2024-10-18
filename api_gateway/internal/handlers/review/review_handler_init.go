@@ -33,7 +33,6 @@ func (h *handler) RegisterRouter(router *gin.Engine) {
 		{
 
 		}
-
 	}
 	h.logger.Info("review handler has been registered")
 }
