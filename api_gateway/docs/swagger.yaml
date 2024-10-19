@@ -127,6 +127,42 @@ definitions:
         example: InvalidArgument
         type: string
     type: object
+  reviews_pb.ReviewModel:
+    properties:
+      created:
+        type: integer
+      creator:
+        $ref: '#/definitions/reviews_pb.UserModel'
+      downvotes:
+        type: integer
+      id:
+        type: string
+      rating:
+        type: number
+      text:
+        type: string
+      upvotes:
+        type: integer
+      userAction:
+        $ref: '#/definitions/reviews_pb.UserActionEnum'
+    type: object
+  reviews_pb.UserActionEnum:
+    enum:
+    - 0
+    - 1
+    - 2
+    type: integer
+    x-enum-varnames:
+    - UserActionEnum_noAction
+    - UserActionEnum_like
+    - UserActionEnum_dislike
+  reviews_pb.UserModel:
+    properties:
+      id:
+        type: string
+      login:
+        type: string
+    type: object
   shared_pb.ErrorDetail:
     description: Error detail contains information about error
     properties:
@@ -810,6 +846,79 @@ paths:
       summary: Get category tree
       tags:
       - genres
+  /reviews/book/{id}:
+    get:
+      description: Find's all book's reviews with page and pagesize arguments
+      parameters:
+      - description: Book ID or translit name
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Page number, must be greater or equal than 0, optional parameter
+        in: query
+        name: page
+        type: integer
+      - description: Page size, default 1, must be greater or equal than 1
+        in: query
+        name: pagesize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Reviews array
+          schema:
+            items:
+              $ref: '#/definitions/reviews_pb.ReviewModel'
+            type: array
+        "400":
+          description: Invalid request
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "404":
+          description: No reviews found
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "500":
+          description: Internal error occurred
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "503":
+          description: Service does not responding (maybe crush)
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+      summary: Get book's reviews
+      tags:
+      - reviews
   /users:
     get:
       description: |-

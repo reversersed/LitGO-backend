@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 
+	model "github.com/reversersed/LitGO-backend/tree/main/api_genre/internal/storage"
 	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
-	model "github.com/reversersed/go-grpc/tree/main/api_genre/internal/storage"
 	"google.golang.org/grpc"
 )
 

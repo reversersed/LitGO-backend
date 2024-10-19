@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/golang/mock/gomock"
-	mock_storage "github.com/reversersed/go-grpc/tree/main/api_book/internal/storage/mocks"
-	"github.com/reversersed/go-grpc/tree/main/api_book/pkg/mongo"
+	mock_storage "github.com/reversersed/LitGO-backend/tree/main/api_book/internal/storage/mocks"
+	"github.com/reversersed/LitGO-backend/tree/main/api_book/pkg/mongo"
 	"github.com/stretchr/testify/assert"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"

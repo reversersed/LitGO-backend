@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	storage "github.com/reversersed/go-grpc/tree/main/api_author/internal/storage"
+	storage "github.com/reversersed/LitGO-backend/tree/main/api_author/internal/storage"
 	primitive "go.mongodb.org/mongo-driver/bson/primitive"
 )
 

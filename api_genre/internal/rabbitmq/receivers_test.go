@@ -12,9 +12,9 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/rabbitmq/amqp091-go"
+	mock_rabbitmq "github.com/reversersed/LitGO-backend/tree/main/api_genre/internal/rabbitmq/mocks"
+	"github.com/reversersed/LitGO-backend/tree/main/api_genre/pkg/rabbitmq"
 	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
-	mock_rabbitmq "github.com/reversersed/go-grpc/tree/main/api_genre/internal/rabbitmq/mocks"
-	"github.com/reversersed/go-grpc/tree/main/api_genre/pkg/rabbitmq"
 	"github.com/stretchr/testify/assert"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"

@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	storage "github.com/reversersed/go-grpc/tree/main/api_genre/internal/storage"
+	storage "github.com/reversersed/LitGO-backend/tree/main/api_genre/internal/storage"
 )
 
 // Mockvalidator is a mock of validator interface.

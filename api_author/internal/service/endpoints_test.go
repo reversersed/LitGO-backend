@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	mock_service "github.com/reversersed/LitGO-backend/tree/main/api_author/internal/service/mocks"
+	model "github.com/reversersed/LitGO-backend/tree/main/api_author/internal/storage"
 	authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors"
-	mock_service "github.com/reversersed/go-grpc/tree/main/api_author/internal/service/mocks"
-	model "github.com/reversersed/go-grpc/tree/main/api_author/internal/storage"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"

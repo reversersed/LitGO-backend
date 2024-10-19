@@ -1,4 +1,4 @@
-module github.com/reversersed/go-grpc/tree/main/api_genre
+module github.com/reversersed/LitGO-backend/tree/main/api_genre
 
 go 1.22.5
 
@@ -10,7 +10,7 @@ require (
 	github.com/jinzhu/copier v0.4.0
 	github.com/mdigger/translit v0.2.0
 	github.com/rabbitmq/amqp091-go v1.10.0
-	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20241018213304-968c3c6b4ef9
+	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20241019165043-b584bb4b8d52
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.9.0
 	github.com/testcontainers/testcontainers-go v0.33.0

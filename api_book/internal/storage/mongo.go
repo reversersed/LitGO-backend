@@ -3,7 +3,7 @@ package storage
 import (
 	"context"
 
-	"github.com/reversersed/go-grpc/tree/main/api_book/pkg/mongo"
+	"github.com/reversersed/LitGO-backend/tree/main/api_book/pkg/mongo"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	mongodb "go.mongodb.org/mongo-driver/mongo"

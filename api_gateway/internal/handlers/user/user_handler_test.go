@@ -10,11 +10,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
+	mocks "github.com/reversersed/LitGO-backend/tree/main/api_gateway/internal/handlers/mocks"
+	"github.com/reversersed/LitGO-backend/tree/main/api_gateway/pkg/middleware"
 	shared_pb "github.com/reversersed/LitGO-proto/gen/go/shared"
 	users_pb "github.com/reversersed/LitGO-proto/gen/go/users"
 	mock_users_pb "github.com/reversersed/LitGO-proto/gen/go/users/mocks"
-	mocks "github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers/mocks"
-	"github.com/reversersed/go-grpc/tree/main/api_gateway/pkg/middleware"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

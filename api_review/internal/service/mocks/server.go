@@ -5,12 +5,9 @@
 package mock_service
 
 import (
-	context "context"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	storage "github.com/reversersed/LitGO-backend/tree/main/api_user/internal/storage"
-	primitive "go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // Mockvalidator is a mock of validator interface.
@@ -193,66 +190,6 @@ func NewMockstorage(ctrl *gomock.Controller) *Mockstorage {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *Mockstorage) EXPECT() *MockstorageMockRecorder {
 	return m.recorder
-}
-
-// CreateUser mocks base method.
-func (m *Mockstorage) CreateUser(ctx context.Context, model *storage.User) (primitive.ObjectID, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateUser", ctx, model)
-	ret0, _ := ret[0].(primitive.ObjectID)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// CreateUser indicates an expected call of CreateUser.
-func (mr *MockstorageMockRecorder) CreateUser(ctx, model interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*Mockstorage)(nil).CreateUser), ctx, model)
-}
-
-// FindByEmail mocks base method.
-func (m *Mockstorage) FindByEmail(arg0 context.Context, arg1 string) (*storage.User, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindByEmail", arg0, arg1)
-	ret0, _ := ret[0].(*storage.User)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// FindByEmail indicates an expected call of FindByEmail.
-func (mr *MockstorageMockRecorder) FindByEmail(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByEmail", reflect.TypeOf((*Mockstorage)(nil).FindByEmail), arg0, arg1)
-}
-
-// FindById mocks base method.
-func (m *Mockstorage) FindById(arg0 context.Context, arg1 string) (*storage.User, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindById", arg0, arg1)
-	ret0, _ := ret[0].(*storage.User)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// FindById indicates an expected call of FindById.
-func (mr *MockstorageMockRecorder) FindById(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindById", reflect.TypeOf((*Mockstorage)(nil).FindById), arg0, arg1)
-}
-
-// FindByLogin mocks base method.
-func (m *Mockstorage) FindByLogin(arg0 context.Context, arg1 string) (*storage.User, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindByLogin", arg0, arg1)
-	ret0, _ := ret[0].(*storage.User)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// FindByLogin indicates an expected call of FindByLogin.
-func (mr *MockstorageMockRecorder) FindByLogin(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByLogin", reflect.TypeOf((*Mockstorage)(nil).FindByLogin), arg0, arg1)
 }
 
 // Mockcache is a mock of cache interface.

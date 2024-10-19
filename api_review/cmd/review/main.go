@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/reversersed/go-grpc/tree/main/api_review/internal/app"
+	"github.com/reversersed/LitGO-backend/tree/main/api_review/internal/app"
 )
 
 func main() {

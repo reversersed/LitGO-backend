@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/cristalhq/jwt/v3"
-	model "github.com/reversersed/go-grpc/tree/main/api_user/internal/storage"
+	model "github.com/reversersed/LitGO-backend/tree/main/api_user/internal/storage"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

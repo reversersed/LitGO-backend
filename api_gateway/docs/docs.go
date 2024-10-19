@@ -981,6 +981,134 @@ const docTemplate = `{
                 }
             }
         },
+        "/reviews/book/{id}": {
+            "get": {
+                "description": "Find's all book's reviews with page and pagesize arguments",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "reviews"
+                ],
+                "summary": "Get book's reviews",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Book ID or translit name",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number, must be greater or equal than 0, optional parameter",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page size, default 1, must be greater or equal than 1",
+                        "name": "pagesize",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reviews array",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/reviews_pb.ReviewModel"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "No reviews found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal error occurred",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "503": {
+                        "description": "Service does not responding (maybe crush)",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
                 "description": "params goes in specific order: id -\u003e login -\u003e email\nfirst found user will be returned. If no user found, there'll be an error with details",
@@ -1631,6 +1759,59 @@ const docTemplate = `{
                     "description": "Error code in string (e.g. InvalidArgument)",
                     "type": "string",
                     "example": "InvalidArgument"
+                }
+            }
+        },
+        "reviews_pb.ReviewModel": {
+            "type": "object",
+            "properties": {
+                "created": {
+                    "type": "integer"
+                },
+                "creator": {
+                    "$ref": "#/definitions/reviews_pb.UserModel"
+                },
+                "downvotes": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "rating": {
+                    "type": "number"
+                },
+                "text": {
+                    "type": "string"
+                },
+                "upvotes": {
+                    "type": "integer"
+                },
+                "userAction": {
+                    "$ref": "#/definitions/reviews_pb.UserActionEnum"
+                }
+            }
+        },
+        "reviews_pb.UserActionEnum": {
+            "type": "integer",
+            "enum": [
+                0,
+                1,
+                2
+            ],
+            "x-enum-varnames": [
+                "UserActionEnum_noAction",
+                "UserActionEnum_like",
+                "UserActionEnum_dislike"
+            ]
+        },
+        "reviews_pb.UserModel": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "login": {
+                    "type": "string"
                 }
             }
         },

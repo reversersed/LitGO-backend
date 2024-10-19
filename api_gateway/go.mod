@@ -1,4 +1,4 @@
-module github.com/reversersed/go-grpc/tree/main/api_gateway
+module github.com/reversersed/LitGO-backend/tree/main/api_gateway
 
 go 1.22.5
 
@@ -9,7 +9,7 @@ require (
 	github.com/golang/mock v1.6.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/mdigger/translit v0.2.0
-	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20241018213304-968c3c6b4ef9
+	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20241019165043-b584bb4b8d52
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.9.0
 	github.com/swaggo/files v1.0.1

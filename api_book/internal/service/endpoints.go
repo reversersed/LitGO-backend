@@ -8,9 +8,9 @@ import (
 	"strings"
 	"time"
 
+	model "github.com/reversersed/LitGO-backend/tree/main/api_book/internal/storage"
+	"github.com/reversersed/LitGO-backend/tree/main/api_book/pkg/copier"
 	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
-	model "github.com/reversersed/go-grpc/tree/main/api_book/internal/storage"
-	"github.com/reversersed/go-grpc/tree/main/api_book/pkg/copier"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

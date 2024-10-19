@@ -1,14 +1,15 @@
-module github.com/reversersed/go-grpc/tree/main/api_review
+module github.com/reversersed/LitGO-backend/tree/main/api_review
 
-go 1.22.1
+go 1.22.5
 
 require (
 	github.com/coocood/freecache v1.2.4
 	github.com/go-playground/validator/v10 v10.22.1
+	github.com/golang/mock v1.6.0
 	github.com/jinzhu/copier v0.4.0
 	github.com/mdigger/translit v0.2.0
 	github.com/rabbitmq/amqp091-go v1.10.0
-	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20241018173016-1f6e17a98026
+	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20241019165043-b584bb4b8d52
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.9.0
 	go.mongodb.org/mongo-driver v1.17.1
@@ -37,6 +38,7 @@ require (
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
+	github.com/kr/text v0.2.0 // indirect
 	github.com/lufia/plan9stats v0.0.0-20211012122336-39d0f177ccd0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/moby/docker-image-spec v1.3.1 // indirect

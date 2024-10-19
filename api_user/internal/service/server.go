@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 
+	model "github.com/reversersed/LitGO-backend/tree/main/api_user/internal/storage"
 	users_pb "github.com/reversersed/LitGO-proto/gen/go/users"
-	model "github.com/reversersed/go-grpc/tree/main/api_user/internal/storage"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc"
 )

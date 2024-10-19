@@ -2,7 +2,7 @@ package app
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/config"
+	"github.com/reversersed/LitGO-backend/tree/main/api_gateway/internal/config"
 )
 
 type handler interface {

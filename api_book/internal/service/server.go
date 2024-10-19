@@ -3,10 +3,10 @@ package service
 import (
 	"context"
 
+	model "github.com/reversersed/LitGO-backend/tree/main/api_book/internal/storage"
 	authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors"
 	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
 	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
-	model "github.com/reversersed/go-grpc/tree/main/api_book/internal/storage"
 	"google.golang.org/grpc"
 )
 

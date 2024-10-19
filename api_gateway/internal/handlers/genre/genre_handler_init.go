@@ -2,8 +2,8 @@ package genre
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/reversersed/LitGO-backend/tree/main/api_gateway/internal/handlers"
 	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
-	"github.com/reversersed/go-grpc/tree/main/api_gateway/internal/handlers"
 )
 
 type handler struct {

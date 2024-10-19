@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/reversersed/go-grpc/tree/main/api_user/internal/config"
-	srv "github.com/reversersed/go-grpc/tree/main/api_user/internal/service"
-	"github.com/reversersed/go-grpc/tree/main/api_user/internal/storage"
-	freecache "github.com/reversersed/go-grpc/tree/main/api_user/pkg/cache"
-	"github.com/reversersed/go-grpc/tree/main/api_user/pkg/logging/logrus"
-	"github.com/reversersed/go-grpc/tree/main/api_user/pkg/mongo"
-	"github.com/reversersed/go-grpc/tree/main/api_user/pkg/shutdown"
-	"github.com/reversersed/go-grpc/tree/main/api_user/pkg/validator"
+	"github.com/reversersed/LitGO-backend/tree/main/api_user/internal/config"
+	srv "github.com/reversersed/LitGO-backend/tree/main/api_user/internal/service"
+	"github.com/reversersed/LitGO-backend/tree/main/api_user/internal/storage"
+	freecache "github.com/reversersed/LitGO-backend/tree/main/api_user/pkg/cache"
+	"github.com/reversersed/LitGO-backend/tree/main/api_user/pkg/logging/logrus"
+	"github.com/reversersed/LitGO-backend/tree/main/api_user/pkg/mongo"
+	"github.com/reversersed/LitGO-backend/tree/main/api_user/pkg/shutdown"
+	"github.com/reversersed/LitGO-backend/tree/main/api_user/pkg/validator"
 	"google.golang.org/grpc"
 )
 

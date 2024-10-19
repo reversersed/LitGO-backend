@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/reversersed/go-grpc/tree/main/api_review/pkg/mongo"
+	"github.com/reversersed/LitGO-backend/tree/main/api_review/pkg/mongo"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 )

@@ -3,7 +3,7 @@ package app
 import (
 	"io"
 
-	"github.com/reversersed/go-grpc/tree/main/api_review/internal/config"
+	"github.com/reversersed/LitGO-backend/tree/main/api_review/internal/config"
 	"google.golang.org/grpc"
 )
 
