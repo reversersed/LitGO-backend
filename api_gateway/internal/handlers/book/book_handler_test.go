@@ -37,28 +37,28 @@ func TestHandlers(t *testing.T) {
 	}{
 		{
 			Name:   "suggestion query",
-			Path:   "/api/v1/books/suggest",
+			Path:   "/api/v1/books/search",
 			Method: http.MethodGet,
 			Body:   func() io.Reader { return nil },
 			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mbc *mock_books_pb.MockBookClient) {
 				mjm.EXPECT().Middleware(gomock.Any()).Return(func(c *gin.Context) { c.Next() }).AnyTimes()
 				ml.EXPECT().Info(gomock.Any()).AnyTimes()
 
-				mbc.EXPECT().GetBookSuggestions(gomock.Any(), gomock.Any(), gomock.Any()).Return(&books_pb.GetBooksResponse{Books: []*books_pb.BookModel{{Name: "book name"}}}, nil)
+				mbc.EXPECT().FindBook(gomock.Any(), gomock.Any(), gomock.Any()).Return(&books_pb.FindBookResponse{Books: []*books_pb.BookModel{{Name: "book name"}}}, nil)
 			},
 			ExceptedStatus: http.StatusOK,
 			ExceptedBody:   "[{\"name\":\"book name\"}]",
 		},
 		{
 			Name:   "suggestion query error",
-			Path:   "/api/v1/books/suggest",
+			Path:   "/api/v1/books/search",
 			Method: http.MethodGet,
 			Body:   func() io.Reader { return nil },
 			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mbc *mock_books_pb.MockBookClient) {
 				mjm.EXPECT().Middleware(gomock.Any()).Return(func(c *gin.Context) { c.Next() }).AnyTimes()
 				ml.EXPECT().Info(gomock.Any()).AnyTimes()
 
-				mbc.EXPECT().GetBookSuggestions(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, status.Error(codes.NotFound, "books not found"))
+				mbc.EXPECT().FindBook(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, status.Error(codes.NotFound, "books not found"))
 			},
 			ExceptedStatus: http.StatusNotFound,
 			ExceptedBody:   "{\"code\":5,\"type\":\"NotFound\",\"message\":\"books not found\",\"details\":[]}",

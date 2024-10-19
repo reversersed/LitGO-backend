@@ -91,13 +91,13 @@ func TestGetSuggestion(t *testing.T) {
 
 	book, err := storage.CreateBook(ctx, &Book{Name: "Книга о книгопечатании", Description: "Описание книги", Picture: "picture.png", Filepath: "book.epub", Genre: primitive.NewObjectID(), Authors: []primitive.ObjectID{primitive.NewObjectID(), primitive.NewObjectID()}})
 	assert.NoError(t, err)
-	sugg, err := storage.GetSuggestions(ctx, "(Книга)|(книгопечатании)", 1)
+	sugg, err := storage.Find(ctx, "(Книга)|(книгопечатании)", 1, 0)
 
 	assert.NoError(t, err)
 	assert.Len(t, sugg, 1)
 	assert.Equal(t, book, sugg[0])
 
-	_, err = storage.GetSuggestions(ctx, "(КнигиНеСуществует)", 1)
+	_, err = storage.Find(ctx, "(КнигиНеСуществует)", 1, 0)
 	assert.EqualError(t, err, "rpc error: code = NotFound desc = no books found")
 }
 func TestGetBook(t *testing.T) {

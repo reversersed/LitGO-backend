@@ -20,7 +20,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func TestGetBookSuggestion(t *testing.T) {
+func TestFindBook(t *testing.T) {
 	category := &genres_pb.CategoryModel{
 		Id:   primitive.NewObjectID().Hex(),
 		Name: "category",
@@ -98,14 +98,14 @@ func TestGetBookSuggestion(t *testing.T) {
 	}
 	table := []struct {
 		Name             string
-		Request          *books_pb.GetSuggestionRequest
+		Request          *books_pb.FindBookRequest
 		ExceptedError    string
-		ExceptedResponse *books_pb.GetBooksResponse
+		ExceptedResponse *books_pb.FindBookResponse
 		MockBehaviour    func(*mock_service.Mockcache, *mock_authors_pb.MockAuthorClient, *mock_genres_pb.MockGenreClient, *mock_service.Mocklogger, *mock_service.Mockstorage, *mock_service.Mockvalidator)
 	}{
 		{
 			Name:          "validation error",
-			Request:       &books_pb.GetSuggestionRequest{},
+			Request:       &books_pb.FindBookRequest{},
 			ExceptedError: "rpc error: code = InvalidArgument desc = wrong arguments number",
 			MockBehaviour: func(m1 *mock_service.Mockcache, mac *mock_authors_pb.MockAuthorClient, mgc *mock_genres_pb.MockGenreClient, m2 *mock_service.Mocklogger, m3 *mock_service.Mockstorage, m4 *mock_service.Mockvalidator) {
 				m4.EXPECT().StructValidation(gomock.Any()).Return(status.Error(codes.InvalidArgument, "wrong arguments number"))
@@ -120,39 +120,39 @@ func TestGetBookSuggestion(t *testing.T) {
 		},
 		{
 			Name:    "successful",
-			Request: &books_pb.GetSuggestionRequest{Query: "Проверка правильности разбиения", Limit: 5},
+			Request: &books_pb.FindBookRequest{Query: "Проверка правильности разбиения", Limit: 5, Page: 1},
 			MockBehaviour: func(m1 *mock_service.Mockcache, mac *mock_authors_pb.MockAuthorClient, mgc *mock_genres_pb.MockGenreClient, m2 *mock_service.Mocklogger, m3 *mock_service.Mockstorage, m4 *mock_service.Mockvalidator) {
 				m4.EXPECT().StructValidation(gomock.Any()).Return(nil)
-				m3.EXPECT().GetSuggestions(gomock.Any(), "(Проверка)|(правильности)|(разбиения)", int64(5)).Return(books, nil)
+				m3.EXPECT().Find(gomock.Any(), "(Проверка)|(правильности)|(разбиения)", 5, 1).Return(books, nil)
 				m1.EXPECT().Get(gomock.Any()).Return([]byte{}, errors.New("")).AnyTimes()
 				m1.EXPECT().Set(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
 				mgc.EXPECT().GetTree(gomock.Any(), gomock.Any()).Return(&genres_pb.CategoryResponse{Category: category}, nil).AnyTimes()
 				mac.EXPECT().GetAuthors(gomock.Any(), gomock.Any()).Return(&authors_pb.GetAuthorsResponse{Authors: []*authors_pb.AuthorModel{author}}, nil).AnyTimes()
 			},
-			ExceptedResponse: &books_pb.GetBooksResponse{Books: bookModel},
+			ExceptedResponse: &books_pb.FindBookResponse{Books: bookModel},
 		},
 		{
 			Name:    "successful with category from cache",
-			Request: &books_pb.GetSuggestionRequest{Query: "Проверка правильности разбиения", Limit: 5},
+			Request: &books_pb.FindBookRequest{Query: "Проверка правильности разбиения", Limit: 5},
 			MockBehaviour: func(m1 *mock_service.Mockcache, mac *mock_authors_pb.MockAuthorClient, mgc *mock_genres_pb.MockGenreClient, m2 *mock_service.Mocklogger, m3 *mock_service.Mockstorage, m4 *mock_service.Mockvalidator) {
 				m4.EXPECT().StructValidation(gomock.Any()).Return(nil)
-				m3.EXPECT().GetSuggestions(gomock.Any(), "(Проверка)|(правильности)|(разбиения)", int64(5)).Return(books, nil)
+				m3.EXPECT().Find(gomock.Any(), "(Проверка)|(правильности)|(разбиения)", 5, 0).Return(books, nil)
 				json, _ := json.Marshal(&genres_pb.CategoryResponse{Category: category})
 				m1.EXPECT().Get(gomock.Any()).Return(json, nil).AnyTimes()
 				mac.EXPECT().GetAuthors(gomock.Any(), gomock.Any()).Return(&authors_pb.GetAuthorsResponse{Authors: []*authors_pb.AuthorModel{author}}, nil).AnyTimes()
 			},
-			ExceptedResponse: &books_pb.GetBooksResponse{Books: bookModel},
+			ExceptedResponse: &books_pb.FindBookResponse{Books: bookModel},
 		},
 		{
 			Name:    "storage error",
-			Request: &books_pb.GetSuggestionRequest{Query: "Проверка правильности разбиения", Limit: 5},
+			Request: &books_pb.FindBookRequest{Query: "Проверка правильности разбиения", Limit: 5},
 			MockBehaviour: func(m1 *mock_service.Mockcache, mac *mock_authors_pb.MockAuthorClient, mgc *mock_genres_pb.MockGenreClient, m2 *mock_service.Mocklogger, m3 *mock_service.Mockstorage, m4 *mock_service.Mockvalidator) {
 				m4.EXPECT().StructValidation(gomock.Any()).Return(nil)
 				m1.EXPECT().Get(gomock.Any()).Return([]byte{}, errors.New("")).AnyTimes()
 				m1.EXPECT().Set(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
-				m3.EXPECT().GetSuggestions(gomock.Any(), "(Проверка)|(правильности)|(разбиения)", int64(5)).Return(nil, status.Error(codes.NotFound, "authors not found"))
+				m3.EXPECT().Find(gomock.Any(), "(Проверка)|(правильности)|(разбиения)", 5, 0).Return(nil, status.Error(codes.NotFound, "books not found"))
 			},
-			ExceptedError: "rpc error: code = NotFound desc = authors not found",
+			ExceptedError: "rpc error: code = NotFound desc = books not found",
 		},
 	}
 
@@ -175,7 +175,7 @@ func TestGetBookSuggestion(t *testing.T) {
 				v.MockBehaviour(cache, authorService, genreService, logger, storage, validator)
 			}
 
-			response, err := service.GetBookSuggestions(context.Background(), v.Request)
+			response, err := service.FindBook(context.Background(), v.Request)
 			if len(v.ExceptedError) == 0 {
 				assert.NoError(t, err)
 			} else {

@@ -11,7 +11,7 @@ require (
 	github.com/jinzhu/copier v0.4.0
 	github.com/mdigger/translit v0.2.0
 	github.com/rabbitmq/amqp091-go v1.10.0
-	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20241019165043-b584bb4b8d52
+	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20241019214558-f57b3c07f515
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.9.0
 	github.com/testcontainers/testcontainers-go v0.33.0

@@ -369,7 +369,7 @@ paths:
       summary: Find authors
       tags:
       - authors
-  /authors/suggest:
+  /authors/search:
     get:
       description: find authors by provided phares, keys or names
       parameters:
@@ -379,9 +379,13 @@ paths:
         required: true
         type: string
       - description: limit authors to display. default = 5 if not specified, min =
-          1, max = 10
+          1, max = 50
         in: query
         name: limit
+        type: integer
+      - description: page number to find, must be greater or equal than 0
+        in: query
+        name: page
         type: integer
       produces:
       - application/json
@@ -611,7 +615,7 @@ paths:
       summary: Create new book
       tags:
       - books
-  /books/suggest:
+  /books/search:
     get:
       description: find books by provided phares, keys or names
       parameters:
@@ -621,9 +625,13 @@ paths:
         required: true
         type: string
       - description: limit books to display. default = 5 if not specified, min = 1,
-          max = 10
+          max = 50
         in: query
         name: limit
+        type: integer
+      - description: page number to find, must be greater or equal than 0
+        in: query
+        name: page
         type: integer
       produces:
       - application/json

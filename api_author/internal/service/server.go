@@ -23,8 +23,8 @@ type logger interface {
 	Warn(...any)
 }
 type storage interface {
-	GetAuthors(ctx context.Context, id []primitive.ObjectID, translit []string) ([]*model.Author, error)
-	GetSuggestions(ctx context.Context, regex string, limit int64) ([]*model.Author, error)
+	GetAuthors(context.Context, []primitive.ObjectID, []string) ([]*model.Author, error)
+	Find(context.Context, string, int, int) ([]*model.Author, error)
 }
 type cache interface {
 	Get([]byte) ([]byte, error)

@@ -195,34 +195,34 @@ func (m *Mockstorage) EXPECT() *MockstorageMockRecorder {
 	return m.recorder
 }
 
-// GetAuthors mocks base method.
-func (m *Mockstorage) GetAuthors(ctx context.Context, id []primitive.ObjectID, translit []string) ([]*storage.Author, error) {
+// Find mocks base method.
+func (m *Mockstorage) Find(arg0 context.Context, arg1 string, arg2, arg3 int) ([]*storage.Author, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAuthors", ctx, id, translit)
+	ret := m.ctrl.Call(m, "Find", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].([]*storage.Author)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Find indicates an expected call of Find.
+func (mr *MockstorageMockRecorder) Find(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Find", reflect.TypeOf((*Mockstorage)(nil).Find), arg0, arg1, arg2, arg3)
+}
+
+// GetAuthors mocks base method.
+func (m *Mockstorage) GetAuthors(arg0 context.Context, arg1 []primitive.ObjectID, arg2 []string) ([]*storage.Author, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAuthors", arg0, arg1, arg2)
 	ret0, _ := ret[0].([]*storage.Author)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetAuthors indicates an expected call of GetAuthors.
-func (mr *MockstorageMockRecorder) GetAuthors(ctx, id, translit interface{}) *gomock.Call {
+func (mr *MockstorageMockRecorder) GetAuthors(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAuthors", reflect.TypeOf((*Mockstorage)(nil).GetAuthors), ctx, id, translit)
-}
-
-// GetSuggestions mocks base method.
-func (m *Mockstorage) GetSuggestions(ctx context.Context, regex string, limit int64) ([]*storage.Author, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetSuggestions", ctx, regex, limit)
-	ret0, _ := ret[0].([]*storage.Author)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetSuggestions indicates an expected call of GetSuggestions.
-func (mr *MockstorageMockRecorder) GetSuggestions(ctx, regex, limit interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSuggestions", reflect.TypeOf((*Mockstorage)(nil).GetSuggestions), ctx, regex, limit)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAuthors", reflect.TypeOf((*Mockstorage)(nil).GetAuthors), arg0, arg1, arg2)
 }
 
 // Mockcache is a mock of cache interface.

@@ -140,7 +140,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/authors/suggest": {
+        "/authors/search": {
             "get": {
                 "description": "find authors by provided phares, keys or names",
                 "produces": [
@@ -160,8 +160,14 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
-                        "description": "limit authors to display. default = 5 if not specified, min = 1, max = 10",
+                        "description": "limit authors to display. default = 5 if not specified, min = 1, max = 50",
                         "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "page number to find, must be greater or equal than 0",
+                        "name": "page",
                         "in": "query"
                     }
                 ],
@@ -547,7 +553,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/books/suggest": {
+        "/books/search": {
             "get": {
                 "description": "find books by provided phares, keys or names",
                 "produces": [
@@ -567,8 +573,14 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
-                        "description": "limit books to display. default = 5 if not specified, min = 1, max = 10",
+                        "description": "limit books to display. default = 5 if not specified, min = 1, max = 50",
                         "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "page number to find, must be greater or equal than 0",
+                        "name": "page",
                         "in": "query"
                     }
                 ],

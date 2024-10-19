@@ -49,8 +49,10 @@ func (d *db) CreateBook(ctx context.Context, book *Book) (*Book, error) {
 	}
 	return book, nil
 }
-func (d *db) GetSuggestions(ctx context.Context, regex string, limit int64) ([]*Book, error) {
-	response, err := d.collection.Find(ctx, bson.M{"name": bson.M{"$regex": regex, "$options": "i"}}, &options.FindOptions{Limit: &limit})
+func (d *db) Find(ctx context.Context, regex string, limit int, page int) ([]*Book, error) {
+	lim := int64(limit)
+	skip := int64(page * limit)
+	response, err := d.collection.Find(ctx, bson.M{"name": bson.M{"$regex": regex, "$options": "i"}}, &options.FindOptions{Limit: &lim, Skip: &skip})
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

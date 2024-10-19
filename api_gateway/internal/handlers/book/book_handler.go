@@ -22,15 +22,16 @@ import (
 // @Tags         books
 // @Produce      json
 // @Param		 query      query     string 		true 		"Query with keywords"
-// @Param		 limit   query     int 		false 		"limit books to display. default = 5 if not specified, min = 1, max = 10"
+// @Param		 limit   query     int 		false 		"limit books to display. default = 5 if not specified, min = 1, max = 50"'
+// @Param		 page	query	int false	"page number to find, must be greater or equal than 0"
 // @Success      200  {array}   books_pb.BookModel 		"Books"
 // @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Query was empty"
 // @Failure      404  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Books not found"
 // @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Some internal error"
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Service does not responding (maybe crush)"
-// @Router       /books/suggest [get]
-func (h *handler) GetBooksSuggestion(c *gin.Context) {
-	var request books_pb.GetSuggestionRequest
+// @Router       /books/search [get]
+func (h *handler) FindBooks(c *gin.Context) {
+	var request books_pb.FindBookRequest
 	if err := c.BindQuery(&request); err != nil {
 		c.Error(status.Error(codes.InvalidArgument, err.Error()))
 		return
@@ -39,7 +40,7 @@ func (h *handler) GetBooksSuggestion(c *gin.Context) {
 		request.Limit = 5
 	}
 
-	reply, err := h.client.GetBookSuggestions(c.Request.Context(), &request)
+	reply, err := h.client.FindBook(c.Request.Context(), &request)
 	if err != nil {
 		c.Error(err)
 		return

@@ -54,7 +54,7 @@ func (s *authorServer) GetAuthors(ctx context.Context, r *authors_pb.GetAuthorsR
 	}, nil
 }
 
-func (s *authorServer) GetAuthorSuggestion(ctx context.Context, r *authors_pb.GetSuggestionRequest) (*authors_pb.GetAuthorsResponse, error) {
+func (s *authorServer) GetAuthorSuggestion(ctx context.Context, r *authors_pb.FindAuthorsRequest) (*authors_pb.GetAuthorsResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
@@ -73,7 +73,7 @@ func (s *authorServer) GetAuthorSuggestion(ctx context.Context, r *authors_pb.Ge
 	pattern = strings.Trim(pattern, "|")
 
 	s.logger.Infof("received authors suggestion request %s with pattern %s", r.GetQuery(), pattern)
-	authors, err := s.storage.GetSuggestions(ctx, pattern, r.GetLimit())
+	authors, err := s.storage.Find(ctx, pattern, int(r.GetLimit()), int(r.GetPage()))
 	if err != nil {
 		return nil, err
 	}
