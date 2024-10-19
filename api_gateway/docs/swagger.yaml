@@ -127,6 +127,21 @@ definitions:
         example: InvalidArgument
         type: string
     type: object
+  reviews_pb.CreateBookReviewRequest:
+    properties:
+      modelId:
+        type: string
+      rating:
+        maximum: 5
+        minimum: 0
+        type: number
+      text:
+        type: string
+    required:
+    - modelId
+    - rating
+    - text
+    type: object
   reviews_pb.ReviewModel:
     properties:
       created:
@@ -885,6 +900,85 @@ paths:
               type: object
         "404":
           description: No reviews found
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "500":
+          description: Internal error occurred
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "503":
+          description: Service does not responding (maybe crush)
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+      summary: Get book's reviews
+      tags:
+      - reviews
+    post:
+      description: Find's all book's reviews with page and pagesize arguments
+      parameters:
+      - description: Book ID or translit name
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/reviews_pb.CreateBookReviewRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created review
+          schema:
+            $ref: '#/definitions/reviews_pb.ReviewModel'
+        "400":
+          description: Invalid request
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "401":
+          description: User not authorized
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "404":
+          description: Book or user not found
           schema:
             allOf:
             - $ref: '#/definitions/middleware.CustomError'

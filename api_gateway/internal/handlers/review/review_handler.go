@@ -45,7 +45,7 @@ func (h *handler) GetBookReviews(c *gin.Context) {
 // @Tags         reviews
 // @Produce      json
 // @Param		 id 		path 	string 	true 	"Book ID or translit name"
-// @Param 		 body 		body 	reviews_pb.CreateBookReviewRequest true
+// @Param 		 body 		body 	reviews_pb.CreateBookReviewRequest true "Request body"
 // @Success      201  {object}   reviews_pb.ReviewModel "Created review"
 // @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Invalid request"
 // @Failure      401  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "User not authorized"

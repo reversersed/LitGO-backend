@@ -169,29 +169,6 @@ func (mr *MockloggerMockRecorder) Warnf(arg0 interface{}, arg1 ...interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Warnf", reflect.TypeOf((*Mocklogger)(nil).Warnf), varargs...)
 }
 
-// Mockstorage is a mock of storage interface.
-type Mockstorage struct {
-	ctrl     *gomock.Controller
-	recorder *MockstorageMockRecorder
-}
-
-// MockstorageMockRecorder is the mock recorder for Mockstorage.
-type MockstorageMockRecorder struct {
-	mock *Mockstorage
-}
-
-// NewMockstorage creates a new mock instance.
-func NewMockstorage(ctrl *gomock.Controller) *Mockstorage {
-	mock := &Mockstorage{ctrl: ctrl}
-	mock.recorder = &MockstorageMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *Mockstorage) EXPECT() *MockstorageMockRecorder {
-	return m.recorder
-}
-
 // Mockcache is a mock of cache interface.
 type Mockcache struct {
 	ctrl     *gomock.Controller
