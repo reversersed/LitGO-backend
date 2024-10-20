@@ -34,7 +34,7 @@ func (s *bookServer) FindBook(ctx context.Context, req *books_pb.FindBookRequest
 	pattern = strings.Trim(pattern, "|")
 
 	s.logger.Infof("received book find request %s, built pattern: %s", req.GetQuery(), pattern)
-	response, err := s.storage.Find(ctx, pattern, int(req.GetLimit()), int(req.GetPage()))
+	response, err := s.storage.Find(ctx, pattern, int(req.GetLimit()), int(req.GetPage()), req.GetRating())
 	if err != nil {
 		return nil, err
 	}

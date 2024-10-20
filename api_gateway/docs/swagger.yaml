@@ -387,6 +387,10 @@ paths:
         in: query
         name: page
         type: integer
+      - description: rating to find, must be 0 <= rating <= 5
+        in: query
+        name: rating
+        type: number
       produces:
       - application/json
       responses:
@@ -397,7 +401,7 @@ paths:
               $ref: '#/definitions/authors_pb.AuthorModel'
             type: array
         "400":
-          description: Query was empty
+          description: Query was empty or not validated
           schema:
             allOf:
             - $ref: '#/definitions/middleware.CustomError'
@@ -633,6 +637,10 @@ paths:
         in: query
         name: page
         type: integer
+      - description: rating to find, must be 0 <= rating <= 5
+        in: query
+        name: rating
+        type: number
       produces:
       - application/json
       responses:
@@ -643,7 +651,7 @@ paths:
               $ref: '#/definitions/books_pb.BookModel'
             type: array
         "400":
-          description: Query was empty
+          description: Query was empty or not validated
           schema:
             allOf:
             - $ref: '#/definitions/middleware.CustomError'

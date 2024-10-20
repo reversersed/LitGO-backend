@@ -123,7 +123,7 @@ func TestFindBook(t *testing.T) {
 			Request: &books_pb.FindBookRequest{Query: "Проверка правильности разбиения", Limit: 5, Page: 1},
 			MockBehaviour: func(m1 *mock_service.Mockcache, mac *mock_authors_pb.MockAuthorClient, mgc *mock_genres_pb.MockGenreClient, m2 *mock_service.Mocklogger, m3 *mock_service.Mockstorage, m4 *mock_service.Mockvalidator) {
 				m4.EXPECT().StructValidation(gomock.Any()).Return(nil)
-				m3.EXPECT().Find(gomock.Any(), "(Проверка)|(правильности)|(разбиения)", 5, 1).Return(books, nil)
+				m3.EXPECT().Find(gomock.Any(), "(Проверка)|(правильности)|(разбиения)", 5, 1, float32(0.0)).Return(books, nil)
 				m1.EXPECT().Get(gomock.Any()).Return([]byte{}, errors.New("")).AnyTimes()
 				m1.EXPECT().Set(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
 				mgc.EXPECT().GetTree(gomock.Any(), gomock.Any()).Return(&genres_pb.CategoryResponse{Category: category}, nil).AnyTimes()
@@ -136,7 +136,7 @@ func TestFindBook(t *testing.T) {
 			Request: &books_pb.FindBookRequest{Query: "Проверка правильности разбиения", Limit: 5},
 			MockBehaviour: func(m1 *mock_service.Mockcache, mac *mock_authors_pb.MockAuthorClient, mgc *mock_genres_pb.MockGenreClient, m2 *mock_service.Mocklogger, m3 *mock_service.Mockstorage, m4 *mock_service.Mockvalidator) {
 				m4.EXPECT().StructValidation(gomock.Any()).Return(nil)
-				m3.EXPECT().Find(gomock.Any(), "(Проверка)|(правильности)|(разбиения)", 5, 0).Return(books, nil)
+				m3.EXPECT().Find(gomock.Any(), "(Проверка)|(правильности)|(разбиения)", 5, 0, float32(0.0)).Return(books, nil)
 				json, _ := json.Marshal(&genres_pb.CategoryResponse{Category: category})
 				m1.EXPECT().Get(gomock.Any()).Return(json, nil).AnyTimes()
 				mac.EXPECT().GetAuthors(gomock.Any(), gomock.Any()).Return(&authors_pb.GetAuthorsResponse{Authors: []*authors_pb.AuthorModel{author}}, nil).AnyTimes()
@@ -145,12 +145,12 @@ func TestFindBook(t *testing.T) {
 		},
 		{
 			Name:    "storage error",
-			Request: &books_pb.FindBookRequest{Query: "Проверка правильности разбиения", Limit: 5},
+			Request: &books_pb.FindBookRequest{Query: "Проверка правильности разбиения", Limit: 5, Rating: 2.0},
 			MockBehaviour: func(m1 *mock_service.Mockcache, mac *mock_authors_pb.MockAuthorClient, mgc *mock_genres_pb.MockGenreClient, m2 *mock_service.Mocklogger, m3 *mock_service.Mockstorage, m4 *mock_service.Mockvalidator) {
 				m4.EXPECT().StructValidation(gomock.Any()).Return(nil)
 				m1.EXPECT().Get(gomock.Any()).Return([]byte{}, errors.New("")).AnyTimes()
 				m1.EXPECT().Set(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
-				m3.EXPECT().Find(gomock.Any(), "(Проверка)|(правильности)|(разбиения)", 5, 0).Return(nil, status.Error(codes.NotFound, "books not found"))
+				m3.EXPECT().Find(gomock.Any(), "(Проверка)|(правильности)|(разбиения)", 5, 0, float32(2.0)).Return(nil, status.Error(codes.NotFound, "books not found"))
 			},
 			ExceptedError: "rpc error: code = NotFound desc = books not found",
 		},

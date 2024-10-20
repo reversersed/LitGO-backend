@@ -24,7 +24,7 @@ type logger interface {
 }
 type storage interface {
 	GetAuthors(context.Context, []primitive.ObjectID, []string) ([]*model.Author, error)
-	Find(context.Context, string, int, int) ([]*model.Author, error)
+	Find(context.Context, string, int, int, float32) ([]*model.Author, error)
 }
 type cache interface {
 	Get([]byte) ([]byte, error)

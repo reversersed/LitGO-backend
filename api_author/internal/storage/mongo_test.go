@@ -118,12 +118,22 @@ func TestFind(t *testing.T) {
 
 	storage := NewStorage(dba, cfg.Base, logger)
 
-	sugg, err := storage.Find(ctx, "(Есенин)|(Пушкин)", 1, 0)
+	sugg, err := storage.Find(ctx, "(Есенин)|(Пушкин)", 1, 0, 0.0)
 
 	assert.NoError(t, err)
 	assert.Len(t, sugg, 1)
 	assert.Equal(t, "Сергей Есенин", sugg[0].Name)
 
-	_, err = storage.Find(ctx, "(АвторНеСуществует)", 1, 0)
+	sugg, err = storage.Find(ctx, "(Есенин)|(Пушкин)", 2, 0, 0.0)
+
+	assert.NoError(t, err)
+	assert.Len(t, sugg, 2)
+	assert.Equal(t, "Сергей Есенин", sugg[0].Name)
+	assert.Equal(t, "Александр Пушкин", sugg[1].Name)
+
+	_, err = storage.Find(ctx, "(Есенин)|(Пушкин)", 2, 0, 5.0)
+	assert.EqualError(t, err, "rpc error: code = NotFound desc = no authors found")
+
+	_, err = storage.Find(ctx, "(АвторНеСуществует)", 1, 0, 0.0)
 	assert.EqualError(t, err, "rpc error: code = NotFound desc = no authors found")
 }

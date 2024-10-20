@@ -118,10 +118,10 @@ func (d *db) GetAuthors(ctx context.Context, id []primitive.ObjectID, translit [
 
 	return authors, nil
 }
-func (d *db) Find(ctx context.Context, regex string, limit, skip int) ([]*Author, error) {
+func (d *db) Find(ctx context.Context, regex string, limit, skip int, rating float32) ([]*Author, error) {
 	lim := int64(limit)
 	sk := int64(skip)
-	response, err := d.collection.Find(ctx, bson.M{"name": bson.M{"$regex": regex, "$options": "i"}}, &options.FindOptions{Limit: &lim, Skip: &sk})
+	response, err := d.collection.Find(ctx, bson.M{"$and": []bson.M{bson.M{"name": bson.M{"$regex": regex, "$options": "i"}}, bson.M{"rating": bson.M{"$gte": rating}}}}, &options.FindOptions{Limit: &lim, Skip: &sk})
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

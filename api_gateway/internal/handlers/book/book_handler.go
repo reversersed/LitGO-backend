@@ -24,8 +24,9 @@ import (
 // @Param		 query      query     string 		true 		"Query with keywords"
 // @Param		 limit   query     int 		false 		"limit books to display. default = 5 if not specified, min = 1, max = 50"'
 // @Param		 page	query	int false	"page number to find, must be greater or equal than 0"
+// @Param		 rating	query	float32 false	"rating to find, must be 0 <= rating <= 5"
 // @Success      200  {array}   books_pb.BookModel 		"Books"
-// @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Query was empty"
+// @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Query was empty or not validated"
 // @Failure      404  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Books not found"
 // @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Some internal error"
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Service does not responding (maybe crush)"

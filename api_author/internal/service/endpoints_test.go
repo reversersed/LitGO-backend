@@ -222,16 +222,16 @@ func TestGetAuthorSuggestion(t *testing.T) {
 			Request: &authors_pb.FindAuthorsRequest{Query: "Проверка правильности разбиения", Limit: 5},
 			MockBehaviour: func(m1 *mock_service.Mockcache, m2 *mock_service.Mocklogger, m3 *mock_service.Mockstorage, m4 *mock_service.Mockvalidator) {
 				m4.EXPECT().StructValidation(gomock.Any()).Return(nil)
-				m3.EXPECT().Find(gomock.Any(), "(Проверка)|(правильности)|(разбиения)", 5, 0).Return(authors, nil)
+				m3.EXPECT().Find(gomock.Any(), "(Проверка)|(правильности)|(разбиения)", 5, 0, float32(0.0)).Return(authors, nil)
 			},
 			ExceptedResponse: &authors_pb.GetAuthorsResponse{Authors: authorModel},
 		},
 		{
 			Name:    "storage error",
-			Request: &authors_pb.FindAuthorsRequest{Query: "Проверка правильности разбиения", Limit: 5},
+			Request: &authors_pb.FindAuthorsRequest{Query: "Проверка правильности разбиения", Limit: 5, Rating: 2.0},
 			MockBehaviour: func(m1 *mock_service.Mockcache, m2 *mock_service.Mocklogger, m3 *mock_service.Mockstorage, m4 *mock_service.Mockvalidator) {
 				m4.EXPECT().StructValidation(gomock.Any()).Return(nil)
-				m3.EXPECT().Find(gomock.Any(), "(Проверка)|(правильности)|(разбиения)", 5, 0).Return(nil, status.Error(codes.NotFound, "authors not found"))
+				m3.EXPECT().Find(gomock.Any(), "(Проверка)|(правильности)|(разбиения)", 5, 0, float32(2.0)).Return(nil, status.Error(codes.NotFound, "authors not found"))
 			},
 			ExceptedError: "rpc error: code = NotFound desc = authors not found",
 		},

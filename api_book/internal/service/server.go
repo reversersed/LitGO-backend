@@ -24,7 +24,7 @@ type logger interface {
 	Warn(...any)
 }
 type storage interface {
-	Find(context.Context, string, int, int) ([]*model.Book, error)
+	Find(context.Context, string, int, int, float32) ([]*model.Book, error)
 	CreateBook(context.Context, *model.Book) (*model.Book, error)
 	GetBook(context.Context, string) (*model.Book, error)
 }

@@ -196,18 +196,18 @@ func (m *Mockstorage) EXPECT() *MockstorageMockRecorder {
 }
 
 // Find mocks base method.
-func (m *Mockstorage) Find(arg0 context.Context, arg1 string, arg2, arg3 int) ([]*storage.Author, error) {
+func (m *Mockstorage) Find(arg0 context.Context, arg1 string, arg2, arg3 int, arg4 float32) ([]*storage.Author, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Find", arg0, arg1, arg2, arg3)
+	ret := m.ctrl.Call(m, "Find", arg0, arg1, arg2, arg3, arg4)
 	ret0, _ := ret[0].([]*storage.Author)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Find indicates an expected call of Find.
-func (mr *MockstorageMockRecorder) Find(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+func (mr *MockstorageMockRecorder) Find(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Find", reflect.TypeOf((*Mockstorage)(nil).Find), arg0, arg1, arg2, arg3)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Find", reflect.TypeOf((*Mockstorage)(nil).Find), arg0, arg1, arg2, arg3, arg4)
 }
 
 // GetAuthors mocks base method.

@@ -169,6 +169,12 @@ const docTemplate = `{
                         "description": "page number to find, must be greater or equal than 0",
                         "name": "page",
                         "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "description": "rating to find, must be 0 \u003c= rating \u003c= 5",
+                        "name": "rating",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -182,7 +188,7 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Query was empty",
+                        "description": "Query was empty or not validated",
                         "schema": {
                             "allOf": [
                                 {
@@ -582,6 +588,12 @@ const docTemplate = `{
                         "description": "page number to find, must be greater or equal than 0",
                         "name": "page",
                         "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "description": "rating to find, must be 0 \u003c= rating \u003c= 5",
+                        "name": "rating",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -595,7 +607,7 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Query was empty",
+                        "description": "Query was empty or not validated",
                         "schema": {
                             "allOf": [
                                 {

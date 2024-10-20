@@ -73,7 +73,7 @@ func (s *authorServer) GetAuthorSuggestion(ctx context.Context, r *authors_pb.Fi
 	pattern = strings.Trim(pattern, "|")
 
 	s.logger.Infof("received authors suggestion request %s with pattern %s", r.GetQuery(), pattern)
-	authors, err := s.storage.Find(ctx, pattern, int(r.GetLimit()), int(r.GetPage()))
+	authors, err := s.storage.Find(ctx, pattern, int(r.GetLimit()), int(r.GetPage()), r.GetRating())
 	if err != nil {
 		return nil, err
 	}
