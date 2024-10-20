@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"time"
 
 	"github.com/reversersed/LitGO-backend/tree/main/api_book/pkg/mongo"
 	"go.mongodb.org/mongo-driver/bson"
@@ -38,6 +39,7 @@ func NewStorage(storage *mongodb.Database, collection string, logger logger) *db
 func (d *db) CreateBook(ctx context.Context, book *Book) (*Book, error) {
 	book.Id = primitive.NewObjectID()
 	book.TranslitName = mongo.GenerateTranslitName(book.Name, book.Id)
+	book.Published = time.Now().UTC().Unix()
 
 	result, err := d.collection.InsertOne(ctx, book)
 	if err != nil {
