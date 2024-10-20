@@ -60,38 +60,38 @@ func TestGetAll(t *testing.T) {
 		{
 			Id:           models[0].Id.Hex(),
 			Name:         "test",
-			TranslitName: "test-213",
+			Translitname: "test-213",
 			Genres: []*genres_pb.GenreModel{
 				{
 					Id:           models[0].Genres[0].Id.Hex(),
 					Name:         "genre",
-					TranslitName: "test-genre",
-					BookCount:    2,
+					Translitname: "test-genre",
+					Bookcount:    2,
 				},
 				{
 					Id:           models[0].Genres[1].Id.Hex(),
 					Name:         "genre2",
-					TranslitName: "test-genre2",
-					BookCount:    22,
+					Translitname: "test-genre2",
+					Bookcount:    22,
 				},
 			},
 		},
 		{
 			Id:           models[1].Id.Hex(),
 			Name:         "test2",
-			TranslitName: "test2-213",
+			Translitname: "test2-213",
 			Genres: []*genres_pb.GenreModel{
 				{
 					Id:           models[1].Genres[0].Id.Hex(),
 					Name:         "genre4",
-					TranslitName: "test-genre4",
-					BookCount:    24,
+					Translitname: "test-genre4",
+					Bookcount:    24,
 				},
 				{
 					Id:           models[1].Genres[1].Id.Hex(),
 					Name:         "genre24",
-					TranslitName: "test-genre24",
-					BookCount:    24,
+					Translitname: "test-genre24",
+					Bookcount:    24,
 				},
 			},
 		},
@@ -178,19 +178,19 @@ func TestGetCategoryTree(t *testing.T) {
 	response := &genres_pb.CategoryModel{
 		Id:           model.Id.Hex(),
 		Name:         "test",
-		TranslitName: "test-213",
+		Translitname: "test-213",
 		Genres: []*genres_pb.GenreModel{
 			{
 				Id:           model.Genres[0].Id.Hex(),
 				Name:         "genre",
-				TranslitName: "test-genre",
-				BookCount:    2,
+				Translitname: "test-genre",
+				Bookcount:    2,
 			},
 			{
 				Id:           model.Genres[1].Id.Hex(),
 				Name:         "genre2",
-				TranslitName: "test-genre2",
-				BookCount:    22,
+				Translitname: "test-genre2",
+				Bookcount:    22,
 			},
 		},
 	}
@@ -309,19 +309,19 @@ func TestGetOneOf(t *testing.T) {
 	response := &genres_pb.CategoryModel{
 		Id:           model.Id.Hex(),
 		Name:         "test",
-		TranslitName: "test-213",
+		Translitname: "test-213",
 		Genres: []*genres_pb.GenreModel{
 			{
 				Id:           model.Genres[0].Id.Hex(),
 				Name:         "genre",
-				TranslitName: "test-genre",
-				BookCount:    2,
+				Translitname: "test-genre",
+				Bookcount:    2,
 			},
 			{
 				Id:           model.Genres[1].Id.Hex(),
 				Name:         "genre2",
-				TranslitName: "test-genre2",
-				BookCount:    22,
+				Translitname: "test-genre2",
+				Bookcount:    22,
 			},
 		},
 	}

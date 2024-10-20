@@ -1808,10 +1808,16 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
+                "pages": {
+                    "type": "integer"
+                },
                 "picture": {
                     "type": "string"
                 },
                 "price": {
+                    "type": "integer"
+                },
+                "published": {
                     "type": "integer"
                 },
                 "rating": {
@@ -1822,6 +1828,9 @@ const docTemplate = `{
                 },
                 "translitname": {
                     "type": "string"
+                },
+                "written": {
+                    "type": "integer"
                 }
             }
         },
@@ -1879,7 +1888,7 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
-                "translitName": {
+                "translitname": {
                     "type": "string"
                 }
             }
@@ -1887,7 +1896,7 @@ const docTemplate = `{
         "genres_pb.GenreModel": {
             "type": "object",
             "properties": {
-                "bookCount": {
+                "bookcount": {
                     "type": "integer"
                 },
                 "id": {
@@ -1896,7 +1905,7 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
-                "translitName": {
+                "translitname": {
                     "type": "string"
                 }
             }

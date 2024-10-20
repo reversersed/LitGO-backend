@@ -15,4 +15,6 @@ type Book struct {
 	Reviews      int                  `bson:"reviews"`
 	Price        int                  `bson:"price"`
 	Published    int64                `bson:"published"`
+	Written      int                  `bson:"written"`
+	Pages        int                  `bson:"pages"`
 }

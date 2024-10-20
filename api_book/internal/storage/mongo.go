@@ -54,7 +54,7 @@ func (d *db) CreateBook(ctx context.Context, book *Book) (*Book, error) {
 func (d *db) Find(ctx context.Context, regex string, limit, page int, rating float32) ([]*Book, error) {
 	lim := int64(limit)
 	skip := int64(page * limit)
-	response, err := d.collection.Find(ctx, bson.M{"$and": []bson.M{bson.M{"name": bson.M{"$regex": regex, "$options": "i"}}, bson.M{"rating": bson.M{"$gte": rating}}}}, &options.FindOptions{Limit: &lim, Skip: &skip})
+	response, err := d.collection.Find(ctx, bson.M{"$and": []bson.M{{"name": bson.M{"$regex": regex, "$options": "i"}}, {"rating": bson.M{"$gte": rating}}}}, &options.FindOptions{Limit: &lim, Skip: &skip})
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
