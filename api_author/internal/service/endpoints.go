@@ -54,7 +54,7 @@ func (s *authorServer) GetAuthors(ctx context.Context, r *authors_pb.GetAuthorsR
 	}, nil
 }
 
-func (s *authorServer) GetAuthorSuggestion(ctx context.Context, r *authors_pb.FindAuthorsRequest) (*authors_pb.GetAuthorsResponse, error) {
+func (s *authorServer) FindAuthors(ctx context.Context, r *authors_pb.FindAuthorsRequest) (*authors_pb.GetAuthorsResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 

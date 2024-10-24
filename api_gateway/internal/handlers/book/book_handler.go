@@ -29,6 +29,7 @@ import (
 // @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Query was empty or not validated"
 // @Failure      404  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Books not found"
 // @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Some internal error"
+// @Failure      501  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Route not implemented yet"
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Service does not responding (maybe crush)"
 // @Router       /books/search [get]
 func (h *handler) FindBooks(c *gin.Context) {
@@ -63,6 +64,7 @@ func (h *handler) FindBooks(c *gin.Context) {
 // @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Wrong request received"
 // @Failure      404  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Authors or genre not found"
 // @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Some internal error"
+// @Failure      501  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Route not implemented yet"
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Service does not responding (maybe crush)"
 // @Security 	 ApiKeyAuth
 // @Router       /books [post]
@@ -212,6 +214,7 @@ func (h *handler) CreateBook(c *gin.Context) {
 // @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Invalid body"
 // @Failure      404  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Book not found"
 // @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Some internal error"
+// @Failure      501  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Route not implemented yet"
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Service does not responding (maybe crush)"
 // @Router       /books [get]
 func (h *handler) GetBook(c *gin.Context) {

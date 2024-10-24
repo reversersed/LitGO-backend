@@ -20,6 +20,7 @@ import (
 // @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Invalid request"
 // @Failure      404  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "No reviews found"
 // @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Internal error occurred"
+// @Failure      501  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Route not implemented yet"
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Service does not responding (maybe crush)"
 // @Router       /reviews/book/{id} [get]
 func (h *handler) GetBookReviews(c *gin.Context) {
@@ -51,6 +52,7 @@ func (h *handler) GetBookReviews(c *gin.Context) {
 // @Failure      401  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "User not authorized"
 // @Failure      404  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Book or user not found"
 // @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Internal error occurred"
+// @Failure      501  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Route not implemented yet"
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Service does not responding (maybe crush)"
 // @Router       /reviews/book/{id} [post]
 func (h *handler) CreateBookReview(c *gin.Context) {

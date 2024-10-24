@@ -213,38 +213,13 @@ definitions:
         example: "5"
         type: string
     type: object
-  user.UserAuthenticate.UserResponse:
+  shared_pb.UserCredentials:
     properties:
+      id:
+        type: string
       login:
-        example: admin
         type: string
       roles:
-        example:
-        - user
-        items:
-          type: string
-        type: array
-    type: object
-  user.UserLogin.UserResponse:
-    properties:
-      login:
-        example: admin
-        type: string
-      roles:
-        example:
-        - user
-        items:
-          type: string
-        type: array
-    type: object
-  user.UserRegister.UserResponse:
-    properties:
-      login:
-        example: admin
-        type: string
-      roles:
-        example:
-        - user
         items:
           type: string
         type: array
@@ -361,6 +336,17 @@ paths:
                     $ref: '#/definitions/shared_pb.ErrorDetail'
                   type: array
               type: object
+        "501":
+          description: Route not implemented yet
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
         "503":
           description: Service does not responding (maybe crush)
           schema:
@@ -439,6 +425,17 @@ paths:
                     $ref: '#/definitions/shared_pb.ErrorDetail'
                   type: array
               type: object
+        "501":
+          description: Route not implemented yet
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
         "503":
           description: Service does not responding (maybe crush)
           schema:
@@ -495,6 +492,17 @@ paths:
               type: object
         "500":
           description: Some internal error
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "501":
+          description: Route not implemented yet
           schema:
             allOf:
             - $ref: '#/definitions/middleware.CustomError'
@@ -609,6 +617,17 @@ paths:
                     $ref: '#/definitions/shared_pb.ErrorDetail'
                   type: array
               type: object
+        "501":
+          description: Route not implemented yet
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
         "503":
           description: Service does not responding (maybe crush)
           schema:
@@ -689,6 +708,17 @@ paths:
                     $ref: '#/definitions/shared_pb.ErrorDetail'
                   type: array
               type: object
+        "501":
+          description: Route not implemented yet
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
         "503":
           description: Service does not responding (maybe crush)
           schema:
@@ -755,6 +785,17 @@ paths:
                     $ref: '#/definitions/shared_pb.ErrorDetail'
                   type: array
               type: object
+        "501":
+          description: Route not implemented yet
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
         "503":
           description: Service does not responding (maybe crush)
           schema:
@@ -794,6 +835,17 @@ paths:
               type: object
         "500":
           description: Internal error occurred
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "501":
+          description: Route not implemented yet
           schema:
             allOf:
             - $ref: '#/definitions/middleware.CustomError'
@@ -869,6 +921,17 @@ paths:
                     $ref: '#/definitions/shared_pb.ErrorDetail'
                   type: array
               type: object
+        "501":
+          description: Route not implemented yet
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
         "503":
           description: Service does not responding (maybe crush)
           schema:
@@ -933,6 +996,17 @@ paths:
               type: object
         "500":
           description: Internal error occurred
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "501":
+          description: Route not implemented yet
           schema:
             allOf:
             - $ref: '#/definitions/middleware.CustomError'
@@ -1021,6 +1095,17 @@ paths:
                     $ref: '#/definitions/shared_pb.ErrorDetail'
                   type: array
               type: object
+        "501":
+          description: Route not implemented yet
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
         "503":
           description: Service does not responding (maybe crush)
           schema:
@@ -1083,6 +1168,28 @@ paths:
                     $ref: '#/definitions/shared_pb.ErrorDetail'
                   type: array
               type: object
+        "500":
+          description: Some internal error occurred
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "501":
+          description: Route not implemented yet
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
         "503":
           description: Service does not responding (maybe crush)
           schema:
@@ -1106,7 +1213,7 @@ paths:
         "200":
           description: User successfully authorized
           schema:
-            $ref: '#/definitions/user.UserAuthenticate.UserResponse'
+            $ref: '#/definitions/shared_pb.UserCredentials'
         "401":
           description: User does not authorized
           schema:
@@ -1120,6 +1227,28 @@ paths:
               type: object
         "404":
           description: User does not exists in database
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "500":
+          description: Some internal error occurred
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "501":
+          description: Route not implemented yet
           schema:
             allOf:
             - $ref: '#/definitions/middleware.CustomError'
@@ -1161,9 +1290,31 @@ paths:
         "200":
           description: User successfully authorized
           schema:
-            $ref: '#/definitions/user.UserLogin.UserResponse'
+            $ref: '#/definitions/shared_pb.UserCredentials'
         "400":
           description: Invalid request data
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "500":
+          description: Some internal error occurred
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "501":
+          description: Route not implemented yet
           schema:
             allOf:
             - $ref: '#/definitions/middleware.CustomError'
@@ -1217,6 +1368,17 @@ paths:
                     $ref: '#/definitions/shared_pb.ErrorDetail'
                   type: array
               type: object
+        "501":
+          description: Route not implemented yet
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
         "503":
           description: Service does not responding (maybe crush)
           schema:
@@ -1249,7 +1411,7 @@ paths:
         "201":
           description: User registered and authorized
           schema:
-            $ref: '#/definitions/user.UserRegister.UserResponse'
+            $ref: '#/definitions/shared_pb.UserCredentials'
         "400":
           description: Invalid request data
           schema:
@@ -1274,6 +1436,17 @@ paths:
               type: object
         "500":
           description: Some internal error occurred
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.CustomError'
+            - properties:
+                details:
+                  items:
+                    $ref: '#/definitions/shared_pb.ErrorDetail'
+                  type: array
+              type: object
+        "501":
+          description: Route not implemented yet
           schema:
             allOf:
             - $ref: '#/definitions/middleware.CustomError'

@@ -253,7 +253,7 @@ func TestGetAuthorSuggestion(t *testing.T) {
 				v.MockBehaviour(cache, logger, storage, validator)
 			}
 
-			response, err := service.GetAuthorSuggestion(context.Background(), v.Request)
+			response, err := service.FindAuthors(context.Background(), v.Request)
 			if len(v.ExceptedError) == 0 {
 				assert.NoError(t, err)
 			} else {

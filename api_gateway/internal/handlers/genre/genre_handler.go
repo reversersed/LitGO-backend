@@ -16,6 +16,7 @@ import (
 // @Success      200  {array}   genres_pb.CategoryModel "Genres fetched successfully"
 // @Failure      404  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "There's no genres in database"
 // @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Internal error occurred"
+// @Failure      501  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Route not implemented yet"
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Service does not responding (maybe crush)"
 // @Router       /genres/all [get]
 func (h *handler) GetAll(c *gin.Context) {
@@ -38,6 +39,7 @@ func (h *handler) GetAll(c *gin.Context) {
 // @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Received wrong query"
 // @Failure      404  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Category not found"
 // @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Internal error occurred"
+// @Failure      501  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Route not implemented yet"
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Service does not responding (maybe crush)"
 // @Router       /genres/tree [get]
 func (h *handler) GetGenreTree(c *gin.Context) {
@@ -67,6 +69,7 @@ func (h *handler) GetGenreTree(c *gin.Context) {
 // @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Received wrong query"
 // @Failure      404  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Category or genre not found"
 // @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Internal error occurred"
+// @Failure      501  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Route not implemented yet"
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} "Service does not responding (maybe crush)"
 // @Router       /genres [get]
 func (h *handler) GetOneOfGenre(c *gin.Context) {

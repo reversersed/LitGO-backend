@@ -136,7 +136,7 @@ func (a *app) Run() error {
 	reviewHandler.RegisterRouter(a.router)
 
 	if a.config.Server.Environment == "debug" {
-		a.router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+		a.router.GET("/api/v1/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 	a.logger.Infof("starting listening address %s:%d...", a.config.Server.Host, a.config.Server.Port)
 	go shutdown.Graceful(a, userConnection)

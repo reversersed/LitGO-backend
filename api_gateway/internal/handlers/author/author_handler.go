@@ -20,6 +20,7 @@ import (
 // @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Field was not in a correct format"
 // @Failure      404  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Authors not found"
 // @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Some internal error"
+// @Failure      501  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Route not implemented yet"
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Service does not responding (maybe crush)"
 // @Router       /authors [get]
 func (h *handler) GetAuthors(c *gin.Context) {
@@ -50,6 +51,7 @@ func (h *handler) GetAuthors(c *gin.Context) {
 // @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Query was empty or not validated"
 // @Failure      404  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Authors not found"
 // @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Some internal error"
+// @Failure      501  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Route not implemented yet"
 // @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Service does not responding (maybe crush)"
 // @Router       /authors/search [get]
 func (h *handler) FindAuthors(c *gin.Context) {

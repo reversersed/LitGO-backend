@@ -116,6 +116,27 @@ const docTemplate = `{
                             ]
                         }
                     },
+                    "501": {
+                        "description": "Route not implemented yet",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
                     "503": {
                         "description": "Service does not responding (maybe crush)",
                         "schema": {
@@ -250,6 +271,27 @@ const docTemplate = `{
                             ]
                         }
                     },
+                    "501": {
+                        "description": "Route not implemented yet",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
                     "503": {
                         "description": "Service does not responding (maybe crush)",
                         "schema": {
@@ -344,6 +386,27 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Some internal error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "501": {
+                        "description": "Route not implemented yet",
                         "schema": {
                             "allOf": [
                                 {
@@ -535,6 +598,27 @@ const docTemplate = `{
                             ]
                         }
                     },
+                    "501": {
+                        "description": "Route not implemented yet",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
                     "503": {
                         "description": "Service does not responding (maybe crush)",
                         "schema": {
@@ -669,6 +753,27 @@ const docTemplate = `{
                             ]
                         }
                     },
+                    "501": {
+                        "description": "Route not implemented yet",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
                     "503": {
                         "description": "Service does not responding (maybe crush)",
                         "schema": {
@@ -782,6 +887,27 @@ const docTemplate = `{
                             ]
                         }
                     },
+                    "501": {
+                        "description": "Route not implemented yet",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
                     "503": {
                         "description": "Service does not responding (maybe crush)",
                         "schema": {
@@ -849,6 +975,27 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Internal error occurred",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "501": {
+                        "description": "Route not implemented yet",
                         "schema": {
                             "allOf": [
                                 {
@@ -981,6 +1128,27 @@ const docTemplate = `{
                             ]
                         }
                     },
+                    "501": {
+                        "description": "Route not implemented yet",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
                     "503": {
                         "description": "Service does not responding (maybe crush)",
                         "schema": {
@@ -1090,6 +1258,27 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Internal error occurred",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "501": {
+                        "description": "Route not implemented yet",
                         "schema": {
                             "allOf": [
                                 {
@@ -1250,6 +1439,27 @@ const docTemplate = `{
                             ]
                         }
                     },
+                    "501": {
+                        "description": "Route not implemented yet",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
                     "503": {
                         "description": "Service does not responding (maybe crush)",
                         "schema": {
@@ -1354,6 +1564,48 @@ const docTemplate = `{
                             ]
                         }
                     },
+                    "500": {
+                        "description": "Some internal error occurred",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "501": {
+                        "description": "Route not implemented yet",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
                     "503": {
                         "description": "Service does not responding (maybe crush)",
                         "schema": {
@@ -1397,7 +1649,7 @@ const docTemplate = `{
                     "200": {
                         "description": "User successfully authorized",
                         "schema": {
-                            "$ref": "#/definitions/user.UserAuthenticate.UserResponse"
+                            "$ref": "#/definitions/shared_pb.UserCredentials"
                         }
                     },
                     "401": {
@@ -1423,6 +1675,48 @@ const docTemplate = `{
                     },
                     "404": {
                         "description": "User does not exists in database",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Some internal error occurred",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "501": {
+                        "description": "Route not implemented yet",
                         "schema": {
                             "allOf": [
                                 {
@@ -1491,11 +1785,53 @@ const docTemplate = `{
                     "200": {
                         "description": "User successfully authorized",
                         "schema": {
-                            "$ref": "#/definitions/user.UserLogin.UserResponse"
+                            "$ref": "#/definitions/shared_pb.UserCredentials"
                         }
                     },
                     "400": {
                         "description": "Invalid request data",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Some internal error occurred",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "501": {
+                        "description": "Route not implemented yet",
                         "schema": {
                             "allOf": [
                                 {
@@ -1600,6 +1936,27 @@ const docTemplate = `{
                             ]
                         }
                     },
+                    "501": {
+                        "description": "Route not implemented yet",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
                     "503": {
                         "description": "Service does not responding (maybe crush)",
                         "schema": {
@@ -1649,7 +2006,7 @@ const docTemplate = `{
                     "201": {
                         "description": "User registered and authorized",
                         "schema": {
-                            "$ref": "#/definitions/user.UserRegister.UserResponse"
+                            "$ref": "#/definitions/shared_pb.UserCredentials"
                         }
                     },
                     "400": {
@@ -1696,6 +2053,27 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Some internal error occurred",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "501": {
+                        "description": "Route not implemented yet",
                         "schema": {
                             "allOf": [
                                 {
@@ -2046,57 +2424,20 @@ const docTemplate = `{
                 }
             }
         },
-        "user.UserAuthenticate.UserResponse": {
+        "shared_pb.UserCredentials": {
             "type": "object",
             "properties": {
+                "id": {
+                    "type": "string"
+                },
                 "login": {
-                    "type": "string",
-                    "example": "admin"
+                    "type": "string"
                 },
                 "roles": {
                     "type": "array",
                     "items": {
                         "type": "string"
-                    },
-                    "example": [
-                        "user"
-                    ]
-                }
-            }
-        },
-        "user.UserLogin.UserResponse": {
-            "type": "object",
-            "properties": {
-                "login": {
-                    "type": "string",
-                    "example": "admin"
-                },
-                "roles": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "example": [
-                        "user"
-                    ]
-                }
-            }
-        },
-        "user.UserRegister.UserResponse": {
-            "type": "object",
-            "properties": {
-                "login": {
-                    "type": "string",
-                    "example": "admin"
-                },
-                "roles": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "example": [
-                        "user"
-                    ]
+                    }
                 }
             }
         },
