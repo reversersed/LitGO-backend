@@ -168,7 +168,7 @@ func (h *handler) UserRegister(c *gin.Context) {
 		c.Error(status.Error(codes.Internal, err.Error()))
 		return
 	}
-	c.JSON(http.StatusOK, response)
+	c.JSON(http.StatusCreated, response)
 }
 
 // @Summary      Logout user

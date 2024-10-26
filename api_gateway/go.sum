@@ -85,8 +85,8 @@ github.com/pelletier/go-toml/v2 v2.2.3 h1:YmeHyLY8mFWbdkNWwpr+qIL2bEqT0o95WSdkNH
 github.com/pelletier/go-toml/v2 v2.2.3/go.mod h1:MfCQTFTvCcUyyvvwm1+G6H/jORL20Xlb6rzQu9GuUkc=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
-github.com/reversersed/LitGO-proto/gen/go v0.0.0-20241020153519-d3e4734a482b h1:LJiN+tEHNlMRJySdtUnXcZDTK1bOCHs7TqVUfEA1J/s=
-github.com/reversersed/LitGO-proto/gen/go v0.0.0-20241020153519-d3e4734a482b/go.mod h1:Gp9jQVxpVV9ZWBJZTyX11S9gS2HZQ9NmfYKGM0REzBQ=
+github.com/reversersed/LitGO-proto/gen/go v0.0.0-20241026201817-411f4f86045c h1:4OuEGm4ACmvRhu495pBC3mhNPODeMaii9e+N6Kbj62g=
+github.com/reversersed/LitGO-proto/gen/go v0.0.0-20241026201817-411f4f86045c/go.mod h1:Gp9jQVxpVV9ZWBJZTyX11S9gS2HZQ9NmfYKGM0REzBQ=
 github.com/rogpeppe/go-internal v1.11.0 h1:cWPaGQEPrBb5/AsnsZesgZZ9yb1OQ+GOISoDNXVBh4M=
 github.com/rogpeppe/go-internal v1.11.0/go.mod h1:ddIwULY96R17DhadqLgMfk9H9tvdUzkipdSkR5nkCZA=
 github.com/sirupsen/logrus v1.9.3 h1:dueUQJ1C2q9oE3F7wvmSGAaVtTmUizReu6fjN8uqzbQ=

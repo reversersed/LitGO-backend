@@ -91,6 +91,48 @@ func TestHandlers(t *testing.T) {
 			ExceptedStatus: http.StatusOK,
 			ExceptedBody:   "{\"name\":\"book name\"}",
 		},
+		{
+			Name:   "get book by genre bad request",
+			Path:   "/api/v1/books/genre/id",
+			Method: http.MethodGet,
+			Body:   func() io.Reader { return nil },
+			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mbc *mock_books_pb.MockBookClient) {
+				mjm.EXPECT().Middleware(gomock.Any()).Return(func(c *gin.Context) { c.Next() }).AnyTimes()
+				ml.EXPECT().Info(gomock.Any()).AnyTimes()
+
+				mbc.EXPECT().GetBookByGenre(gomock.Any(), &books_pb.GetBookByGenreRequest{Query: "id"}).Return(nil, status.Error(codes.InvalidArgument, "bad provided request"))
+			},
+			ExceptedStatus: http.StatusBadRequest,
+			ExceptedBody:   "{\"code\":3,\"type\":\"InvalidArgument\",\"message\":\"bad provided request\",\"details\":[]}",
+		},
+		{
+			Name:   "get book by genre not found with props",
+			Path:   "/api/v1/books/genre/id?page=5&limit=5&sorttype=Popular&onlyhighrating=true",
+			Method: http.MethodGet,
+			Body:   func() io.Reader { return nil },
+			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mbc *mock_books_pb.MockBookClient) {
+				mjm.EXPECT().Middleware(gomock.Any()).Return(func(c *gin.Context) { c.Next() }).AnyTimes()
+				ml.EXPECT().Info(gomock.Any()).AnyTimes()
+
+				mbc.EXPECT().GetBookByGenre(gomock.Any(), &books_pb.GetBookByGenreRequest{Query: "id", Limit: 5, Page: 5, Onlyhighrating: true, Sorttype: "Popular"}).Return(nil, status.Error(codes.NotFound, "books not found"))
+			},
+			ExceptedStatus: http.StatusNotFound,
+			ExceptedBody:   "{\"code\":5,\"type\":\"NotFound\",\"message\":\"books not found\",\"details\":[]}",
+		},
+		{
+			Name:   "get book by genre success",
+			Path:   "/api/v1/books/genre/id?page=5&limit=5&sorttype=Popular&onlyhighrating=true",
+			Method: http.MethodGet,
+			Body:   func() io.Reader { return nil },
+			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mbc *mock_books_pb.MockBookClient) {
+				mjm.EXPECT().Middleware(gomock.Any()).Return(func(c *gin.Context) { c.Next() }).AnyTimes()
+				ml.EXPECT().Info(gomock.Any()).AnyTimes()
+
+				mbc.EXPECT().GetBookByGenre(gomock.Any(), &books_pb.GetBookByGenreRequest{Query: "id", Limit: 5, Page: 5, Onlyhighrating: true, Sorttype: "Popular"}).Return(&books_pb.GetBookByGenreResponse{Books: []*books_pb.BookModel{{Name: "book"}}}, nil)
+			},
+			ExceptedStatus: http.StatusOK,
+			ExceptedBody:   "[{\"name\":\"book\"}]",
+		},
 	}
 
 	for _, v := range table {

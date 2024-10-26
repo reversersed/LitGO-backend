@@ -11,6 +11,8 @@ import (
 	model "github.com/reversersed/LitGO-backend/tree/main/api_book/internal/storage"
 	"github.com/reversersed/LitGO-backend/tree/main/api_book/pkg/copier"
 	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
+	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -119,4 +121,59 @@ func (s *bookServer) GetBook(ctx context.Context, req *books_pb.GetBookRequest) 
 		return nil, err
 	}
 	return &books_pb.GetBookResponse{Book: responseModel}, nil
+}
+
+// TODO add tests
+func (s *bookServer) GetBookByGenre(ctx context.Context, req *books_pb.GetBookByGenreRequest) (*books_pb.GetBookByGenreResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 500*time.Millisecond)
+	defer cancel()
+
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "received nil request")
+	}
+	if err := s.validator.StructValidation(req); err != nil {
+		return nil, err
+	}
+
+	tree, err := s.genreService.GetTree(ctx, &genres_pb.GetOneOfRequest{Query: req.GetQuery()})
+	if err != nil {
+		return nil, err
+	}
+	genre := make([]primitive.ObjectID, 0)
+
+	if tree.GetCategory().GetId() == req.GetQuery() || tree.GetCategory().GetTranslitname() == req.GetQuery() { // all genres
+		for _, v := range tree.GetCategory().GetGenres() {
+			id, err := primitive.ObjectIDFromHex(v.GetId())
+			if err != nil {
+				return nil, status.Error(codes.Internal, err.Error())
+			}
+			genre = append(genre, id)
+		}
+	} else {
+		for _, v := range tree.GetCategory().GetGenres() {
+			if v.GetId() == req.GetQuery() || v.GetTranslitname() == req.GetQuery() {
+				id, err := primitive.ObjectIDFromHex(v.GetId())
+				if err != nil {
+					return nil, status.Error(codes.Internal, err.Error())
+				}
+				genre = append(genre, id)
+				break
+			}
+		}
+	}
+
+	response, err := s.storage.GetBookByGenre(ctx, genre, model.SortType(req.GetSorttype()), req.GetOnlyhighrating())
+	if err != nil {
+		return nil, err
+	}
+
+	data := make([]*books_pb.BookModel, len(response))
+	for i, v := range response {
+		model, err := s.bookMapper(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		data[i] = model
+	}
+	return &books_pb.GetBookByGenreResponse{Books: data}, nil
 }

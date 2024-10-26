@@ -269,7 +269,7 @@ func TestHandlers(t *testing.T) {
 				muc.EXPECT().GetUser(gomock.Any(), &users_pb.UserRequest{Id: "123"}).Return(&users_pb.UserModel{Id: "123", Roles: []string{"user"}, Login: "user"}, nil)
 			},
 			ExceptedStatus: http.StatusOK,
-			ExceptedBody:   "{\"login\":\"user\",\"roles\":[\"user\"]}",
+			ExceptedBody:   "{\"id\":\"123\",\"login\":\"user\",\"roles\":[\"user\"]}",
 		},
 		{
 			Name:   "User authenticate jwt failure",
@@ -342,7 +342,7 @@ func TestHandlers(t *testing.T) {
 				assert.True(t, refresh, "excepted refresh token in cookies")
 			},
 			ExceptedStatus: http.StatusOK,
-			ExceptedBody:   "{\"login\":\"user\",\"roles\":[\"user\"]}",
+			ExceptedBody:   "{\"id\":\"123\",\"login\":\"user\",\"roles\":[\"user\"]}",
 		},
 		{
 			Name:   "User authenticate new roles",
@@ -384,7 +384,7 @@ func TestHandlers(t *testing.T) {
 				assert.True(t, refresh, "excepted refresh token in cookies")
 			},
 			ExceptedStatus: http.StatusOK,
-			ExceptedBody:   "{\"login\":\"user\",\"roles\":[\"user\",\"admin\"]}",
+			ExceptedBody:   "{\"id\":\"123\",\"login\":\"user\",\"roles\":[\"user\",\"admin\"]}",
 		},
 		{
 			Name:   "User authenticate error updating token",

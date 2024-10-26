@@ -7,6 +7,7 @@ import (
 	authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors"
 	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
 	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc"
 )
 
@@ -27,6 +28,7 @@ type storage interface {
 	Find(context.Context, string, int, int, float32) ([]*model.Book, error)
 	CreateBook(context.Context, *model.Book) (*model.Book, error)
 	GetBook(context.Context, string) (*model.Book, error)
+	GetBookByGenre(context.Context, []primitive.ObjectID, model.SortType, bool) ([]*model.Book, error)
 }
 
 type cache interface {

@@ -11,6 +11,7 @@ import (
 	gomock "github.com/golang/mock/gomock"
 	storage "github.com/reversersed/LitGO-backend/tree/main/api_book/internal/storage"
 	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
+	primitive "go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // Mockvalidator is a mock of validator interface.
@@ -238,6 +239,21 @@ func (m *Mockstorage) GetBook(arg0 context.Context, arg1 string) (*storage.Book,
 func (mr *MockstorageMockRecorder) GetBook(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBook", reflect.TypeOf((*Mockstorage)(nil).GetBook), arg0, arg1)
+}
+
+// GetBookByGenre mocks base method.
+func (m *Mockstorage) GetBookByGenre(arg0 context.Context, arg1 []primitive.ObjectID, arg2 storage.SortType, arg3 bool) ([]*storage.Book, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBookByGenre", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].([]*storage.Book)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBookByGenre indicates an expected call of GetBookByGenre.
+func (mr *MockstorageMockRecorder) GetBookByGenre(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBookByGenre", reflect.TypeOf((*Mockstorage)(nil).GetBookByGenre), arg0, arg1, arg2, arg3)
 }
 
 // Mockcache is a mock of cache interface.

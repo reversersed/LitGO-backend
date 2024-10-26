@@ -232,3 +232,35 @@ func (h *handler) GetBook(c *gin.Context) {
 
 	c.JSON(http.StatusOK, reply.GetBook())
 }
+
+// @Summary      Get books by genre
+// @Description  fetches books by genre or category id/translit name
+// @Tags         books
+// @Produce      json
+// @Param		 name      		path     string 		true 		"ID or translit name"
+// @Param		 sorttype      	query     string 		true 		"Sort type. Can be Newest or Popular"
+// @Param		 onlyhighrating query bool false "Searches only high (4+) rating"
+// @Param		 limit query int true "Books limit to find"
+// @Param		 page query int true "Search page"
+// @Success      200  {array}   books_pb.BookModel 		"Books"
+// @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Invalid request"
+// @Failure      404  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Books not found"
+// @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Some internal error"
+// @Failure      501  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Route not implemented yet"
+// @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Service does not responding (maybe crush)"
+// @Router       /books/genre/{name} [get]
+func (h *handler) GetBookByGenre(c *gin.Context) {
+	var request books_pb.GetBookByGenreRequest
+	if err := c.BindQuery(&request); err != nil {
+		c.Error(status.Error(codes.InvalidArgument, err.Error()))
+		return
+	}
+	request.Query = c.Param("name")
+	reply, err := h.client.GetBookByGenre(c.Request.Context(), &request)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, reply.GetBooks())
+}

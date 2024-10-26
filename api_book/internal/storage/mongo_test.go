@@ -140,3 +140,58 @@ func TestGetBook(t *testing.T) {
 		assert.EqualError(t, err, "rpc error: code = NotFound desc = mongo: no documents in result")
 	})
 }
+func TestGetBookByGenre(t *testing.T) {
+	ctx := context.Background()
+	dba, err := mongo.NewClient(context.Background(), cfg)
+	defer dba.Client().Disconnect(ctx)
+	assert.NoError(t, err)
+
+	ctrl := gomock.NewController(t)
+	logger := mock_storage.NewMocklogger(ctrl)
+	logger.EXPECT().Info(gomock.Any()).AnyTimes()
+	logger.EXPECT().Infof(gomock.Any(), gomock.Any()).AnyTimes()
+
+	storage := NewStorage(dba, cfg.Base, logger)
+
+	genreIds := []primitive.ObjectID{primitive.NewObjectID(), primitive.NewObjectID()}
+	models := []*Book{{Name: "Эрагон 2.0", Rating: 2.0, Genre: genreIds[0]}, {Name: "Эрагон 4.0", Rating: 4.0, Genre: genreIds[0]}, {Name: "Эрагон 4.0", Rating: 4.0, Genre: genreIds[1]}}
+
+	for i := 0; i < len(models); i++ {
+		book, err := storage.CreateBook(ctx, models[i])
+		assert.NoError(t, err)
+
+		models[i] = book
+	}
+
+	t.Run("search all books", func(t *testing.T) {
+		books, err := storage.GetBookByGenre(ctx, genreIds, Popular, false)
+		if assert.NoError(t, err) {
+			assert.Equal(t, models, books)
+		}
+	})
+	t.Run("search only high rating", func(t *testing.T) {
+		books, err := storage.GetBookByGenre(ctx, genreIds, Popular, true)
+		if assert.NoError(t, err) {
+			assert.Equal(t, models[1:], books)
+		}
+	})
+	t.Run("search only one genre", func(t *testing.T) {
+		books, err := storage.GetBookByGenre(ctx, []primitive.ObjectID{genreIds[1]}, Newest, false)
+		if assert.NoError(t, err) {
+			assert.Equal(t, []*Book{models[2]}, books)
+		}
+	})
+	t.Run("empty array passed", func(t *testing.T) {
+		_, err := storage.GetBookByGenre(ctx, []primitive.ObjectID{}, Popular, false)
+		assert.Error(t, err)
+	})
+	t.Run("invalid sort type passed", func(t *testing.T) {
+		_, err := storage.GetBookByGenre(ctx, []primitive.ObjectID{primitive.NewObjectID()}, SortType(""), false)
+		assert.Error(t, err)
+	})
+	t.Run("not found error", func(t *testing.T) {
+		books, err := storage.GetBookByGenre(ctx, []primitive.ObjectID{primitive.NewObjectID()}, Newest, false)
+		assert.Error(t, err)
+		assert.Nil(t, books)
+	})
+}

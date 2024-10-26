@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/reversersed/LitGO-backend/tree/main/api_book/pkg/mongo"
@@ -92,4 +93,41 @@ func (d *db) GetBook(ctx context.Context, query string) (*Book, error) {
 		return nil, status.Error(codes.Internal, "error decoding response: "+err.Error())
 	}
 	return &book, nil
+}
+func (d *db) GetBookByGenre(ctx context.Context, genreIds []primitive.ObjectID, sortType SortType, onlyHighRating bool) ([]*Book, error) {
+	options := options.Find()
+
+	if len(genreIds) == 0 {
+		return nil, status.Error(codes.InvalidArgument, "received empty array")
+	}
+
+	filter := bson.M{"genre": bson.M{"$in": genreIds}}
+
+	if onlyHighRating {
+		filter["rating"] = bson.M{"$gte": 4.0}
+	}
+
+	switch sortType {
+	case Popular:
+		options.SetSort(bson.M{"monthpurchases": -1})
+	case Newest:
+		options.SetSort(bson.M{"published": -1})
+	default:
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("not knonw sort type: %v", sortType))
+	}
+
+	response, err := d.collection.Find(ctx, filter, options)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	defer response.Close(ctx)
+
+	var book []*Book = make([]*Book, 0)
+	if err := response.All(ctx, &book); err != nil {
+		return nil, status.Error(codes.Internal, "error decoding response: "+err.Error())
+	}
+	if len(book) == 0 {
+		return nil, status.Error(codes.NotFound, "books not found")
+	}
+	return book, nil
 }
