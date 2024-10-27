@@ -164,33 +164,38 @@ func TestGetBookByGenre(t *testing.T) {
 	}
 
 	t.Run("search all books", func(t *testing.T) {
-		books, err := storage.GetBookByGenre(ctx, genreIds, Popular, false)
+		books, err := storage.GetBookByGenre(ctx, genreIds, Popular, false, 5, 0)
 		if assert.NoError(t, err) {
 			assert.Equal(t, models, books)
 		}
 	})
 	t.Run("search only high rating", func(t *testing.T) {
-		books, err := storage.GetBookByGenre(ctx, genreIds, Popular, true)
+		books, err := storage.GetBookByGenre(ctx, genreIds, Popular, true, 5, 0)
 		if assert.NoError(t, err) {
 			assert.Equal(t, models[1:], books)
 		}
 	})
 	t.Run("search only one genre", func(t *testing.T) {
-		books, err := storage.GetBookByGenre(ctx, []primitive.ObjectID{genreIds[1]}, Newest, false)
+		books, err := storage.GetBookByGenre(ctx, []primitive.ObjectID{genreIds[1]}, Newest, false, 5, 0)
 		if assert.NoError(t, err) {
 			assert.Equal(t, []*Book{models[2]}, books)
 		}
 	})
 	t.Run("empty array passed", func(t *testing.T) {
-		_, err := storage.GetBookByGenre(ctx, []primitive.ObjectID{}, Popular, false)
+		_, err := storage.GetBookByGenre(ctx, []primitive.ObjectID{}, Popular, false, 5, 0)
 		assert.Error(t, err)
 	})
 	t.Run("invalid sort type passed", func(t *testing.T) {
-		_, err := storage.GetBookByGenre(ctx, []primitive.ObjectID{primitive.NewObjectID()}, SortType(""), false)
+		_, err := storage.GetBookByGenre(ctx, []primitive.ObjectID{primitive.NewObjectID()}, SortType(""), false, 5, 0)
 		assert.Error(t, err)
 	})
 	t.Run("not found error", func(t *testing.T) {
-		books, err := storage.GetBookByGenre(ctx, []primitive.ObjectID{primitive.NewObjectID()}, Newest, false)
+		books, err := storage.GetBookByGenre(ctx, []primitive.ObjectID{primitive.NewObjectID()}, Newest, false, 5, 0)
+		assert.Error(t, err)
+		assert.Nil(t, books)
+	})
+	t.Run("not found by page", func(t *testing.T) {
+		books, err := storage.GetBookByGenre(ctx, []primitive.ObjectID{primitive.NewObjectID()}, Newest, false, 10, 5)
 		assert.Error(t, err)
 		assert.Nil(t, books)
 	})

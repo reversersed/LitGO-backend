@@ -162,7 +162,7 @@ func (s *bookServer) GetBookByGenre(ctx context.Context, req *books_pb.GetBookBy
 		}
 	}
 
-	response, err := s.storage.GetBookByGenre(ctx, genre, model.SortType(req.GetSorttype()), req.GetOnlyhighrating())
+	response, err := s.storage.GetBookByGenre(ctx, genre, model.SortType(req.GetSorttype()), req.GetOnlyhighrating(), int(req.GetLimit()), int(req.GetPage()))
 	if err != nil {
 		return nil, err
 	}

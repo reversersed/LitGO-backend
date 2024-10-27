@@ -94,7 +94,7 @@ func (d *db) GetBook(ctx context.Context, query string) (*Book, error) {
 	}
 	return &book, nil
 }
-func (d *db) GetBookByGenre(ctx context.Context, genreIds []primitive.ObjectID, sortType SortType, onlyHighRating bool) ([]*Book, error) {
+func (d *db) GetBookByGenre(ctx context.Context, genreIds []primitive.ObjectID, sortType SortType, onlyHighRating bool, limit int, page int) ([]*Book, error) {
 	options := options.Find()
 
 	if len(genreIds) == 0 {
@@ -115,6 +115,8 @@ func (d *db) GetBookByGenre(ctx context.Context, genreIds []primitive.ObjectID, 
 	default:
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("not knonw sort type: %v", sortType))
 	}
+	options.SetSkip(int64(page * limit))
+	options.SetLimit(int64(limit))
 
 	response, err := d.collection.Find(ctx, filter, options)
 	if err != nil {

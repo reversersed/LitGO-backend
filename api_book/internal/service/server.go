@@ -28,7 +28,7 @@ type storage interface {
 	Find(context.Context, string, int, int, float32) ([]*model.Book, error)
 	CreateBook(context.Context, *model.Book) (*model.Book, error)
 	GetBook(context.Context, string) (*model.Book, error)
-	GetBookByGenre(context.Context, []primitive.ObjectID, model.SortType, bool) ([]*model.Book, error)
+	GetBookByGenre(context.Context, []primitive.ObjectID, model.SortType, bool, int, int) ([]*model.Book, error)
 }
 
 type cache interface {
