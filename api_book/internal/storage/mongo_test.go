@@ -76,7 +76,7 @@ func TestMain(m *testing.M) {
 	exit := m.Run()
 	os.Exit(exit)
 }
-func TestGetSuggestion(t *testing.T) {
+func TestFindBook(t *testing.T) {
 	ctx := context.Background()
 	dba, err := mongo.NewClient(context.Background(), cfg)
 	defer dba.Client().Disconnect(ctx)
@@ -89,19 +89,37 @@ func TestGetSuggestion(t *testing.T) {
 
 	storage := NewStorage(dba, cfg.Base, logger)
 
-	book, err := storage.CreateBook(ctx, &Book{Name: "Книга о книгопечатании", Description: "Описание книги", Picture: "picture.png", Filepath: "book.epub", Genre: primitive.NewObjectID(), Authors: []primitive.ObjectID{primitive.NewObjectID(), primitive.NewObjectID()}})
+	book, err := storage.CreateBook(ctx, &Book{Name: "Книга о книгопечатании", MonthPurchases: 20, Published: 1, Description: "Описание книги", Picture: "picture.png", Filepath: "book.epub", Genre: primitive.NewObjectID(), Authors: []primitive.ObjectID{primitive.NewObjectID(), primitive.NewObjectID()}})
 	assert.NoError(t, err)
-	sugg, err := storage.Find(ctx, "(Книга)|(книгопечатании)", 1, 0, 0.0)
+	book2, err := storage.CreateBook(ctx, &Book{Name: "Треш какой-то", MonthPurchases: 60, Published: 0, Description: "Описание книги", Picture: "picture.png", Filepath: "book.epub", Genre: primitive.NewObjectID(), Authors: []primitive.ObjectID{primitive.NewObjectID(), primitive.NewObjectID()}})
+	assert.NoError(t, err)
+
+	sugg, err := storage.Find(ctx, "(Книга)|(книгопечатании)", 1, 0, 0.0, Popular)
 
 	assert.NoError(t, err)
 	assert.Len(t, sugg, 1)
 	assert.Equal(t, book, sugg[0])
 
-	_, err = storage.Find(ctx, "(Книга)|(книгопечатании)", 1, 0, 2.0)
+	_, err = storage.Find(ctx, "(Книга)|(книгопечатании)", 1, 0, 2.0, Popular)
 	assert.EqualError(t, err, "rpc error: code = NotFound desc = no books found")
 
-	_, err = storage.Find(ctx, "(КнигиНеСуществует)", 1, 0, 0.0)
+	_, err = storage.Find(ctx, "(КнигиНеСуществует)", 1, 0, 0.0, Newest)
 	assert.EqualError(t, err, "rpc error: code = NotFound desc = no books found")
+
+	sugg, err = storage.Find(ctx, "(.*?)", 2, 0, 0.0, Popular)
+	assert.NoError(t, err)
+	assert.Len(t, sugg, 2)
+	assert.Equal(t, book2, sugg[0])
+	assert.Equal(t, book, sugg[1])
+
+	sugg, err = storage.Find(ctx, "(.*?)", 2, 0, 0.0, Newest)
+	assert.NoError(t, err)
+	assert.Len(t, sugg, 2)
+	assert.Equal(t, book2, sugg[1])
+	assert.Equal(t, book, sugg[0])
+
+	_, err = storage.Find(ctx, "(.*?)", 2, 0, 0.0, SortType("not-existing-sort-type"))
+	assert.EqualError(t, err, "rpc error: code = InvalidArgument desc = not known sort type: not-existing-sort-type")
 }
 func TestGetBook(t *testing.T) {
 	ctx := context.Background()

@@ -822,8 +822,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Query with keywords",
                         "name": "query",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     },
                     {
                         "type": "integer",
@@ -842,6 +841,13 @@ const docTemplate = `{
                         "description": "rating to find, must be 0 \u003c= rating \u003c= 5",
                         "name": "rating",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort type. Can be Newest or Popular",
+                        "name": "sorttype",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {

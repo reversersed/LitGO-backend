@@ -212,18 +212,18 @@ func (mr *MockstorageMockRecorder) CreateBook(arg0, arg1 interface{}) *gomock.Ca
 }
 
 // Find mocks base method.
-func (m *Mockstorage) Find(arg0 context.Context, arg1 string, arg2, arg3 int, arg4 float32) ([]*storage.Book, error) {
+func (m *Mockstorage) Find(arg0 context.Context, arg1 string, arg2, arg3 int, arg4 float32, arg5 storage.SortType) ([]*storage.Book, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Find", arg0, arg1, arg2, arg3, arg4)
+	ret := m.ctrl.Call(m, "Find", arg0, arg1, arg2, arg3, arg4, arg5)
 	ret0, _ := ret[0].([]*storage.Book)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Find indicates an expected call of Find.
-func (mr *MockstorageMockRecorder) Find(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
+func (mr *MockstorageMockRecorder) Find(arg0, arg1, arg2, arg3, arg4, arg5 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Find", reflect.TypeOf((*Mockstorage)(nil).Find), arg0, arg1, arg2, arg3, arg4)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Find", reflect.TypeOf((*Mockstorage)(nil).Find), arg0, arg1, arg2, arg3, arg4, arg5)
 }
 
 // GetBook mocks base method.

@@ -746,7 +746,6 @@ paths:
       - description: Query with keywords
         in: query
         name: query
-        required: true
         type: string
       - description: limit books to display. default = 5 if not specified, min = 1,
           max = 50
@@ -761,6 +760,11 @@ paths:
         in: query
         name: rating
         type: number
+      - description: Sort type. Can be Newest or Popular
+        in: query
+        name: sorttype
+        required: true
+        type: string
       produces:
       - application/json
       responses:

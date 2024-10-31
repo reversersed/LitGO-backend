@@ -52,10 +52,21 @@ func (d *db) CreateBook(ctx context.Context, book *Book) (*Book, error) {
 	}
 	return book, nil
 }
-func (d *db) Find(ctx context.Context, regex string, limit, page int, rating float32) ([]*Book, error) {
-	lim := int64(limit)
-	skip := int64(page * limit)
-	response, err := d.collection.Find(ctx, bson.M{"$and": []bson.M{{"name": bson.M{"$regex": regex, "$options": "i"}}, {"rating": bson.M{"$gte": rating}}}}, &options.FindOptions{Limit: &lim, Skip: &skip})
+func (d *db) Find(ctx context.Context, regex string, limit, page int, rating float32, sort SortType) ([]*Book, error) {
+	options := &options.FindOptions{}
+	options.SetLimit(int64(limit))
+	options.SetSkip(int64(page * limit))
+
+	switch sort {
+	case Popular:
+		options.SetSort(bson.M{"monthpurchases": -1})
+	case Newest:
+		options.SetSort(bson.M{"published": -1})
+	default:
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("not known sort type: %v", sort))
+	}
+
+	response, err := d.collection.Find(ctx, bson.M{"$and": []bson.M{{"name": bson.M{"$regex": regex, "$options": "i"}}, {"rating": bson.M{"$gte": rating}}}}, options)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -113,7 +124,7 @@ func (d *db) GetBookByGenre(ctx context.Context, genreIds []primitive.ObjectID, 
 	case Newest:
 		options.SetSort(bson.M{"published": -1})
 	default:
-		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("not knonw sort type: %v", sortType))
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("not known sort type: %v", sortType))
 	}
 	options.SetSkip(int64(page * limit))
 	options.SetLimit(int64(limit))
