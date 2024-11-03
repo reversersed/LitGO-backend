@@ -127,7 +127,6 @@ func (s *bookServer) GetBook(ctx context.Context, req *books_pb.GetBookRequest) 
 	return &books_pb.GetBookResponse{Book: responseModel}, nil
 }
 
-// TODO add tests
 func (s *bookServer) GetBookByGenre(ctx context.Context, req *books_pb.GetBookByGenreRequest) (*books_pb.GetBookByGenreResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, 500*time.Millisecond)
 	defer cancel()
@@ -145,22 +144,14 @@ func (s *bookServer) GetBookByGenre(ctx context.Context, req *books_pb.GetBookBy
 	}
 	genre := make([]primitive.ObjectID, 0)
 
-	if tree.GetCategory().GetId() == req.GetQuery() || tree.GetCategory().GetTranslitname() == req.GetQuery() { // all genres
-		for _, v := range tree.GetCategory().GetGenres() {
+	for _, v := range tree.GetCategory().GetGenres() {
+		if v.GetId() == req.GetQuery() || v.GetTranslitname() == req.GetQuery() || tree.GetCategory().GetId() == req.GetQuery() || tree.GetCategory().GetTranslitname() == req.GetQuery() {
 			id, err := primitive.ObjectIDFromHex(v.GetId())
 			if err != nil {
 				return nil, status.Error(codes.Internal, err.Error())
 			}
 			genre = append(genre, id)
-		}
-	} else {
-		for _, v := range tree.GetCategory().GetGenres() {
-			if v.GetId() == req.GetQuery() || v.GetTranslitname() == req.GetQuery() {
-				id, err := primitive.ObjectIDFromHex(v.GetId())
-				if err != nil {
-					return nil, status.Error(codes.Internal, err.Error())
-				}
-				genre = append(genre, id)
+			if tree.GetCategory().GetId() != req.GetQuery() && tree.GetCategory().GetTranslitname() != req.GetQuery() {
 				break
 			}
 		}
