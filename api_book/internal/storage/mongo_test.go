@@ -73,8 +73,7 @@ func TestMain(m *testing.M) {
 		Base:     "testbase",
 		AuthDb:   "admin",
 	}
-	exit := m.Run()
-	os.Exit(exit)
+	os.Exit(m.Run())
 }
 func TestFindBook(t *testing.T) {
 	ctx := context.Background()
@@ -217,4 +216,43 @@ func TestGetBookByGenre(t *testing.T) {
 		assert.Error(t, err)
 		assert.Nil(t, books)
 	})
+}
+func TestGetBookList(t *testing.T) {
+	ctx := context.Background()
+	dba, err := mongo.NewClient(context.Background(), cfg)
+	defer dba.Client().Disconnect(ctx)
+	assert.NoError(t, err)
+
+	ctrl := gomock.NewController(t)
+	logger := mock_storage.NewMocklogger(ctrl)
+	logger.EXPECT().Info(gomock.Any()).AnyTimes()
+	logger.EXPECT().Infof(gomock.Any(), gomock.Any()).AnyTimes()
+
+	storage := NewStorage(dba, cfg.Base, logger)
+
+	genreId := primitive.NewObjectID()
+
+	books := []Book{{Name: "book1", Genre: genreId}, {Name: "book2", Genre: genreId}, {Name: "book3", Genre: genreId}}
+	for _, b := range books {
+		_, err := storage.CreateBook(ctx, &b)
+		assert.NoError(t, err)
+	}
+
+	mocked_books, err := storage.GetBookByGenre(ctx, []primitive.ObjectID{genreId}, Popular, false, 20, 0)
+	assert.NoError(t, err)
+	assert.Len(t, mocked_books, len(books))
+
+	_, e := storage.GetBookList(ctx, []primitive.ObjectID{primitive.NewObjectID()}, []string{})
+	assert.EqualError(t, e, "rpc error: code = NotFound desc = no books found")
+
+	storage = NewStorage(dba, cfg.Base, logger)
+
+	a, e := storage.GetBookList(ctx, []primitive.ObjectID{mocked_books[0].Id, mocked_books[1].Id}, []string{mocked_books[2].TranslitName})
+	assert.NoError(t, e)
+
+	assert.Equal(t, mocked_books, a)
+
+	_, e = storage.GetBookList(ctx, []primitive.ObjectID{}, []string{})
+	assert.EqualError(t, e, "rpc error: code = InvalidArgument desc = no id or translit name argument presented")
+
 }

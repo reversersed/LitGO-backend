@@ -70,35 +70,21 @@ func (d *db) CreateAuthor(ctx context.Context, author *Author) (*Author, error) 
 	return author, nil
 }
 func (d *db) GetAuthors(ctx context.Context, id []primitive.ObjectID, translit []string) ([]*Author, error) {
-	authors := make([]*Author, 0)
-
-	if len(id) > 0 {
-		result, err := d.collection.Find(ctx, bson.M{"_id": bson.D{{Key: "$in", Value: id}}})
-		if err != nil {
-			return nil, status.Error(codes.Internal, err.Error())
-		}
-		var temp []*Author
-		err = result.All(ctx, &temp)
-		if err != nil {
-			return nil, status.Error(codes.Internal, err.Error())
-		}
-		authors = append(authors, temp...)
-	}
-	if len(translit) > 0 {
-		result, err := d.collection.Find(ctx, bson.M{"translit": bson.D{{Key: "$in", Value: translit}}})
-		if err != nil {
-			return nil, status.Error(codes.Internal, err.Error())
-		}
-		var temp []*Author
-		err = result.All(ctx, &temp)
-		if err != nil {
-			return nil, status.Error(codes.Internal, err.Error())
-		}
-		authors = append(authors, temp...)
-	}
 	if len(id) == 0 && len(translit) == 0 {
 		return nil, status.Error(codes.InvalidArgument, "no id or translit name argument presented")
 	}
+
+	authors := make([]*Author, 0)
+	result, err := d.collection.Find(ctx, bson.M{"$or": bson.A{bson.M{"_id": bson.D{{Key: "$in", Value: id}}}, bson.M{"translit": bson.D{{Key: "$in", Value: translit}}}}})
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	err = result.All(ctx, &authors)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
 	if len(authors) == 0 {
 		var str string
 		for _, i := range id {

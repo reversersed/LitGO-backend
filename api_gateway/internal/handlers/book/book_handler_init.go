@@ -34,6 +34,7 @@ func (h *handler) RegisterRouter(router *gin.Engine) {
 			admin.POST("", h.CreateBook)
 		}
 		general.GET("/genre/:name", h.GetBookByGenre)
+		general.GET("/list", h.GetBookList)
 		general.GET("/search", h.FindBooks)
 		general.GET("", h.GetBook)
 	}

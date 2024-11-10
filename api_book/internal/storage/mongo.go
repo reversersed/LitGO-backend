@@ -3,9 +3,11 @@ package storage
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/reversersed/LitGO-backend/tree/main/api_book/pkg/mongo"
+	shared_pb "github.com/reversersed/LitGO-proto/gen/go/shared"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	mongodb "go.mongodb.org/mongo-driver/mongo"
@@ -143,4 +145,39 @@ func (d *db) GetBookByGenre(ctx context.Context, genreIds []primitive.ObjectID, 
 		return nil, status.Error(codes.NotFound, "books not found")
 	}
 	return book, nil
+}
+func (d *db) GetBookList(ctx context.Context, id []primitive.ObjectID, translit []string) ([]*Book, error) {
+	if len(id) == 0 && len(translit) == 0 {
+		return nil, status.Error(codes.InvalidArgument, "no id or translit name argument presented")
+	}
+
+	books := make([]*Book, 0)
+	result, err := d.collection.Find(ctx, bson.M{"$or": bson.A{bson.M{"_id": bson.D{{Key: "$in", Value: id}}}, bson.M{"translit": bson.D{{Key: "$in", Value: translit}}}}})
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	err = result.All(ctx, &books)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	if len(books) == 0 {
+		var str string
+		for _, i := range id {
+			str += i.Hex() + ","
+		}
+		status, _ := status.New(codes.NotFound, "no books found").WithDetails(&shared_pb.ErrorDetail{
+			Field:       "id",
+			Struct:      "books_pb.GetBookListRequest",
+			Actualvalue: strings.Trim(str, ","),
+		}, &shared_pb.ErrorDetail{
+			Field:       "translit",
+			Struct:      "books_pb.GetBookListRequest",
+			Actualvalue: strings.Join(translit, ","),
+		})
+		return nil, status.Err()
+	}
+
+	return books, nil
 }

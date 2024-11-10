@@ -9,7 +9,7 @@ require (
 	github.com/jinzhu/copier v0.4.0
 	github.com/mdigger/translit v0.2.0
 	github.com/rabbitmq/amqp091-go v1.10.0
-	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20241031153538-0f75ac48714c
+	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20241110152621-0a3ddbb82f0b
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.9.0
 	go.mongodb.org/mongo-driver v1.17.1

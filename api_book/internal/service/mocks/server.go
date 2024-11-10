@@ -256,6 +256,21 @@ func (mr *MockstorageMockRecorder) GetBookByGenre(arg0, arg1, arg2, arg3, arg4, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBookByGenre", reflect.TypeOf((*Mockstorage)(nil).GetBookByGenre), arg0, arg1, arg2, arg3, arg4, arg5)
 }
 
+// GetBookList mocks base method.
+func (m *Mockstorage) GetBookList(arg0 context.Context, arg1 []primitive.ObjectID, arg2 []string) ([]*storage.Book, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBookList", arg0, arg1, arg2)
+	ret0, _ := ret[0].([]*storage.Book)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBookList indicates an expected call of GetBookList.
+func (mr *MockstorageMockRecorder) GetBookList(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBookList", reflect.TypeOf((*Mockstorage)(nil).GetBookList), arg0, arg1, arg2)
+}
+
 // Mockcache is a mock of cache interface.
 type Mockcache struct {
 	ctrl     *gomock.Controller

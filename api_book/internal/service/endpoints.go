@@ -172,3 +172,5 @@ func (s *bookServer) GetBookByGenre(ctx context.Context, req *books_pb.GetBookBy
 	}
 	return &books_pb.GetBookByGenreResponse{Books: data}, nil
 }
+
+// TODO implement book list handler

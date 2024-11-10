@@ -77,7 +77,7 @@ endif
 test: test-folder-creation gen
 ifeq ($(OS),Windows_NT)
 	@$(foreach directory,$(API_DIRECTORIES),\
-		cd ./$(directory) && go test -coverprofile=../../data/tests/$(directory)/coverage -coverpkg=./... ./... | findstr /V mocks && go tool cover -func=../../data/tests/$(directory)/coverage -o ../../data/tests/$(directory)/coverage.func && go tool cover -html=../../data/tests/$(directory)/coverage -o ../../data/tests/$(directory)/coverage.html && cd ..\
+		cd ./$(directory) && go test -coverprofile=../../data/tests/$(directory)/coverage -coverpkg=./... ./... -json | go-test-report -o ../../data/tests/$(directory)/results.html | findstr /V mocks && go tool cover -func=../../data/tests/$(directory)/coverage -o ../../data/tests/$(directory)/coverage.func && go tool cover -html=../../data/tests/$(directory)/coverage -o ../../data/tests/$(directory)/coverage.html && cd ..\
 		$(CMDSEP)) echo tests completed successfully
 else
 	@$(foreach directory,$(API_DIRECTORIES),\

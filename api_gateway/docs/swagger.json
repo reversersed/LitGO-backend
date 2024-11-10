@@ -800,6 +800,148 @@
                 }
             }
         },
+        "/books/list": {
+            "get": {
+                "description": "there can be multiple search parameters, id or translit, or both\nexample: ?id=1\u0026id=2\u0026translit=book-21\u0026id=3\u0026translit=book-756342",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "books"
+                ],
+                "summary": "Get book list by multiple id or translit names",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Book Id, must be a primitive id hex",
+                        "name": "id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Translit book name",
+                        "name": "translit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Books",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/books_pb.BookModel"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Field was not in a correct format",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Books not found",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Some internal error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "501": {
+                        "description": "Route not implemented yet",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "503": {
+                        "description": "Service does not responding (maybe crush)",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.CustomError"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "details": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/shared_pb.ErrorDetail"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/books/search": {
             "get": {
                 "description": "find books by provided phares, keys or names",

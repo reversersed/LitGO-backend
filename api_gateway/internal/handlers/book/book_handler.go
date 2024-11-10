@@ -265,3 +265,33 @@ func (h *handler) GetBookByGenre(c *gin.Context) {
 
 	c.JSON(http.StatusOK, reply.GetBooks())
 }
+
+// @Summary      Get book list by multiple id or translit names
+// @Description  there can be multiple search parameters, id or translit, or both
+// @Description  example: ?id=1&id=2&translit=book-21&id=3&translit=book-756342
+// @Tags         books
+// @Produce      json
+// @Param		 id      query     string 		false 		"Book Id, must be a primitive id hex"
+// @Param		 translit   query     string 		false 		"Translit book name"
+// @Success      200  {array}   books_pb.BookModel 		"Books"
+// @Failure      400  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Field was not in a correct format"
+// @Failure      404  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Books not found"
+// @Failure      500  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Some internal error"
+// @Failure      501  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Route not implemented yet"
+// @Failure      503  {object}  middleware.CustomError{details=[]shared_pb.ErrorDetail} 	"Service does not responding (maybe crush)"
+// @Router       /books/list [get]
+func (h *handler) GetBookList(c *gin.Context) {
+	var request books_pb.GetBookListRequest
+	if err := c.BindQuery(&request); err != nil {
+		c.Error(status.Error(codes.InvalidArgument, err.Error()))
+		return
+	}
+
+	reply, err := h.client.GetBootList(c.Request.Context(), &request)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, reply.GetBooks())
+}

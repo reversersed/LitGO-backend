@@ -133,6 +133,34 @@ func TestHandlers(t *testing.T) {
 			ExceptedStatus: http.StatusOK,
 			ExceptedBody:   "[{\"name\":\"book\"}]",
 		},
+		{
+			Name:   "get book list single request",
+			Path:   "/api/v1/books/list?id=123",
+			Method: http.MethodGet,
+			Body:   func() io.Reader { return nil },
+			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mbc *mock_books_pb.MockBookClient) {
+				mjm.EXPECT().Middleware(gomock.Any()).Return(func(c *gin.Context) { c.Next() }).AnyTimes()
+				ml.EXPECT().Info(gomock.Any()).AnyTimes()
+
+				mbc.EXPECT().GetBootList(gomock.Any(), &books_pb.GetBookListRequest{Id: []string{"123"}}).Return(&books_pb.GetBookListResponse{Books: []*books_pb.BookModel{{Name: "book"}}}, nil)
+			},
+			ExceptedStatus: http.StatusOK,
+			ExceptedBody:   "[{\"name\":\"book\"}]",
+		},
+		{
+			Name:   "get book list multiple request",
+			Path:   "/api/v1/books/list?id=123&id=32&translit=book-421421&id=3dass2&translit=book-trans",
+			Method: http.MethodGet,
+			Body:   func() io.Reader { return nil },
+			MockBehaviour: func(ml *mocks.MockLogger, mjm *mocks.MockJwtMiddleware, mbc *mock_books_pb.MockBookClient) {
+				mjm.EXPECT().Middleware(gomock.Any()).Return(func(c *gin.Context) { c.Next() }).AnyTimes()
+				ml.EXPECT().Info(gomock.Any()).AnyTimes()
+
+				mbc.EXPECT().GetBootList(gomock.Any(), &books_pb.GetBookListRequest{Id: []string{"123", "32", "3dass2"}, Translit: []string{"book-421421", "book-trans"}}).Return(nil, status.Error(codes.NotFound, "books not found"))
+			},
+			ExceptedStatus: http.StatusNotFound,
+			ExceptedBody:   "{\"code\":5,\"type\":\"NotFound\",\"message\":\"books not found\",\"details\":[]}",
+		},
 	}
 
 	for _, v := range table {

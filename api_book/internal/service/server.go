@@ -29,6 +29,7 @@ type storage interface {
 	CreateBook(context.Context, *model.Book) (*model.Book, error)
 	GetBook(context.Context, string) (*model.Book, error)
 	GetBookByGenre(context.Context, []primitive.ObjectID, model.SortType, bool, int, int) ([]*model.Book, error)
+	GetBookList(context.Context, []primitive.ObjectID, []string) ([]*model.Book, error)
 }
 
 type cache interface {
