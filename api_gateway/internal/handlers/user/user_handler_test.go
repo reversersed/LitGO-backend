@@ -168,7 +168,7 @@ func TestHandlers(t *testing.T) {
 				ml.EXPECT().Info(gomock.Any()).AnyTimes()
 				ml.EXPECT().Infof(gomock.Any(), gomock.Any()).AnyTimes()
 				mjm.EXPECT().Middleware(gomock.Any()).AnyTimes()
-				muc.EXPECT().Login(gomock.Any(), &users_pb.LoginRequest{Login: "user", Password: "password"}).Return(&users_pb.LoginResponse{Login: "user", Roles: []string{"user"}, Token: "token", Refreshtoken: "rtoken"}, nil)
+				muc.EXPECT().Login(gomock.Any(), &users_pb.LoginRequest{Login: "user", Password: "password"}).Return(&users_pb.LoginResponse{Id: "id", Login: "user", Roles: []string{"user"}, Token: "token", Refreshtoken: "rtoken"}, nil)
 			},
 			ExtraCheck: func(rr *httptest.ResponseRecorder, t *testing.T) {
 				cookie := rr.Result().Cookies()
@@ -194,7 +194,7 @@ func TestHandlers(t *testing.T) {
 				assert.False(t, refresh, "excepted no refresh token in cookies")
 			},
 			ExceptedStatus: http.StatusOK,
-			ExceptedBody:   "{\"login\":\"user\",\"roles\":[\"user\"]}",
+			ExceptedBody:   "{\"id\":\"id\",\"login\":\"user\",\"roles\":[\"user\"]}",
 		},
 		{
 			Name:   "User login success with remember me",

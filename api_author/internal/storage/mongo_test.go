@@ -97,12 +97,26 @@ func TestGetAuthors(t *testing.T) {
 
 	storage = NewStorage(dba, cfg.Base, logger)
 
-	a, e := storage.GetAuthors(ctx, []primitive.ObjectID{mocked_authors[0].Id, mocked_authors[1].Id}, []string{mocked_authors[2].TranslitName})
+	a, e := storage.GetAuthors(ctx, []primitive.ObjectID{mocked_authors[0].Id}, nil)
+	assert.NoError(t, e)
+	if assert.Len(t, a, 1) {
+		assert.Equal(t, mocked_authors[0], a[0])
+	}
+
+	a, e = storage.GetAuthors(ctx, nil, []string{mocked_authors[0].TranslitName})
+	assert.NoError(t, e)
+	if assert.Len(t, a, 1) {
+		assert.Equal(t, mocked_authors[0], a[0])
+	}
+	a, e = storage.GetAuthors(ctx, []primitive.ObjectID{mocked_authors[0].Id, mocked_authors[1].Id}, []string{mocked_authors[2].TranslitName})
 	assert.NoError(t, e)
 
 	assert.Equal(t, mocked_authors, a)
 
 	_, e = storage.GetAuthors(ctx, []primitive.ObjectID{}, []string{})
+	assert.EqualError(t, e, "rpc error: code = InvalidArgument desc = no id or translit name argument presented")
+
+	_, e = storage.GetAuthors(ctx, nil, nil)
 	assert.EqualError(t, e, "rpc error: code = InvalidArgument desc = no id or translit name argument presented")
 }
 func TestFind(t *testing.T) {

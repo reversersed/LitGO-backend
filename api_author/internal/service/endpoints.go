@@ -42,6 +42,7 @@ func (s *authorServer) GetAuthors(ctx context.Context, r *authors_pb.GetAuthorsR
 	}
 	authors, err := s.storage.GetAuthors(ctx, id, r.GetTranslit())
 	if err != nil {
+		s.logger.Errorf("got error from storage: %v, id data: %v, translit data: %v", err, id, r.GetTranslit())
 		return nil, err
 	}
 	s.logger.Infof("found %d authors: %v", len(authors), authors)

@@ -95,6 +95,7 @@ func (u *userServer) Login(c context.Context, r *users_pb.LoginRequest) (*users_
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 	return &users_pb.LoginResponse{
+		Id:           model.Id.Hex(),
 		Login:        model.Login,
 		Roles:        model.Roles,
 		Token:        token,
@@ -145,6 +146,7 @@ func (u *userServer) RegisterUser(c context.Context, usr *users_pb.RegistrationR
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 	return &users_pb.LoginResponse{
+		Id:           user.Id.Hex(),
 		Login:        user.Login,
 		Roles:        user.Roles,
 		Token:        token,

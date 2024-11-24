@@ -41,8 +41,8 @@ func (h *handler) GetBookReviews(c *gin.Context) {
 	c.JSON(http.StatusOK, response.GetReviews())
 }
 
-// @Summary      Get book's reviews
-// @Description  Find's all book's reviews with page and pagesize arguments
+// @Summary      Creates review on book
+// @Description  Adds review to specified book and updates it's rating
 // @Tags         reviews
 // @Produce      json
 // @Param		 id 		path 	string 	true 	"Book ID or translit name"

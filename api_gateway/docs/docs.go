@@ -1634,14 +1634,14 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Find's all book's reviews with page and pagesize arguments",
+                "description": "Adds review to specified book and updates it's rating",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "reviews"
                 ],
-                "summary": "Get book's reviews",
+                "summary": "Creates review on book",
                 "parameters": [
                     {
                         "type": "string",

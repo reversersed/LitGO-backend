@@ -9,7 +9,7 @@ require (
 	github.com/golang/mock v1.6.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/mdigger/translit v0.2.0
-	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20241110152621-0a3ddbb82f0b
+	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20241124095038-53a6147da8fc
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.9.0
 	github.com/swaggo/files v1.0.1

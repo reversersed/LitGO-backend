@@ -14,6 +14,7 @@ i:
 
 check:
 	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+	@golangci-lint cache clean
 	@$(foreach directory,$(API_DIRECTORIES),\
 	cd ./$(directory)/ && echo checking $(directory)... && golangci-lint run && cd .. \
 	$(CMDSEP)) echo lint checks completed

@@ -1211,7 +1211,7 @@ paths:
       tags:
       - reviews
     post:
-      description: Find's all book's reviews with page and pagesize arguments
+      description: Adds review to specified book and updates it's rating
       parameters:
       - description: Book ID or translit name
         in: path
@@ -1297,7 +1297,7 @@ paths:
                     $ref: '#/definitions/shared_pb.ErrorDetail'
                   type: array
               type: object
-      summary: Get book's reviews
+      summary: Creates review on book
       tags:
       - reviews
   /users:

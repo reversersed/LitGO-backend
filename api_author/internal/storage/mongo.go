@@ -74,6 +74,12 @@ func (d *db) GetAuthors(ctx context.Context, id []primitive.ObjectID, translit [
 		return nil, status.Error(codes.InvalidArgument, "no id or translit name argument presented")
 	}
 
+	if translit == nil {
+		translit = []string{}
+	}
+	if id == nil {
+		id = []primitive.ObjectID{}
+	}
 	authors := make([]*Author, 0)
 	result, err := d.collection.Find(ctx, bson.M{"$or": bson.A{bson.M{"_id": bson.D{{Key: "$in", Value: id}}}, bson.M{"translit": bson.D{{Key: "$in", Value: translit}}}}})
 
