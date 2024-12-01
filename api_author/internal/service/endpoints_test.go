@@ -128,6 +128,7 @@ func TestGetAuthors(t *testing.T) {
 			logger.EXPECT().Info(gomock.Any()).AnyTimes()
 			logger.EXPECT().Infof(gomock.Any(), gomock.Any()).AnyTimes()
 			logger.EXPECT().Infof(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
+			logger.EXPECT().Errorf(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
 
 			service := NewServer(logger, cache, storage, validator)
 			if v.MockBehaviour != nil {
