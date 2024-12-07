@@ -61,7 +61,7 @@ func New() (*app, error) {
 		AllowWildcard:    true,
 		AllowAllOrigins:  false,
 		AllowCredentials: true,
-		AllowOrigins:     []string{"http://109.111.79.204:8080", "https://*.ngrok-free.app", ("http://localhost:" + strconv.Itoa(server.config.Server.Port)), "http://localhost:7000", "http://localhost:8080"},
+		AllowOrigins:     []string{"http://localhost", "https://*.ngrok-free.app", ("http://localhost:" + strconv.Itoa(server.config.Server.Port)), "http://localhost:7000"},
 		AllowMethods:     []string{"GET", "POST", "PATCH", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Content-Type", "Accept", "Cookie", "Access-Control-Expose-Headers"},
 	}))
