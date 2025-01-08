@@ -5,6 +5,7 @@ go 1.22.1
 require (
 	github.com/coocood/freecache v1.2.4
 	github.com/go-playground/validator/v10 v10.23.0
+	github.com/golang/mock v1.6.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/jinzhu/copier v0.4.0
 	github.com/mdigger/translit v0.2.0
