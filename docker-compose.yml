@@ -126,3 +126,17 @@ services:
     depends_on:
       api_gateway:
         condition: service_started
+
+  api_collection:
+    image: api_collection
+    container_name: api_collection
+    volumes:
+      - ../data/logs/review:/logs
+      - ./api_collection/config:/config
+    user: root
+    build:
+      context: ./api_collection
+      dockerfile: ./Dockerfile
+    depends_on:
+      api_gateway:
+        condition: service_started

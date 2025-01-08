@@ -10,6 +10,7 @@ import (
 	"github.com/reversersed/LitGO-backend/tree/main/api_gateway/internal/config"
 	"github.com/reversersed/LitGO-backend/tree/main/api_gateway/internal/handlers/author"
 	"github.com/reversersed/LitGO-backend/tree/main/api_gateway/internal/handlers/book"
+	"github.com/reversersed/LitGO-backend/tree/main/api_gateway/internal/handlers/collection"
 	"github.com/reversersed/LitGO-backend/tree/main/api_gateway/internal/handlers/genre"
 	"github.com/reversersed/LitGO-backend/tree/main/api_gateway/internal/handlers/review"
 	"github.com/reversersed/LitGO-backend/tree/main/api_gateway/internal/handlers/user"
@@ -18,6 +19,7 @@ import (
 	"github.com/reversersed/LitGO-backend/tree/main/api_gateway/pkg/shutdown"
 	authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors"
 	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
+	collections_pb "github.com/reversersed/LitGO-proto/gen/go/collections"
 	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
 	reviews_pb "github.com/reversersed/LitGO-proto/gen/go/reviews"
 	users_pb "github.com/reversersed/LitGO-proto/gen/go/users"
@@ -104,6 +106,12 @@ func (a *app) Run() error {
 	}
 	reviewClient := reviews_pb.NewReviewClient(reviewConnection)
 
+	collectionConnection, err := grpc.NewClient(a.config.Url.CollectionServiceUrl, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		return err
+	}
+	collectionClient := collections_pb.NewCollectionClient(collectionConnection)
+
 	a.logger.Info("setting up middleware...")
 	jwt := middleware.NewJwtMiddleware(a.logger, a.config.Server.JwtSecret)
 
@@ -113,33 +121,33 @@ func (a *app) Run() error {
 	userHandler := user.New(userClient, a.logger, jwt)
 	jwt.ApplyUserServer(userClient)
 	a.handlers = append(a.handlers, userHandler)
-	userHandler.RegisterRouter(a.router)
 
 	// genres
-	genreHandler := genre.New(genreClient, a.logger, jwt)
-	a.handlers = append(a.handlers, genreHandler)
-	genreHandler.RegisterRouter(a.router)
+	a.handlers = append(a.handlers, genre.New(genreClient, a.logger, jwt))
 
 	// authors
-	authorHandler := author.New(authorClient, a.logger, jwt)
-	a.handlers = append(a.handlers, authorHandler)
-	authorHandler.RegisterRouter(a.router)
+	a.handlers = append(a.handlers, author.New(authorClient, a.logger, jwt))
 
 	// books
-	bookHandler := book.New(bookClient, a.logger, jwt)
-	a.handlers = append(a.handlers, bookHandler)
-	bookHandler.RegisterRouter(a.router)
+	a.handlers = append(a.handlers, book.New(bookClient, a.logger, jwt))
 
 	// reviews
-	reviewHandler := review.New(reviewClient, a.logger, jwt)
-	a.handlers = append(a.handlers, reviewHandler)
-	reviewHandler.RegisterRouter(a.router)
+	a.handlers = append(a.handlers, review.New(reviewClient, a.logger, jwt))
+
+	// collections
+	a.handlers = append(a.handlers, collection.New(collectionClient, a.logger, jwt))
+
+	for _, hander := range a.handlers {
+		hander.RegisterRouter(a.router)
+	}
 
 	if a.config.Server.Environment == "debug" {
 		a.router.GET("/api/v1/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 	a.logger.Infof("starting listening address %s:%d...", a.config.Server.Host, a.config.Server.Port)
-	go shutdown.Graceful(a, userConnection)
+
+	go shutdown.Graceful(a, userConnection, genreConnection, authorConnection, bookConnection, reviewConnection, collectionConnection)
+
 	if err := a.router.Run(fmt.Sprintf("%s:%d", a.config.Server.Host, a.config.Server.Port)); err != nil {
 		return err
 	}
