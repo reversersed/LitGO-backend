@@ -173,4 +173,35 @@ func (s *bookServer) GetBookByGenre(ctx context.Context, req *books_pb.GetBookBy
 	return &books_pb.GetBookByGenreResponse{Books: data}, nil
 }
 
-// TODO implement book list handler
+// TODO write tests
+func (s *bookServer) GetBookList(ctx context.Context, req *books_pb.GetBookListRequest) (*books_pb.GetBookListResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 500*time.Millisecond)
+	defer cancel()
+
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "received nil request")
+	}
+	if err := s.validator.StructValidation(req); err != nil {
+		return nil, err
+	}
+
+	var ids []primitive.ObjectID
+	if err := copier.Copy(&ids, req.GetId(), copier.WithPrimitiveToStringConverter); err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	response, err := s.storage.GetBookList(ctx, ids, req.GetTranslit())
+	if err != nil {
+		return nil, err
+	}
+
+	data := make([]*books_pb.BookModel, len(response))
+	for i, v := range response {
+		model, err := s.bookMapper(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		data[i] = model
+	}
+	return &books_pb.GetBookListResponse{Books: data}, nil
+}

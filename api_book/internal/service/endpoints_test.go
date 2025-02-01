@@ -544,3 +544,75 @@ func TestGetBookByGenre(t *testing.T) {
 		})
 	}
 }
+
+// TODO write tests
+func TestGetBookList(t *testing.T) {
+	/*category := &genres_pb.CategoryModel{Id: primitive.NewObjectID().Hex(), Translitname: "category-1", Genres: []*genres_pb.GenreModel{
+		{
+			Id:           primitive.NewObjectID().Hex(),
+			Translitname: "genre-1",
+		},
+		{
+			Id:           primitive.NewObjectID().Hex(),
+			Translitname: "genre-2",
+		}, {
+			Id:           primitive.NewObjectID().Hex(),
+			Translitname: "genre-3",
+		},
+	}}
+	/book := &model.Book{Name: "book"}*/
+	table := []struct {
+		Name             string
+		MockBehaviour    func(*mock_service.Mockcache, *mock_authors_pb.MockAuthorClient, *mock_genres_pb.MockGenreClient, *mock_service.Mocklogger, *mock_service.Mockstorage, *mock_service.Mockvalidator)
+		ExceptedError    string
+		ExceptedResponse *books_pb.GetBookListResponse
+		Request          *books_pb.GetBookListRequest
+	}{
+		{
+			Name:          "nil request",
+			ExceptedError: "rpc error: code = InvalidArgument desc = received nil request",
+			Request:       nil,
+		},
+		{
+			Name: "validation error",
+			MockBehaviour: func(m1 *mock_service.Mockcache, mac *mock_authors_pb.MockAuthorClient, mgc *mock_genres_pb.MockGenreClient, m2 *mock_service.Mocklogger, m3 *mock_service.Mockstorage, m4 *mock_service.Mockvalidator) {
+				m4.EXPECT().StructValidation(gomock.Any()).Return(status.Error(codes.InvalidArgument, "validation error"))
+			},
+			ExceptedError: "rpc error: code = InvalidArgument desc = validation error",
+			Request:       &books_pb.GetBookListRequest{},
+		},
+	}
+
+	for _, v := range table {
+		t.Run(v.Name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			logger := mock_service.NewMocklogger(ctrl)
+			cache := mock_service.NewMockcache(ctrl)
+			storage := mock_service.NewMockstorage(ctrl)
+			validator := mock_service.NewMockvalidator(ctrl)
+			genreService := mock_genres_pb.NewMockGenreClient(ctrl)
+			authorService := mock_authors_pb.NewMockAuthorClient(ctrl)
+			rabbit := mock_service.NewMockrabbitservice(ctrl)
+			logger.EXPECT().Info(gomock.Any()).AnyTimes()
+			logger.EXPECT().Infof(gomock.Any(), gomock.Any()).AnyTimes()
+			logger.EXPECT().Infof(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
+
+			service := NewServer(logger, cache, storage, validator, genreService, authorService, rabbit)
+			if v.MockBehaviour != nil {
+				v.MockBehaviour(cache, authorService, genreService, logger, storage, validator)
+			}
+
+			response, err := service.GetBookList(context.Background(), v.Request)
+			if len(v.ExceptedError) == 0 {
+				assert.NoError(t, err)
+			} else {
+				assert.EqualError(t, err, v.ExceptedError)
+			}
+			if v.ExceptedResponse != nil && assert.NotNil(t, response) {
+				assert.Equal(t, v.ExceptedResponse, response)
+			} else if v.ExceptedResponse == nil {
+				assert.Nil(t, response)
+			}
+		})
+	}
+}

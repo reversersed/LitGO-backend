@@ -287,7 +287,7 @@ func (h *handler) GetBookList(c *gin.Context) {
 		return
 	}
 
-	reply, err := h.client.GetBootList(c.Request.Context(), &request)
+	reply, err := h.client.GetBookList(c.Request.Context(), &request)
 	if err != nil {
 		c.Error(err)
 		return
