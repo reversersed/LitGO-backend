@@ -1,3 +1,3 @@
-[submodule "LitGO-backend-pkg"]
+[submodule "pkg"]
 	path = pkg
 	url = https://github.com/reversersed/LitGO-backend-pkg
