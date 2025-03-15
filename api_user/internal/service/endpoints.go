@@ -103,6 +103,8 @@ func (u *userServer) Login(c context.Context, r *users_pb.LoginRequest) (*users_
 	}, nil
 }
 func (u *userServer) RegisterUser(c context.Context, usr *users_pb.RegistrationRequest) (*users_pb.LoginResponse, error) {
+
+	
 	ctx, cancel := context.WithTimeout(c, 5*time.Second)
 	defer cancel()
 

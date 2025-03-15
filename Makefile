@@ -9,7 +9,6 @@ install: i
 i:
 	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 	@go install github.com/golang/mock/mockgen@latest
-	@go install github.com/swaggo/swag/cmd/swag@latest
 	@$(MAKE) clean
 
 check:
@@ -29,8 +28,6 @@ gen:
 	@$(foreach directory,$(API_DIRECTORIES),\
 		@cd ./$(directory) && go generate ./... && cd ..\
 		$(CMDSEP)) echo go files generated
-
-	@swag init --parseDependency -d ./api_gateway/internal/handlers -g ../app/app.go -o ./api_gateway/docs
 
 upgrade: clean i
 	@$(foreach directory,$(API_DIRECTORIES),\

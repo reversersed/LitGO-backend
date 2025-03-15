@@ -1,22 +1,29 @@
 module github.com/reversersed/LitGO-backend/tree/main/api_gateway
 
-go 1.22.5
+go 1.23.0
+
+toolchain go1.24.1
 
 require (
 	github.com/cristalhq/jwt/v3 v3.1.0
 	github.com/gin-contrib/cors v1.7.2
 	github.com/gin-gonic/gin v1.10.0
 	github.com/golang/mock v1.6.0
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.3
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/mdigger/translit v0.2.0
-	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250201152300-9b668e0da338
+	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250315142050-d47edd3131cc
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.9.0
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
-	github.com/swaggo/swag v1.16.3
 	go.mongodb.org/mongo-driver v1.17.1
-	google.golang.org/grpc v1.67.1
+	google.golang.org/grpc v1.70.0
+)
+
+require (
+	github.com/swaggo/swag v1.16.3 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20250303144028-a0af3efb3deb // indirect
 )
 
 require (
@@ -52,13 +59,13 @@ require (
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	golang.org/x/arch v0.11.0 // indirect
-	golang.org/x/crypto v0.28.0 // indirect
-	golang.org/x/net v0.30.0 // indirect
-	golang.org/x/sys v0.26.0 // indirect
-	golang.org/x/text v0.19.0 // indirect
+	golang.org/x/crypto v0.33.0 // indirect
+	golang.org/x/net v0.35.0 // indirect
+	golang.org/x/sys v0.30.0 // indirect
+	golang.org/x/text v0.22.0 // indirect
 	golang.org/x/tools v0.26.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20241007155032-5fefd90f89a9 // indirect
-	google.golang.org/protobuf v1.35.1 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250303144028-a0af3efb3deb // indirect
+	google.golang.org/protobuf v1.36.5 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	olympos.io/encoding/edn v0.0.0-20201019073823-d3554ca0b0a3 // indirect
 )
