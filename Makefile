@@ -15,29 +15,31 @@ check:
 	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 	@golangci-lint cache clean
 	@$(foreach directory,$(API_DIRECTORIES),\
-	cd ./$(directory)/ && echo checking $(directory)... && golangci-lint run && cd .. \
-	$(CMDSEP)) echo lint checks completed
+	cd ./$(directory)/ $(CMDSEP) echo checking $(directory)... $(CMDSEP) golangci-lint run $(CMDSEP) cd .. \
+	$(CMDSEP)) cd ./pkg $(CMDSEP) echo checking $(directory)... $(CMDSEP) golangci-lint run
 
 fix:
 	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 	@$(foreach directory,$(API_DIRECTORIES),\
-	cd ./$(directory)/ && echo checking $(directory)... && golangci-lint run --fix && cd .. \
-	$(CMDSEP)) echo lint check and fix completed
+	cd ./$(directory) $(CMDSEP) echo checking $(directory)... $(CMDSEP) golangci-lint run --fix $(CMDSEP) cd .. \
+	$(CMDSEP)) cd ./pkg $(CMDSEP) echo checking $(directory)... $(CMDSEP) golangci-lint run --fix
 
 gen:
 	@$(foreach directory,$(API_DIRECTORIES),\
-		@cd ./$(directory) && go generate ./... && cd ..\
-		$(CMDSEP)) echo go files generated
+		@cd ./$(directory) $(CMDSEP) go generate ./... $(CMDSEP) cd ..\
+		$(CMDSEP)) cd ./pkg $(CMDSEP) go generate ./...
 
 upgrade: clean i
 	@$(foreach directory,$(API_DIRECTORIES),\
-		@cd ./$(directory) && go get -v -u ./... && go mod tidy && cd ..\
-		$(CMDSEP)) echo packages upgraded
+		@cd ./$(directory) $(CMDSEP) go get -v -u ./... $(CMDSEP) go mod tidy $(CMDSEP) cd ..\
+		$(CMDSEP)) cd ./pkg $(CMDSEP) go get -v -u ./...
 
 clean:
 	@go env -w GOPROXY=direct
 	@$(foreach directory,$(API_DIRECTORIES),\
-		cd ./$(directory) && go get -v -u github.com/reversersed/LitGO-proto/gen/go@latest && go mod tidy && cd ..\
+		cd ./$(directory) $(CMDSEP) go get -v -u github.com/reversersed/LitGO-proto/gen/go@latest $(CMDSEP)\
+		go get -v -u github.com/reversersed/LitGO-backend-pkg@latest $(CMDSEP)\
+		go mod tidy $(CMDSEP) cd ..\
 		$(CMDSEP)) echo mod files cleaned
 	@go env -w GOPROXY=https://proxy.golang.org,direct
 
@@ -53,34 +55,34 @@ up:
 test-unit:
 ifeq ($(OS),Windows_NT)
 	@$(foreach directory,$(API_DIRECTORIES),\
-		cd ./$(directory) && go test -v -short ./... | findstr /V mocks && cd ..\
-		$(CMDSEP)) echo tests completed successfully
+		cd ./$(directory) $(CMDSEP) go test -v -short ./... | findstr /V mocks $(CMDSEP) cd ..\
+		$(CMDSEP))cd ./pkg $(CMDSEP) go test -v -short ./... | grep -v mocks
 else
 	@$(foreach directory,$(API_DIRECTORIES),\
-		cd ./$(directory) && go test -v -short ./... | grep -v mocks && cd ..\
-		$(CMDSEP)) echo tests completed successfully
+		cd ./$(directory) $(CMDSEP) go test -v -short ./... | grep -v mocks $(CMDSEP) cd ..\
+		$(CMDSEP))cd ./pkg $(CMDSEP) go test -v -short ./... | grep -v mocks
 endif
 
 test-verbose:
 ifeq ($(OS),Windows_NT)
 	@$(foreach directory,$(API_DIRECTORIES),\
-		cd ./$(directory) && go test -v ./... | findstr /V mocks && cd ..\
-		$(CMDSEP)) echo tests completed successfully
+		cd ./$(directory) $(CMDSEP) go test -v ./... | findstr /V mocks $(CMDSEP) cd ..\
+		$(CMDSEP)) cd ./pkg $(CMDSEP) go test -v ./... | findstr /V mocks
 else
 	@$(foreach directory,$(API_DIRECTORIES),\
-		cd ./$(directory) && go test -v ./... | grep -v mocks && cd ..\
-		$(CMDSEP)) echo tests completed successfully
+		cd ./$(directory) $(CMDSEP) go test -v ./... | grep -v mocks $(CMDSEP) cd ..\
+		$(CMDSEP)) cd ./pkg $(CMDSEP) go test -v ./... | findstr /V mocks
 endif
 
 test: test-folder-creation gen
 ifeq ($(OS),Windows_NT)
 	@$(foreach directory,$(API_DIRECTORIES),\
-		cd ./$(directory) && go test -coverprofile=../../data/tests/$(directory)/coverage -coverpkg=./... ./... -json | go-test-report -o ../../data/tests/$(directory)/results.html | findstr /V mocks && go tool cover -func=../../data/tests/$(directory)/coverage -o ../../data/tests/$(directory)/coverage.func && go tool cover -html=../../data/tests/$(directory)/coverage -o ../../data/tests/$(directory)/coverage.html && cd ..\
-		$(CMDSEP)) echo tests completed successfully
+		cd ./$(directory) $(CMDSEP) go test -coverprofile=../../data/tests/$(directory)/coverage -coverpkg=./... ./... -json | go-test-report -o ../../data/tests/$(directory)/results.html | findstr /V mocks $(CMDSEP) go tool cover -func=../../data/tests/$(directory)/coverage -o ../../data/tests/$(directory)/coverage.func $(CMDSEP) go tool cover -html=../../data/tests/$(directory)/coverage -o ../../data/tests/$(directory)/coverage.html $(CMDSEP) cd ..\
+		$(CMDSEP)) cd ./pkg $(CMDSEP) go test -coverprofile=../../data/tests/pkg/coverage -coverpkg=./... ./... -json | go-test-report -o ../../data/tests/pkg/results.html | findstr /V mocks $(CMDSEP) go tool cover -func=../../data/tests/pkg/coverage -o ../../data/tests/pkg/coverage.func $(CMDSEP) go tool cover -html=../../data/tests/pkg/coverage -o ../../data/tests/pkg/coverage.html
 else
 	@$(foreach directory,$(API_DIRECTORIES),\
-		cd ./$(directory) && go test -coverprofile=../../data/tests/$(directory)/coverage -coverpkg=./... ./... | grep -v mocks && go tool cover -func=../../data/tests/$(directory)/coverage -o ../../data/tests/$(directory)/coverage.func && go tool cover -html=../../data/tests/$(directory)/coverage -o ../../data/tests/$(directory)/coverage.html && cd ..\
-		$(CMDSEP)) echo tests completed successfully
+		cd ./$(directory) $(CMDSEP) go test -coverprofile=../../data/tests/$(directory)/coverage -coverpkg=./... ./... | grep -v mocks $(CMDSEP) go tool cover -func=../../data/tests/$(directory)/coverage -o ../../data/tests/$(directory)/coverage.func $(CMDSEP) go tool cover -html=../../data/tests/$(directory)/coverage -o ../../data/tests/$(directory)/coverage.html $(CMDSEP) cd ..\
+		$(CMDSEP)) cd ./pkg $(CMDSEP) go test -coverprofile=../../data/tests/pkg/coverage -coverpkg=./... ./... | grep -v mocks $(CMDSEP) go tool cover -func=../../data/tests/pkg/coverage -o ../../data/tests/pkg/coverage.func $(CMDSEP) go tool cover -html=../../data/tests/pkg/coverage -o ../../data/tests/pkg/coverage.html
 endif
 
 test-folder-creation:
@@ -89,9 +91,11 @@ ifeq ($(OS),Windows_NT)
 	-@cd ../data & mkdir tests
 	-@cd ../data/tests & $(foreach directory,$(API_DIRECTORIES),\
 		mkdir $(directory)\
-		$(CMDSEP)) echo test directories has been created
+		$(CMDSEP)) mkdir pkg
 else
-	-@$(foreach directory,$(API_DIRECTORIES),\
-		cd ./$(directory) & mkdir tests -p & cd ..\
-		$(CMDSEP)) echo test directories has been created
+	-@cd .. & mkdir data -p
+	-@cd ../data & mkdir tests -p
+	-@cd ../data/tests & $(foreach directory,$(API_DIRECTORIES),\
+		mkdir $(directory) -p\
+		$(CMDSEP)) mkdir pkg -p
 endif

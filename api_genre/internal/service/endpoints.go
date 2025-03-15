@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"time"
 
+	"github.com/reversersed/LitGO-backend-pkg/copier"
 	model "github.com/reversersed/LitGO-backend/tree/main/api_genre/internal/storage"
-	"github.com/reversersed/LitGO-backend/tree/main/api_genre/pkg/copier"
 	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

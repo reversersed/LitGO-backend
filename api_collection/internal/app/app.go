@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"net"
 
+	freecache "github.com/reversersed/LitGO-backend-pkg/cache"
+	"github.com/reversersed/LitGO-backend-pkg/logging/logrus"
+	"github.com/reversersed/LitGO-backend-pkg/mongo"
+	"github.com/reversersed/LitGO-backend-pkg/shutdown"
+	"github.com/reversersed/LitGO-backend-pkg/validator"
 	"github.com/reversersed/LitGO-backend/tree/main/api_collection/internal/config"
 	srv "github.com/reversersed/LitGO-backend/tree/main/api_collection/internal/service"
 	"github.com/reversersed/LitGO-backend/tree/main/api_collection/internal/storage"
-	freecache "github.com/reversersed/LitGO-backend/tree/main/api_collection/pkg/cache"
-	"github.com/reversersed/LitGO-backend/tree/main/api_collection/pkg/logging/logrus"
-	"github.com/reversersed/LitGO-backend/tree/main/api_collection/pkg/mongo"
-	"github.com/reversersed/LitGO-backend/tree/main/api_collection/pkg/shutdown"
-	"github.com/reversersed/LitGO-backend/tree/main/api_collection/pkg/validator"
 	"google.golang.org/grpc"
 )
 

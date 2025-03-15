@@ -5,8 +5,8 @@ import (
 	"sync"
 
 	"github.com/ilyakaznacheev/cleanenv"
-	"github.com/reversersed/LitGO-backend/tree/main/api_collection/pkg/mongo"
-	"github.com/reversersed/LitGO-backend/tree/main/api_collection/pkg/rabbitmq"
+	"github.com/reversersed/LitGO-backend-pkg/mongo"
+	"github.com/reversersed/LitGO-backend-pkg/rabbitmq"
 )
 
 type Config struct {

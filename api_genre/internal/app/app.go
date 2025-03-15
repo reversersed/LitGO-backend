@@ -6,16 +6,16 @@ import (
 	"io"
 	"net"
 
+	freecache "github.com/reversersed/LitGO-backend-pkg/cache"
+	"github.com/reversersed/LitGO-backend-pkg/logging/logrus"
+	"github.com/reversersed/LitGO-backend-pkg/mongo"
+	rabbit "github.com/reversersed/LitGO-backend-pkg/rabbitmq"
+	"github.com/reversersed/LitGO-backend-pkg/shutdown"
+	"github.com/reversersed/LitGO-backend-pkg/validator"
 	"github.com/reversersed/LitGO-backend/tree/main/api_genre/internal/config"
 	"github.com/reversersed/LitGO-backend/tree/main/api_genre/internal/rabbitmq"
 	srv "github.com/reversersed/LitGO-backend/tree/main/api_genre/internal/service"
 	"github.com/reversersed/LitGO-backend/tree/main/api_genre/internal/storage"
-	freecache "github.com/reversersed/LitGO-backend/tree/main/api_genre/pkg/cache"
-	"github.com/reversersed/LitGO-backend/tree/main/api_genre/pkg/logging/logrus"
-	"github.com/reversersed/LitGO-backend/tree/main/api_genre/pkg/mongo"
-	rabbit "github.com/reversersed/LitGO-backend/tree/main/api_genre/pkg/rabbitmq"
-	"github.com/reversersed/LitGO-backend/tree/main/api_genre/pkg/shutdown"
-	"github.com/reversersed/LitGO-backend/tree/main/api_genre/pkg/validator"
 	"google.golang.org/grpc"
 )
 

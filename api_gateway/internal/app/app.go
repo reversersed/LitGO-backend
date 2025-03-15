@@ -7,12 +7,12 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/reversersed/LitGO-backend/tree/main/api_gateway/internal/config"
-	"github.com/reversersed/LitGO-backend/tree/main/api_gateway/internal/endpoint"
-	"github.com/reversersed/LitGO-backend/tree/main/api_gateway/internal/swagger"
 	"github.com/reversersed/LitGO-backend-pkg/logging/logrus"
 	"github.com/reversersed/LitGO-backend-pkg/middleware"
 	"github.com/reversersed/LitGO-backend-pkg/shutdown"
+	"github.com/reversersed/LitGO-backend/tree/main/api_gateway/internal/config"
+	"github.com/reversersed/LitGO-backend/tree/main/api_gateway/internal/endpoint"
+	"github.com/reversersed/LitGO-backend/tree/main/api_gateway/internal/swagger"
 	users_pb "github.com/reversersed/LitGO-proto/gen/go/users"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -28,6 +28,7 @@ func New() (*app, error) {
 		logger.Error(err)
 		return nil, err
 	}
+	server := &app{
 		router: gin.New(),
 		config: cfg,
 		logger: logger,

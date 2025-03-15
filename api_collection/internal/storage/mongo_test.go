@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/reversersed/LitGO-backend/tree/main/api_collection/pkg/mongo"
+	"github.com/reversersed/LitGO-backend-pkg/mongo"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 )

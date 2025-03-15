@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/reversersed/LitGO-backend/tree/main/api_author/pkg/mongo"
+	"github.com/reversersed/LitGO-backend-pkg/mongo"
 	shared_pb "github.com/reversersed/LitGO-proto/gen/go/shared"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"

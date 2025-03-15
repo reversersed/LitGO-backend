@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/reversersed/LitGO-backend-pkg/copier"
 	model "github.com/reversersed/LitGO-backend/tree/main/api_book/internal/storage"
-	"github.com/reversersed/LitGO-backend/tree/main/api_book/pkg/copier"
 	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
 	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
 	"go.mongodb.org/mongo-driver/bson/primitive"

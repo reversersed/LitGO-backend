@@ -95,6 +95,8 @@ github.com/pelletier/go-toml/v2 v2.2.3 h1:YmeHyLY8mFWbdkNWwpr+qIL2bEqT0o95WSdkNH
 github.com/pelletier/go-toml/v2 v2.2.3/go.mod h1:MfCQTFTvCcUyyvvwm1+G6H/jORL20Xlb6rzQu9GuUkc=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
+github.com/reversersed/LitGO-backend-pkg v0.0.0-20250315213413-4ee7fb7379f9 h1:xNsPjYvQbZWx8ocxrjXuMKb3uts6F9Qt3iew0Y15c9Q=
+github.com/reversersed/LitGO-backend-pkg v0.0.0-20250315213413-4ee7fb7379f9/go.mod h1:D2JN/7VP+lmNgSyN3bLk/KNnZfXScq+cZ3QKyh/V9GQ=
 github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250315142050-d47edd3131cc h1:PQ+QMDSINcvr+vM5ZbnUYTMlNmmZ7O0oDYY10bUMtVw=
 github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250315142050-d47edd3131cc/go.mod h1:iCld1gxjyDuoh6cScF/mOWSszRC1BPhVfmyyFyN0v/8=
 github.com/rogpeppe/go-internal v1.11.0 h1:cWPaGQEPrBb5/AsnsZesgZZ9yb1OQ+GOISoDNXVBh4M=

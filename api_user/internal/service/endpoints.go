@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/reversersed/LitGO-backend-pkg/copier"
 	model "github.com/reversersed/LitGO-backend/tree/main/api_user/internal/storage"
-	"github.com/reversersed/LitGO-backend/tree/main/api_user/pkg/copier"
 	shared_pb "github.com/reversersed/LitGO-proto/gen/go/shared"
 	users_pb "github.com/reversersed/LitGO-proto/gen/go/users"
 	"golang.org/x/crypto/bcrypt"
@@ -104,7 +104,6 @@ func (u *userServer) Login(c context.Context, r *users_pb.LoginRequest) (*users_
 }
 func (u *userServer) RegisterUser(c context.Context, usr *users_pb.RegistrationRequest) (*users_pb.LoginResponse, error) {
 
-	
 	ctx, cancel := context.WithTimeout(c, 5*time.Second)
 	defer cancel()
 
