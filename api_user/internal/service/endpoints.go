@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/reversersed/LitGO-backend-pkg/copier"
+	"github.com/reversersed/LitGO-backend-pkg/middleware"
 	model "github.com/reversersed/LitGO-backend/tree/main/api_user/internal/storage"
 	shared_pb "github.com/reversersed/LitGO-proto/gen/go/shared"
 	users_pb "github.com/reversersed/LitGO-proto/gen/go/users"
@@ -72,6 +73,9 @@ func (u *userServer) UpdateToken(c context.Context, r *users_pb.TokenRequest) (*
 	}, nil
 }
 func (u *userServer) Login(c context.Context, r *users_pb.LoginRequest) (*users_pb.LoginResponse, error) {
+	if _, err := middleware.GetCredentialsFromContext(c, u.logger); err == nil {
+		return nil, status.Error(codes.AlreadyExists, "user already logged in")
+	}
 	c, cancel := context.WithTimeout(c, 5*time.Second)
 	defer cancel()
 
@@ -103,7 +107,9 @@ func (u *userServer) Login(c context.Context, r *users_pb.LoginRequest) (*users_
 	}, nil
 }
 func (u *userServer) RegisterUser(c context.Context, usr *users_pb.RegistrationRequest) (*users_pb.LoginResponse, error) {
-
+	if _, err := middleware.GetCredentialsFromContext(c, u.logger); err == nil {
+		return nil, status.Error(codes.AlreadyExists, "user already registered")
+	}
 	ctx, cancel := context.WithTimeout(c, 5*time.Second)
 	defer cancel()
 

@@ -56,7 +56,7 @@ test-unit:
 ifeq ($(OS),Windows_NT)
 	@$(foreach directory,$(API_DIRECTORIES),\
 		cd ./$(directory) $(CMDSEP) go test -v -short ./... | findstr /V mocks $(CMDSEP) cd ..\
-		$(CMDSEP))cd ./pkg $(CMDSEP) go test -v -short ./... | grep -v mocks
+		$(CMDSEP))cd ./pkg $(CMDSEP) go test -v -short ./... | findstr /V mocks
 else
 	@$(foreach directory,$(API_DIRECTORIES),\
 		cd ./$(directory) $(CMDSEP) go test -v -short ./... | grep -v mocks $(CMDSEP) cd ..\
