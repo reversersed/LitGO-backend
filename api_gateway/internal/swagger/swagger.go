@@ -11,8 +11,10 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func fetchSwaggerJSON(url string) ([]byte, error) {
-	resp, err := http.Get(url)
+const swaggerUrl = "https://raw.githubusercontent.com/reversersed/LitGO-proto/main/gen/docs/swagger/swagger.json"
+
+func fetchSwaggerJSON() ([]byte, error) {
+	resp, err := http.Get(swaggerUrl)
 	if err != nil {
 		return nil, err
 	}
@@ -27,14 +29,12 @@ func fetchSwaggerJSON(url string) ([]byte, error) {
 }
 
 func InitiateSwagger(router *gin.Engine) {
-	url := "https://raw.githubusercontent.com/reversersed/LitGO-proto/main/gen/docs/swagger/swagger.json"
-	swaggerJSON, err := fetchSwaggerJSON(url)
+	swaggerJSON, err := fetchSwaggerJSON()
 	if err != nil {
 		log.Fatalf("Failed to fetch Swagger JSON: %v", err)
 	}
 
-	// Сохраняем Swagger JSON в файл (опционально)
-	err = os.WriteFile("doc.json", swaggerJSON, 0644)
+	err = os.WriteFile("doc.json", swaggerJSON, 0600)
 	if err != nil {
 		log.Fatalf("Failed to write Swagger JSON to file: %v", err)
 	}
