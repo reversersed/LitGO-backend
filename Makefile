@@ -71,7 +71,7 @@ ifeq ($(OS),Windows_NT)
 else
 	@$(foreach directory,$(API_DIRECTORIES),\
 		cd ./$(directory) $(CMDSEP) go test -v ./... | grep -v mocks $(CMDSEP) cd ..\
-		$(CMDSEP)) cd ./pkg $(CMDSEP) go test -v ./... | findstr /V mocks
+		$(CMDSEP)) cd ./pkg $(CMDSEP) go test -v ./... | grep -v mocks
 endif
 
 test: test-folder-creation gen
