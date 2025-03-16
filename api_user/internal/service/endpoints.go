@@ -10,10 +10,44 @@ import (
 	shared_pb "github.com/reversersed/LitGO-proto/gen/go/shared"
 	users_pb "github.com/reversersed/LitGO-proto/gen/go/users"
 	"golang.org/x/crypto/bcrypt"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/protoadapt"
 )
+
+// TODO write tests for auth and logout
+func (u *userServer) Logout(c context.Context, r *shared_pb.Empty) (*shared_pb.Empty, error) {
+	c, cancel := context.WithTimeout(c, 5*time.Second)
+	defer cancel()
+
+	if _, err := middleware.GetCredentialsFromContext(c, u.logger); err != nil {
+		return nil, err
+	}
+
+	tokenCookie, refreshCookie := middleware.CreateTokenCookie("", "", false)
+	md := metadata.Pairs(
+		"set-cookie-1", tokenCookie.String(),
+		"set-cookie-2", refreshCookie.String(),
+	)
+
+	if err := grpc.SendHeader(c, md); err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to send cookies: %v", err)
+	}
+
+	return &shared_pb.Empty{}, nil
+}
+func (u *userServer) Auth(c context.Context, r *shared_pb.Empty) (*shared_pb.UserCredentials, error) {
+	c, cancel := context.WithTimeout(c, 5*time.Second)
+	defer cancel()
+
+	if credentials, err := middleware.GetCredentialsFromContext(c, u.logger); err != nil {
+		return nil, err
+	} else {
+		return credentials, nil
+	}
+}
 
 func (u *userServer) GetUser(c context.Context, r *users_pb.UserRequest) (*users_pb.UserModel, error) {
 	c, cancel := context.WithTimeout(c, 5*time.Second)
@@ -98,6 +132,17 @@ func (u *userServer) Login(c context.Context, r *users_pb.LoginRequest) (*users_
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
+
+	tokenCookie, refreshCookie := middleware.CreateTokenCookie(token, refresh, r.GetRememberMe())
+	md := metadata.Pairs(
+		"set-cookie-1", tokenCookie.String(),
+		"set-cookie-2", refreshCookie.String(),
+	)
+
+	if err := grpc.SendHeader(c, md); err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to send cookies: %v", err)
+	}
+
 	return &users_pb.LoginResponse{
 		Id:           model.Id.Hex(),
 		Login:        model.Login,
@@ -152,6 +197,17 @@ func (u *userServer) RegisterUser(c context.Context, usr *users_pb.RegistrationR
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
+
+	tokenCookie, refreshCookie := middleware.CreateTokenCookie(token, refresh, usr.GetRememberMe())
+	md := metadata.Pairs(
+		"set-cookie-1", tokenCookie.String(),
+		"set-cookie-2", refreshCookie.String(),
+	)
+
+	if err := grpc.SendHeader(c, md); err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to send cookies: %v", err)
+	}
+
 	return &users_pb.LoginResponse{
 		Id:           user.Id.Hex(),
 		Login:        user.Login,

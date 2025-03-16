@@ -15,7 +15,7 @@ import (
 )
 
 func RegisterEndpoints(ctx context.Context, cfg *config.UrlConfig) (*runtime.ServeMux, error) {
-	mux := runtime.NewServeMux()
+	mux := runtime.NewServeMux(runtime.WithOutgoingHeaderMatcher(cookieHeaderMatcher))
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 
 	err := users_pb.RegisterUserHandlerFromEndpoint(ctx, mux, cfg.UserServiceUrl, opts)

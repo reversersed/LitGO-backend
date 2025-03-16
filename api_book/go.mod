@@ -8,8 +8,8 @@ require (
 	github.com/golang/mock v1.6.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/rabbitmq/amqp091-go v1.10.0
-	github.com/reversersed/LitGO-backend-pkg v0.0.0-20250315235745-d43e0af89c86
-	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250316015425-02502b473c27
+	github.com/reversersed/LitGO-backend-pkg v0.0.0-20250316143433-3571d457c25a
+	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250316123156-294edb6c4c49
 	github.com/stretchr/testify v1.10.0
 	github.com/testcontainers/testcontainers-go v0.33.0
 	go.mongodb.org/mongo-driver v1.17.3
