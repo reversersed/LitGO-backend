@@ -38,12 +38,12 @@ func (s *bookServer) bookMapper(ctx context.Context, src *model.Book) (*books_pb
 				return nil, status.Error(codes.Internal, err.Error())
 			}
 		}
-		book.Category = new(books_pb.CategoryModel)
+		book.Category = new(genres_pb.CategoryModel)
 		if err := copier.Copy(book.GetCategory(), response.GetCategory(), copier.WithPrimitiveToStringConverter); err != nil {
 			return nil, status.Error(codes.Internal, err.Error())
 		}
 
-		book.Genre = new(books_pb.GenreModel)
+		book.Genre = new(genres_pb.GenreModel)
 		for _, v := range response.GetCategory().GetGenres() {
 			if v.GetId() == src.Genre.Hex() {
 				if err := copier.Copy(book.GetGenre(), v, copier.WithPrimitiveToStringConverter); err != nil {

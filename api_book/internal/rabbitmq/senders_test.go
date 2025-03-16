@@ -16,6 +16,7 @@ import (
 	"github.com/reversersed/LitGO-backend-pkg/rabbitmq"
 	mock_rabbitmq "github.com/reversersed/LitGO-backend/tree/main/api_book/internal/rabbitmq/mocks"
 	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
+	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
 	"github.com/stretchr/testify/assert"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
@@ -98,7 +99,7 @@ func TestBookCreatedSender(t *testing.T) {
 	assert.Error(t, err)
 
 	logger.EXPECT().Infof("sended book created message")
-	book := &books_pb.BookModel{Name: "книга", Genre: &books_pb.GenreModel{Id: primitive.NewObjectID().Hex(), Name: "жанр"}}
+	book := &books_pb.BookModel{Name: "книга", Genre: &genres_pb.GenreModel{Id: primitive.NewObjectID().Hex(), Name: "жанр"}}
 	err = service.SendBookCreatedMessage(ctx, book)
 	assert.NoError(t, err)
 

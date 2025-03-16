@@ -15,6 +15,7 @@ import (
 	"github.com/reversersed/LitGO-backend-pkg/rabbitmq"
 	mock_rabbitmq "github.com/reversersed/LitGO-backend/tree/main/api_genre/internal/rabbitmq/mocks"
 	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
+	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
 	"github.com/stretchr/testify/assert"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
@@ -126,7 +127,7 @@ func TestBookCreatedReceiver(t *testing.T) {
 		logger.EXPECT().Infof(gomock.Any(), gomock.Any())
 		logger.EXPECT().Errorf(gomock.Any(), gomock.Any(), gomock.Any()).Do(func(_ any, _ ...any) { done <- true })
 
-		book := &books_pb.BookModel{Genre: &books_pb.GenreModel{Id: "bad id"}}
+		book := &books_pb.BookModel{Genre: &genres_pb.GenreModel{Id: "bad id"}}
 		body, err := json.Marshal(book)
 		assert.NoError(t, err)
 		err = channel.PublishWithContext(ctx, bookCreatedExchange, "#", false, false, amqp091.Publishing{
@@ -156,7 +157,7 @@ func TestBookCreatedReceiver(t *testing.T) {
 		logger.EXPECT().Errorf(gomock.Any(), gomock.Any()).Do(func(_ any, _ ...any) { done <- true })
 
 		id := primitive.NewObjectID()
-		book := &books_pb.BookModel{Genre: &books_pb.GenreModel{Id: id.Hex()}}
+		book := &books_pb.BookModel{Genre: &genres_pb.GenreModel{Id: id.Hex()}}
 		body, err := json.Marshal(book)
 		assert.NoError(t, err)
 		err = channel.PublishWithContext(ctx, bookCreatedExchange, "#", false, false, amqp091.Publishing{
@@ -187,7 +188,7 @@ func TestBookCreatedReceiver(t *testing.T) {
 		logger.EXPECT().Infof(gomock.Any(), gomock.Any())
 
 		id := primitive.NewObjectID()
-		book := &books_pb.BookModel{Genre: &books_pb.GenreModel{Id: id.Hex()}}
+		book := &books_pb.BookModel{Genre: &genres_pb.GenreModel{Id: id.Hex()}}
 		body, err := json.Marshal(book)
 		assert.NoError(t, err)
 		err = channel.PublishWithContext(ctx, bookCreatedExchange, "#", false, false, amqp091.Publishing{

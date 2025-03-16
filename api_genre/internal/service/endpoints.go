@@ -8,11 +8,12 @@ import (
 	"github.com/reversersed/LitGO-backend-pkg/copier"
 	model "github.com/reversersed/LitGO-backend/tree/main/api_genre/internal/storage"
 	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
+	shared_pb "github.com/reversersed/LitGO-proto/gen/go/shared"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func (s *genreServer) GetAll(ctx context.Context, _ *genres_pb.Empty) (*genres_pb.GetAllResponse, error) {
+func (s *genreServer) GetAll(ctx context.Context, _ *shared_pb.Empty) (*genres_pb.GetAllResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 	var response []*model.Category

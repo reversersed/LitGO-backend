@@ -9,6 +9,7 @@ import (
 	mocks "github.com/reversersed/LitGO-backend/tree/main/api_genre/internal/service/mocks"
 	model "github.com/reversersed/LitGO-backend/tree/main/api_genre/internal/storage"
 	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
+	shared_pb "github.com/reversersed/LitGO-proto/gen/go/shared"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"
@@ -144,7 +145,7 @@ func TestGetAll(t *testing.T) {
 			server := NewServer(m_logger, m_cache, m_storage, m_validator, m_rabbit)
 			v.MockBehaviour(m_cache, m_logger, m_storage, m_validator)
 
-			response, err := server.GetAll(context.Background(), &genres_pb.Empty{})
+			response, err := server.GetAll(context.Background(), &shared_pb.Empty{})
 			if len(v.ExceptedError) > 0 {
 				assert.EqualError(t, err, v.ExceptedError)
 			} else {

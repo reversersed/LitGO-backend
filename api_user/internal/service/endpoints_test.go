@@ -13,6 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -190,7 +191,7 @@ func TestLogin(t *testing.T) {
 				v.MockBehaviour(cache, logger, storage, validator)
 			}
 			server := NewServer("secretKey", logger, cache, storage, validator)
-			response, err := server.Login(context.Background(), v.Request)
+			response, err := server.Login(grpc.NewContextWithServerTransportStream(context.Background(), &mock_service.MockServerTransportStream{}), v.Request)
 
 			if len(v.ExceptedError) == 0 {
 				assert.NoError(t, err)
@@ -354,7 +355,7 @@ func TestRegisterUser(t *testing.T) {
 				v.MockBehaviour(cache, logger, storage, validator)
 			}
 			server := NewServer("secretKey", logger, cache, storage, validator)
-			response, err := server.RegisterUser(context.Background(), v.Request)
+			response, err := server.RegisterUser(grpc.NewContextWithServerTransportStream(context.Background(), &mock_service.MockServerTransportStream{}), v.Request)
 
 			if len(v.ExceptedError) == 0 {
 				assert.NoError(t, err)
