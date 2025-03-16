@@ -7,7 +7,7 @@ require (
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/rabbitmq/amqp091-go v1.10.0
 	github.com/reversersed/LitGO-backend-pkg v0.0.0-20250315235745-d43e0af89c86
-	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250315235805-b5314d57d998
+	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250316015425-02502b473c27
 	github.com/stretchr/testify v1.10.0
 	github.com/testcontainers/testcontainers-go v0.33.0
 	go.mongodb.org/mongo-driver v1.17.3
