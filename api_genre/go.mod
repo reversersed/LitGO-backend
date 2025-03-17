@@ -6,7 +6,7 @@ require (
 	github.com/golang/mock v1.6.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/rabbitmq/amqp091-go v1.10.0
-	github.com/reversersed/LitGO-backend-pkg v0.0.0-20250316195958-50a3ee63ca33
+	github.com/reversersed/LitGO-backend-pkg v0.0.0-20250317195211-d6f20c10abb6
 	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250316191455-6275e4fb1ddd
 	github.com/stretchr/testify v1.10.0
 	github.com/testcontainers/testcontainers-go v0.33.0
