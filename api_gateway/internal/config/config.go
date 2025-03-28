@@ -18,6 +18,7 @@ type UrlConfig struct {
 	BookServiceUrl       string `env:"SERVICE_BOOK_URL" env-required:"true" env-description:"External URL of book service"`
 	ReviewServiceUrl     string `env:"SERVICE_REVIEW_URL" env-required:"true" env-description:"External URL of review service"`
 	CollectionServiceUrl string `env:"SERVICE_COLLECTION_URL" env-required:"true" env-description:"External URL of collection service"`
+	FileServiceUrl       string `env:"SERVICE_FILE_URL" env-required:"true" env-description:"External URL of file service"`
 }
 type ServerConfig struct {
 	Host        string `env:"SERVER_HOST" env-required:"true" env-description:"Server listening address"`

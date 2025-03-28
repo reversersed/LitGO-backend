@@ -7,7 +7,7 @@ require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.3
 	github.com/ilyakaznacheev/cleanenv v1.5.0
-	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250316191455-6275e4fb1ddd
+	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250328100717-49ef2243184e
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
 	google.golang.org/grpc v1.71.0

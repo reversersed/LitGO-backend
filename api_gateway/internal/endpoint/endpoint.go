@@ -7,6 +7,7 @@ import (
 	"github.com/reversersed/LitGO-backend/tree/main/api_gateway/internal/config"
 	authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors"
 	books_pb "github.com/reversersed/LitGO-proto/gen/go/books"
+	file_pb "github.com/reversersed/LitGO-proto/gen/go/files"
 	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
 	reviews_pb "github.com/reversersed/LitGO-proto/gen/go/reviews"
 	users_pb "github.com/reversersed/LitGO-proto/gen/go/users"
@@ -35,6 +36,10 @@ func RegisterEndpoints(ctx context.Context, cfg *config.UrlConfig) (*runtime.Ser
 		return nil, err
 	}
 	err = reviews_pb.RegisterReviewHandlerFromEndpoint(ctx, mux, cfg.ReviewServiceUrl, opts)
+	if err != nil {
+		return nil, err
+	}
+	err = file_pb.RegisterFileHandlerFromEndpoint(ctx, mux, cfg.FileServiceUrl, opts)
 	if err != nil {
 		return nil, err
 	}

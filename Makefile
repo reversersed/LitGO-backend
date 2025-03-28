@@ -1,5 +1,4 @@
-API_DIRECTORIES = api_gateway api_user api_author api_genre api_book api_review api_collection
-PROTO_PKG_FOLDERS = users genres authors books reviews collections
+API_DIRECTORIES = api_gateway api_user api_author api_genre api_book api_review api_collection api_file
 CMDSEP = &&
 
 run: i clean gen test-verbose check start
