@@ -8,13 +8,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/golang/mock/gomock"
 	"github.com/reversersed/LitGO-backend-pkg/mongo"
 	mock_storage "github.com/reversersed/LitGO-backend/tree/main/api_user/internal/storage/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.uber.org/mock/gomock"
 )
 
 var cfg *mongo.DatabaseConfig

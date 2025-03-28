@@ -11,7 +11,6 @@ import (
 
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/go-connections/nat"
-	"github.com/golang/mock/gomock"
 	"github.com/rabbitmq/amqp091-go"
 	"github.com/reversersed/LitGO-backend-pkg/rabbitmq"
 	mock_rabbitmq "github.com/reversersed/LitGO-backend/tree/main/api_book/internal/rabbitmq/mocks"
@@ -21,6 +20,7 @@ import (
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.uber.org/mock/gomock"
 )
 
 var conn *amqp091.Connection

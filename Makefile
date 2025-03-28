@@ -7,7 +7,7 @@ install: i
 
 i:
 	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-	@go install github.com/golang/mock/mockgen@latest
+	@go install go.uber.org/mock/mockgen@latest
 	@$(MAKE) clean
 
 check:
@@ -15,13 +15,13 @@ check:
 	@golangci-lint cache clean
 	@$(foreach directory,$(API_DIRECTORIES),\
 	cd ./$(directory)/ $(CMDSEP) echo checking $(directory)... $(CMDSEP) golangci-lint run $(CMDSEP) cd .. \
-	$(CMDSEP)) cd ./pkg $(CMDSEP) echo checking $(directory)... $(CMDSEP) golangci-lint run
+	$(CMDSEP)) cd ./pkg $(CMDSEP) echo checking pkg... $(CMDSEP) golangci-lint run
 
 fix:
 	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 	@$(foreach directory,$(API_DIRECTORIES),\
 	cd ./$(directory) $(CMDSEP) echo checking $(directory)... $(CMDSEP) golangci-lint run --fix $(CMDSEP) cd .. \
-	$(CMDSEP)) cd ./pkg $(CMDSEP) echo checking $(directory)... $(CMDSEP) golangci-lint run --fix
+	$(CMDSEP)) cd ./pkg $(CMDSEP) echo checking pkg... $(CMDSEP) golangci-lint run --fix
 
 gen:
 	@$(foreach directory,$(API_DIRECTORIES),\
@@ -39,7 +39,7 @@ clean:
 		cd ./$(directory) $(CMDSEP) go get -v -u github.com/reversersed/LitGO-proto/gen/go@latest $(CMDSEP)\
 		go get -v -u github.com/reversersed/LitGO-backend-pkg@latest $(CMDSEP)\
 		go mod tidy $(CMDSEP) cd ..\
-		$(CMDSEP)) echo mod files cleaned
+		$(CMDSEP)) cd ./pkg $(CMDSEP) go mod tidy
 	@go env -w GOPROXY=https://proxy.golang.org,direct
 
 start:

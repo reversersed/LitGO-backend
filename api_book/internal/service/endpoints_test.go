@@ -6,7 +6,6 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	mock_service "github.com/reversersed/LitGO-backend/tree/main/api_book/internal/service/mocks"
 	model "github.com/reversersed/LitGO-backend/tree/main/api_book/internal/storage"
 	authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors"
@@ -16,6 +15,7 @@ import (
 	mock_genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres/mocks"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.uber.org/mock/gomock"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

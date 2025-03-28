@@ -3,14 +3,14 @@ module github.com/reversersed/LitGO-backend/tree/main/api_genre
 go 1.24.1
 
 require (
-	github.com/golang/mock v1.6.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/rabbitmq/amqp091-go v1.10.0
-	github.com/reversersed/LitGO-backend-pkg v0.0.0-20250317195211-d6f20c10abb6
-	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250328100717-49ef2243184e
+	github.com/reversersed/LitGO-backend-pkg v0.0.0-20250328130326-de64789809ac
+	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250328153601-1f0060cf835f
 	github.com/stretchr/testify v1.10.0
 	github.com/testcontainers/testcontainers-go v0.33.0
 	go.mongodb.org/mongo-driver v1.17.3
+	go.uber.org/mock v0.5.0
 	google.golang.org/grpc v1.71.0
 	google.golang.org/protobuf v1.36.5
 )

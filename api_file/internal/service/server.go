@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/reversersed/LitGO-backend/tree/main/api_file/internal/config"
 	files_pb "github.com/reversersed/LitGO-proto/gen/go/files"
 	"google.golang.org/grpc"
 )
@@ -31,15 +32,17 @@ type fileServer struct {
 	logger    logger
 	validator validator
 	rabbit    rabbitservice
+	fileCfg   *config.FileConfig
 	files_pb.UnimplementedFileServer
 }
 
-func NewServer(logger logger, cache cache, validator validator, rabbit rabbitservice) *fileServer {
+func NewServer(logger logger, cache cache, validator validator, rabbit rabbitservice, fileCfg *config.FileConfig) *fileServer {
 	return &fileServer{
 		logger:    logger,
 		cache:     cache,
 		validator: validator,
 		rabbit:    rabbit,
+		fileCfg:   fileCfg,
 	}
 }
 func (u *fileServer) Register(s grpc.ServiceRegistrar) {

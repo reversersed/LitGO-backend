@@ -4,12 +4,12 @@ import (
 	"context"
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	mock_service "github.com/reversersed/LitGO-backend/tree/main/api_author/internal/service/mocks"
 	model "github.com/reversersed/LitGO-backend/tree/main/api_author/internal/storage"
 	authors_pb "github.com/reversersed/LitGO-proto/gen/go/authors"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.uber.org/mock/gomock"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

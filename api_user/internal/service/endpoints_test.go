@@ -6,12 +6,12 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	mock_service "github.com/reversersed/LitGO-backend/tree/main/api_user/internal/service/mocks"
 	model "github.com/reversersed/LitGO-backend/tree/main/api_user/internal/storage"
 	users_pb "github.com/reversersed/LitGO-proto/gen/go/users"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.uber.org/mock/gomock"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"

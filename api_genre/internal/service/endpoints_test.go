@@ -5,13 +5,13 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	mocks "github.com/reversersed/LitGO-backend/tree/main/api_genre/internal/service/mocks"
 	model "github.com/reversersed/LitGO-backend/tree/main/api_genre/internal/storage"
 	genres_pb "github.com/reversersed/LitGO-proto/gen/go/genres"
 	shared_pb "github.com/reversersed/LitGO-proto/gen/go/shared"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.uber.org/mock/gomock"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

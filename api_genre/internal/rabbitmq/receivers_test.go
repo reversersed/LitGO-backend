@@ -10,7 +10,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/golang/mock/gomock"
 	"github.com/rabbitmq/amqp091-go"
 	"github.com/reversersed/LitGO-backend-pkg/rabbitmq"
 	mock_rabbitmq "github.com/reversersed/LitGO-backend/tree/main/api_genre/internal/rabbitmq/mocks"
@@ -20,6 +19,7 @@ import (
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.uber.org/mock/gomock"
 )
 
 var conn *amqp091.Connection

@@ -46,7 +46,7 @@ func GetConfig() (*Config, error) {
 		}
 		if err := cleanenv.ReadConfig("config/.env", rabbit); err != nil {
 			var header string = "RabbitMQ part config"
-			desc, _ := cleanenv.GetDescription(database, &header)
+			desc, _ := cleanenv.GetDescription(rabbit, &header)
 			e = fmt.Errorf("%v\n%s", err, desc)
 			return
 		}

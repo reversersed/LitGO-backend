@@ -42,7 +42,7 @@ func New() (*app, error) {
 		config:                cfg,
 		cache:                 cache,
 		RabbitListenerService: rabbitService,
-		service:               srv.NewServer(logger, cache, validator, rabbitService),
+		service:               srv.NewServer(logger, cache, validator, rabbitService, cfg.File),
 		closers:               []io.Closer{rabbitMqConnection},
 	}
 
