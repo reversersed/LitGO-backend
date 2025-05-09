@@ -17,7 +17,6 @@ import (
 	"google.golang.org/protobuf/protoadapt"
 )
 
-// TODO write tests for auth and logout
 func (u *userServer) Logout(c context.Context, r *shared_pb.Empty) (*shared_pb.Empty, error) {
 	c, cancel := context.WithTimeout(c, 5*time.Second)
 	defer cancel()

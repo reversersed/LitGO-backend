@@ -4,7 +4,7 @@ go 1.24.1
 
 require (
 	github.com/reversersed/LitGO-backend-pkg v0.0.0-20250328130326-de64789809ac
-	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250328153601-1f0060cf835f
+	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250509155051-d9e619bcfdaa
 	go.mongodb.org/mongo-driver v1.17.3
 	go.uber.org/mock v0.5.0
 	google.golang.org/grpc v1.71.0

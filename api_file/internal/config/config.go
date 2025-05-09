@@ -21,8 +21,9 @@ type ServerConfig struct {
 }
 
 type FileConfig struct {
-	BooksFolder      string `env:"FOLDER_BOOK_FILE" env-required:"true" env-description:"Book's epub folder"`
-	BookCoversFolder string `env:"FOLDER_COVERS_FILE" env-required:"true" env-description:"Book cover's folder"`
+	BooksFolder        string `env:"FOLDER_BOOK_FILE" env-required:"true" env-description:"Book's epub folder"`
+	BookCoversFolder   string `env:"FOLDER_COVERS_FILE" env-required:"true" env-description:"Book cover's folder"`
+	AuthorCoversFolder string `env:"FOLDER_COVERS_AUTHOR" env-required:"true" env-description:"Authors cover's folder"`
 }
 
 var once sync.Once

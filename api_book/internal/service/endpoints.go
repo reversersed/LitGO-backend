@@ -57,7 +57,7 @@ func (s *bookServer) FindBook(ctx context.Context, req *books_pb.FindBookRequest
 	return &books_pb.FindBookResponse{Books: data}, nil
 }
 
-// TODO rework method to new request
+// TODO rework method to new request, add cover and book loading
 func (s *bookServer) CreateBook(ctx context.Context, req *books_pb.CreateBookRequest) (*books_pb.CreateBookResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, 2500*time.Millisecond)
 	defer cancel()
@@ -174,7 +174,6 @@ func (s *bookServer) GetBookByGenre(ctx context.Context, req *books_pb.GetBookBy
 	return &books_pb.GetBookByGenreResponse{Books: data}, nil
 }
 
-// TODO write tests
 func (s *bookServer) GetBookList(ctx context.Context, req *books_pb.GetBookListRequest) (*books_pb.GetBookListResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, 500*time.Millisecond)
 	defer cancel()
