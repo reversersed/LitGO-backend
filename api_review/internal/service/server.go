@@ -1,6 +1,9 @@
 package service
 
 import (
+	"context"
+
+	model "github.com/reversersed/LitGO-backend/tree/main/api_review/internal/storage"
 	reviews_pb "github.com/reversersed/LitGO-proto/gen/go/reviews"
 	users_pb "github.com/reversersed/LitGO-proto/gen/go/users"
 	"google.golang.org/grpc"
@@ -18,7 +21,11 @@ type logger interface {
 	Warnf(string, ...any)
 	Warn(...any)
 }
-type storage any
+type storage interface {
+	GetUserBookReview(context.Context, string, string) (*model.ReviewModel, error)
+	GetBookReviews(ctx context.Context, bookId string, page int, count int, sortType string) ([]*model.ReviewModel, error)
+	DeleteReview(ctx context.Context, bookId string, reviewId string) error
+}
 
 type cache interface {
 	Get([]byte) ([]byte, error)

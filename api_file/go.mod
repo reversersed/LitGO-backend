@@ -5,8 +5,8 @@ go 1.24.1
 require (
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/rabbitmq/amqp091-go v1.10.0
-	github.com/reversersed/LitGO-backend-pkg v0.0.0-20250328130326-de64789809ac
-	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250509155051-d9e619bcfdaa
+	github.com/reversersed/LitGO-backend-pkg v0.0.0-20250513205645-2cf26f383754
+	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250513200809-794a766c1706
 	go.uber.org/mock v0.5.0
 	google.golang.org/grpc v1.71.0
 )

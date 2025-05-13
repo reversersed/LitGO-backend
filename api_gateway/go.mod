@@ -7,7 +7,7 @@ require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.3
 	github.com/ilyakaznacheev/cleanenv v1.5.0
-	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250509155051-d9e619bcfdaa
+	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250513200809-794a766c1706
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
 	google.golang.org/grpc v1.71.0
@@ -46,7 +46,7 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
-	github.com/reversersed/LitGO-backend-pkg v0.0.0-20250328130326-de64789809ac
+	github.com/reversersed/LitGO-backend-pkg v0.0.0-20250513205645-2cf26f383754
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	golang.org/x/arch v0.15.0 // indirect

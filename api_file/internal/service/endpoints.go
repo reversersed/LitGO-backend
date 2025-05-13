@@ -42,7 +42,7 @@ func (f *fileServer) GetAuthorCover(c context.Context, r *files_pb.FileRequest) 
 	}
 	names := strings.Split(r.GetFileName(), ".")
 	f.logger.Infof("file sended to client: %v from %d bytes (%d kB)", file.Name(), len(fileBytes), len(fileBytes)/1024)
-	return &files_pb.FileResponse{File: fileBytes, Mimetype: fmt.Sprintf("image/%s", names[len(names)-1])}, nil
+	return &files_pb.FileResponse{File: fileBytes, Mimetype: "image/" + names[len(names)-1]}, nil
 }
 func (f *fileServer) GetBookCover(c context.Context, r *files_pb.FileRequest) (*files_pb.FileResponse, error) {
 	if err := f.validator.StructValidation(r); err != nil {
@@ -74,7 +74,7 @@ func (f *fileServer) GetBookCover(c context.Context, r *files_pb.FileRequest) (*
 	}
 	names := strings.Split(r.GetFileName(), ".")
 	f.logger.Infof("file sended to client: %v from %d bytes (%d kB)", file.Name(), len(fileBytes), len(fileBytes)/1024)
-	return &files_pb.FileResponse{File: fileBytes, Mimetype: fmt.Sprintf("image/%s", names[len(names)-1])}, nil
+	return &files_pb.FileResponse{File: fileBytes, Mimetype: "image/" + names[len(names)-1]}, nil
 }
 func (f *fileServer) GetBookFile(c context.Context, r *files_pb.FileRequest) (*files_pb.FileResponse, error) {
 	if err := f.validator.StructValidation(r); err != nil {

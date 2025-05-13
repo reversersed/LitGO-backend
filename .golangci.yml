@@ -19,7 +19,6 @@ linters:
     - copyloopvar # Copyloopvar is a linter detects places where loop variables are copied
     - decorder # Check declaration order and count of types, constants, variables and functions
     - dogsled # Checks assignments with too many blank identifiers (e.g. x, , , _, := f()).
-    - dupl # Tool for code clone detection.
     - durationcheck # Check for two durations multiplied together.
     - errchkjson # Checks types passed to the json encoding functions.
     - exhaustive # Check exhaustiveness of enum switch statements.

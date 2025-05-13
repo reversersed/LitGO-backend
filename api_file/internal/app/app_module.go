@@ -27,8 +27,8 @@ type logger interface {
 	Warnf(string, ...any)
 	Fatalf(string, ...any)
 }
-type RabbitListenerService interface {
-}
+type RabbitListenerService any
+
 type app struct {
 	config                *config.Config
 	logger                logger

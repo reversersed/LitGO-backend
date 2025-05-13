@@ -18,8 +18,8 @@ type logger interface {
 	Warnf(string, ...any)
 	Warn(...any)
 }
-type storage interface {
-}
+type storage any
+
 type cache interface {
 	Get([]byte) ([]byte, error)
 	Set([]byte, []byte, int) error
