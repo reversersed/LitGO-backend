@@ -366,27 +366,11 @@ func TestGetBook(t *testing.T) {
 			Request: &books_pb.GetBookRequest{},
 		},
 		{
-			Name:    "get from cache",
-			Request: &books_pb.GetBookRequest{Query: "bookId"},
-			MockBehaviour: func(m1 *mock_service.Mockcache, mac *mock_authors_pb.MockAuthorClient, mgc *mock_genres_pb.MockGenreClient, m2 *mock_service.Mocklogger, m3 *mock_service.Mockstorage, m4 *mock_service.Mockvalidator) {
-				m4.EXPECT().StructValidation(gomock.Any()).Return(nil)
-				bytes, _ := json.Marshal(model)
-				m1.EXPECT().Get([]byte("book_bookId")).Return(bytes, nil)
-				m1.EXPECT().Get(gomock.Any()).Return([]byte{}, errors.New("")).AnyTimes()
-				m1.EXPECT().Set(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
-				mgc.EXPECT().GetTree(gomock.Any(), gomock.Any()).Return(&genres_pb.CategoryResponse{Category: category}, nil).AnyTimes()
-				mac.EXPECT().GetAuthors(gomock.Any(), gomock.Any()).Return(&authors_pb.GetAuthorsResponse{Authors: []*authors_pb.AuthorModel{authors[0], authors[1]}}, nil).AnyTimes()
-			},
-			ExceptedResponse: &books_pb.GetBookResponse{Book: book},
-		},
-		{
 			Name:    "get from database",
 			Request: &books_pb.GetBookRequest{Query: "bookId"},
 			MockBehaviour: func(m1 *mock_service.Mockcache, mac *mock_authors_pb.MockAuthorClient, mgc *mock_genres_pb.MockGenreClient, m2 *mock_service.Mocklogger, m3 *mock_service.Mockstorage, m4 *mock_service.Mockvalidator) {
 				m4.EXPECT().StructValidation(gomock.Any()).Return(nil)
-				m1.EXPECT().Get([]byte("book_bookId")).Return([]byte{}, errors.New(""))
 				m3.EXPECT().GetBook(gomock.Any(), "bookId").Return(model, nil)
-				m1.EXPECT().Set([]byte("book_bookId"), gomock.Any(), gomock.Any()).Return(nil)
 				m1.EXPECT().Get(gomock.Any()).Return([]byte{}, errors.New("")).AnyTimes()
 				m1.EXPECT().Set(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
 				mgc.EXPECT().GetTree(gomock.Any(), gomock.Any()).Return(&genres_pb.CategoryResponse{Category: category}, nil).AnyTimes()
@@ -399,21 +383,9 @@ func TestGetBook(t *testing.T) {
 			Request: &books_pb.GetBookRequest{Query: "bookId"},
 			MockBehaviour: func(m1 *mock_service.Mockcache, mac *mock_authors_pb.MockAuthorClient, mgc *mock_genres_pb.MockGenreClient, m2 *mock_service.Mocklogger, m3 *mock_service.Mockstorage, m4 *mock_service.Mockvalidator) {
 				m4.EXPECT().StructValidation(gomock.Any()).Return(nil)
-				m1.EXPECT().Get([]byte("book_bookId")).Return([]byte{}, errors.New(""))
 				m3.EXPECT().GetBook(gomock.Any(), "bookId").Return(nil, status.Error(codes.NotFound, "not found book"))
 			},
 			ExceptedError: "rpc error: code = NotFound desc = not found book",
-		},
-		{
-			Name:    "error from cache",
-			Request: &books_pb.GetBookRequest{Query: "bookId"},
-			MockBehaviour: func(m1 *mock_service.Mockcache, mac *mock_authors_pb.MockAuthorClient, mgc *mock_genres_pb.MockGenreClient, m2 *mock_service.Mocklogger, m3 *mock_service.Mockstorage, m4 *mock_service.Mockvalidator) {
-				m4.EXPECT().StructValidation(gomock.Any()).Return(nil)
-				m1.EXPECT().Get([]byte("book_bookId")).Return([]byte{}, errors.New(""))
-				m3.EXPECT().GetBook(gomock.Any(), "bookId").Return(model, nil)
-				m1.EXPECT().Set([]byte("book_bookId"), gomock.Any(), gomock.Any()).Return(errors.New("not enough space"))
-			},
-			ExceptedError: "rpc error: code = Internal desc = error saving book to cache: not enough space",
 		},
 	}
 	for _, v := range table {

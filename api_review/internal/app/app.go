@@ -9,9 +9,11 @@ import (
 	freecache "github.com/reversersed/LitGO-backend-pkg/cache"
 	"github.com/reversersed/LitGO-backend-pkg/logging/logrus"
 	"github.com/reversersed/LitGO-backend-pkg/mongo"
+	"github.com/reversersed/LitGO-backend-pkg/rabbitmq"
 	"github.com/reversersed/LitGO-backend-pkg/shutdown"
 	"github.com/reversersed/LitGO-backend-pkg/validator"
 	"github.com/reversersed/LitGO-backend/tree/main/api_review/internal/config"
+	rabbitService "github.com/reversersed/LitGO-backend/tree/main/api_review/internal/rabbitmq"
 	srv "github.com/reversersed/LitGO-backend/tree/main/api_review/internal/service"
 	"github.com/reversersed/LitGO-backend/tree/main/api_review/internal/storage"
 	users_pb "github.com/reversersed/LitGO-proto/gen/go/users"
@@ -45,11 +47,17 @@ func New() (*app, error) {
 	}
 	userClient := users_pb.NewUserClient(userConnection)
 
+	rabbitMqServer, err := rabbitmq.New(cfg.Rabbit)
+	if err != nil {
+		return nil, err
+	}
+	rabbit := rabbitService.New(rabbitMqServer.Connection, logger, storage)
+
 	app := &app{
 		logger:  logger,
 		config:  cfg,
 		cache:   cache,
-		service: srv.NewServer(logger, cache, storage, validator, userClient),
+		service: srv.NewServer(logger, cache, storage, validator, userClient, rabbit),
 		closers: []io.Closer{},
 	}
 

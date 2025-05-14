@@ -10,10 +10,8 @@
 package mock_rabbitmq
 
 import (
-	context "context"
 	reflect "reflect"
 
-	primitive "go.mongodb.org/mongo-driver/bson/primitive"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -89,80 +87,4 @@ func (mr *MockloggerMockRecorder) Infof(arg0 any, arg1 ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]any{arg0}, arg1...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Infof", reflect.TypeOf((*Mocklogger)(nil).Infof), varargs...)
-}
-
-// Mockstorage is a mock of storage interface.
-type Mockstorage struct {
-	ctrl     *gomock.Controller
-	recorder *MockstorageMockRecorder
-	isgomock struct{}
-}
-
-// MockstorageMockRecorder is the mock recorder for Mockstorage.
-type MockstorageMockRecorder struct {
-	mock *Mockstorage
-}
-
-// NewMockstorage creates a new mock instance.
-func NewMockstorage(ctrl *gomock.Controller) *Mockstorage {
-	mock := &Mockstorage{ctrl: ctrl}
-	mock.recorder = &MockstorageMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *Mockstorage) EXPECT() *MockstorageMockRecorder {
-	return m.recorder
-}
-
-// ChangeBookRating mocks base method.
-func (m *Mockstorage) ChangeBookRating(ctx context.Context, bookId primitive.ObjectID, rating float64, totalReviews int) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ChangeBookRating", ctx, bookId, rating, totalReviews)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// ChangeBookRating indicates an expected call of ChangeBookRating.
-func (mr *MockstorageMockRecorder) ChangeBookRating(ctx, bookId, rating, totalReviews any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChangeBookRating", reflect.TypeOf((*Mockstorage)(nil).ChangeBookRating), ctx, bookId, rating, totalReviews)
-}
-
-// Mockcache is a mock of cache interface.
-type Mockcache struct {
-	ctrl     *gomock.Controller
-	recorder *MockcacheMockRecorder
-	isgomock struct{}
-}
-
-// MockcacheMockRecorder is the mock recorder for Mockcache.
-type MockcacheMockRecorder struct {
-	mock *Mockcache
-}
-
-// NewMockcache creates a new mock instance.
-func NewMockcache(ctrl *gomock.Controller) *Mockcache {
-	mock := &Mockcache{ctrl: ctrl}
-	mock.recorder = &MockcacheMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *Mockcache) EXPECT() *MockcacheMockRecorder {
-	return m.recorder
-}
-
-// Delete mocks base method.
-func (m *Mockcache) Delete(arg0 []byte) bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", arg0)
-	ret0, _ := ret[0].(bool)
-	return ret0
-}
-
-// Delete indicates an expected call of Delete.
-func (mr *MockcacheMockRecorder) Delete(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*Mockcache)(nil).Delete), arg0)
 }

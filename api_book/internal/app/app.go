@@ -57,7 +57,11 @@ func New() (*app, error) {
 	if err != nil {
 		return nil, err
 	}
-	rabbit := rabbitService.New(rabbitMqServer.Connection, logger, storage)
+	rabbit := rabbitService.New(rabbitMqServer.Connection, logger, storage, cache)
+
+	if err := rabbit.InitiateBookRatingChangedReceiver(); err != nil {
+		return nil, err
+	}
 
 	app := &app{
 		logger:      logger,

@@ -10,8 +10,11 @@
 package mock_service
 
 import (
+	context "context"
 	reflect "reflect"
 
+	rabbitmq "github.com/reversersed/LitGO-backend/tree/main/api_review/internal/rabbitmq"
+	storage "github.com/reversersed/LitGO-backend/tree/main/api_review/internal/storage"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -176,6 +179,120 @@ func (mr *MockloggerMockRecorder) Warnf(arg0 any, arg1 ...any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Warnf", reflect.TypeOf((*Mocklogger)(nil).Warnf), varargs...)
 }
 
+// Mockstorage is a mock of storage interface.
+type Mockstorage struct {
+	ctrl     *gomock.Controller
+	recorder *MockstorageMockRecorder
+	isgomock struct{}
+}
+
+// MockstorageMockRecorder is the mock recorder for Mockstorage.
+type MockstorageMockRecorder struct {
+	mock *Mockstorage
+}
+
+// NewMockstorage creates a new mock instance.
+func NewMockstorage(ctrl *gomock.Controller) *Mockstorage {
+	mock := &Mockstorage{ctrl: ctrl}
+	mock.recorder = &MockstorageMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *Mockstorage) EXPECT() *MockstorageMockRecorder {
+	return m.recorder
+}
+
+// CreateBookReview mocks base method.
+func (m *Mockstorage) CreateBookReview(ctx context.Context, bookId, text, authorId string, rating float64) (*storage.ReviewModel, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateBookReview", ctx, bookId, text, authorId, rating)
+	ret0, _ := ret[0].(*storage.ReviewModel)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateBookReview indicates an expected call of CreateBookReview.
+func (mr *MockstorageMockRecorder) CreateBookReview(ctx, bookId, text, authorId, rating any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBookReview", reflect.TypeOf((*Mockstorage)(nil).CreateBookReview), ctx, bookId, text, authorId, rating)
+}
+
+// CreateBookReviewReply mocks base method.
+func (m *Mockstorage) CreateBookReviewReply(ctx context.Context, reviewId, text, authorId string) (*storage.ReviewModel, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateBookReviewReply", ctx, reviewId, text, authorId)
+	ret0, _ := ret[0].(*storage.ReviewModel)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateBookReviewReply indicates an expected call of CreateBookReviewReply.
+func (mr *MockstorageMockRecorder) CreateBookReviewReply(ctx, reviewId, text, authorId any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBookReviewReply", reflect.TypeOf((*Mockstorage)(nil).CreateBookReviewReply), ctx, reviewId, text, authorId)
+}
+
+// DeleteReview mocks base method.
+func (m *Mockstorage) DeleteReview(ctx context.Context, bookId, reviewId string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteReview", ctx, bookId, reviewId)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteReview indicates an expected call of DeleteReview.
+func (mr *MockstorageMockRecorder) DeleteReview(ctx, bookId, reviewId any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteReview", reflect.TypeOf((*Mockstorage)(nil).DeleteReview), ctx, bookId, reviewId)
+}
+
+// GetBookReviews mocks base method.
+func (m *Mockstorage) GetBookReviews(ctx context.Context, bookId string, page, count int, sortType string) ([]*storage.ReviewModel, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBookReviews", ctx, bookId, page, count, sortType)
+	ret0, _ := ret[0].([]*storage.ReviewModel)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBookReviews indicates an expected call of GetBookReviews.
+func (mr *MockstorageMockRecorder) GetBookReviews(ctx, bookId, page, count, sortType any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBookReviews", reflect.TypeOf((*Mockstorage)(nil).GetBookReviews), ctx, bookId, page, count, sortType)
+}
+
+// GetBookReviewsData mocks base method.
+func (m *Mockstorage) GetBookReviewsData(ctx context.Context, bookId string) (int, float64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBookReviewsData", ctx, bookId)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(float64)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// GetBookReviewsData indicates an expected call of GetBookReviewsData.
+func (mr *MockstorageMockRecorder) GetBookReviewsData(ctx, bookId any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBookReviewsData", reflect.TypeOf((*Mockstorage)(nil).GetBookReviewsData), ctx, bookId)
+}
+
+// GetUserBookReview mocks base method.
+func (m *Mockstorage) GetUserBookReview(ctx context.Context, bookId, userId string) (*storage.ReviewModel, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserBookReview", ctx, bookId, userId)
+	ret0, _ := ret[0].(*storage.ReviewModel)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserBookReview indicates an expected call of GetUserBookReview.
+func (mr *MockstorageMockRecorder) GetUserBookReview(ctx, bookId, userId any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserBookReview", reflect.TypeOf((*Mockstorage)(nil).GetUserBookReview), ctx, bookId, userId)
+}
+
 // Mockcache is a mock of cache interface.
 type Mockcache struct {
 	ctrl     *gomock.Controller
@@ -241,4 +358,42 @@ func (m *Mockcache) Set(arg0, arg1 []byte, arg2 int) error {
 func (mr *MockcacheMockRecorder) Set(arg0, arg1, arg2 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Set", reflect.TypeOf((*Mockcache)(nil).Set), arg0, arg1, arg2)
+}
+
+// MockrabbitService is a mock of rabbitService interface.
+type MockrabbitService struct {
+	ctrl     *gomock.Controller
+	recorder *MockrabbitServiceMockRecorder
+	isgomock struct{}
+}
+
+// MockrabbitServiceMockRecorder is the mock recorder for MockrabbitService.
+type MockrabbitServiceMockRecorder struct {
+	mock *MockrabbitService
+}
+
+// NewMockrabbitService creates a new mock instance.
+func NewMockrabbitService(ctrl *gomock.Controller) *MockrabbitService {
+	mock := &MockrabbitService{ctrl: ctrl}
+	mock.recorder = &MockrabbitServiceMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockrabbitService) EXPECT() *MockrabbitServiceMockRecorder {
+	return m.recorder
+}
+
+// SendBookRatingChangedMessage mocks base method.
+func (m *MockrabbitService) SendBookRatingChangedMessage(ctx context.Context, model *rabbitmq.RatingChangeModel) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SendBookRatingChangedMessage", ctx, model)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SendBookRatingChangedMessage indicates an expected call of SendBookRatingChangedMessage.
+func (mr *MockrabbitServiceMockRecorder) SendBookRatingChangedMessage(ctx, model any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendBookRatingChangedMessage", reflect.TypeOf((*MockrabbitService)(nil).SendBookRatingChangedMessage), ctx, model)
 }

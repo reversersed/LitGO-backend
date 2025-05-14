@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"regexp"
 	"strings"
@@ -103,24 +102,12 @@ func (s *bookServer) GetBook(ctx context.Context, req *books_pb.GetBookRequest) 
 	if err := s.validator.StructValidation(req); err != nil {
 		return nil, err
 	}
-	book := new(model.Book)
-	if bytes, err := s.cache.Get([]byte("book_" + req.GetQuery())); err == nil {
-		if err = json.Unmarshal(bytes, book); err != nil {
-			return nil, status.Error(codes.Internal, "error decoding book: "+err.Error())
-		}
-	} else {
-		book, err = s.storage.GetBook(ctx, req.GetQuery())
-		if err != nil {
-			return nil, err
-		}
-		bytes, err := json.Marshal(book)
-		if err != nil {
-			return nil, status.Error(codes.Internal, "error encoding book: "+err.Error())
-		}
-		if err = s.cache.Set([]byte("book_"+req.GetQuery()), bytes, int(time.Hour)); err != nil {
-			return nil, status.Error(codes.Internal, "error saving book to cache: "+err.Error())
-		}
+
+	book, err := s.storage.GetBook(ctx, req.GetQuery())
+	if err != nil {
+		return nil, err
 	}
+
 	responseModel, err := s.bookMapper(ctx, book)
 	if err != nil {
 		return nil, err

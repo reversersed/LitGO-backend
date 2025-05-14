@@ -90,7 +90,7 @@ func TestMain(m *testing.M) {
 func TestBookCreatedSender(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	logger := mock_rabbitmq.NewMocklogger(ctrl)
-	service := New(conn, logger, nil)
+	service := New(conn, logger, nil, nil)
 	defer service.Close()
 
 	ctx := context.Background()

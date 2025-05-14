@@ -181,3 +181,17 @@ func (d *db) GetBookList(ctx context.Context, id []primitive.ObjectID, translit 
 
 	return books, nil
 }
+func (d *db) ChangeBookRating(ctx context.Context, bookId primitive.ObjectID, rating float64, totalReviews int) error {
+	update := bson.M{
+		"$set": bson.M{
+			"rating":  rating,
+			"reviews": totalReviews,
+		},
+	}
+
+	_, err := d.collection.UpdateOne(ctx, bson.M{"_id": bookId}, update)
+	if err != nil {
+		return err
+	}
+	return nil
+}
