@@ -56,7 +56,6 @@ func (s *bookServer) FindBook(ctx context.Context, req *books_pb.FindBookRequest
 	return &books_pb.FindBookResponse{Books: data}, nil
 }
 
-// rework method to new request, add cover and book loading
 func (s *bookServer) CreateBook(ctx context.Context, req *books_pb.CreateBookRequest) (*books_pb.CreateBookResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, 2500*time.Millisecond)
 	defer cancel()
