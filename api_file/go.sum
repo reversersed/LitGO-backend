@@ -54,8 +54,8 @@ github.com/rabbitmq/amqp091-go v1.10.0 h1:STpn5XsHlHGcecLmMFCtg7mqq0RnD+zFr4uzuk
 github.com/rabbitmq/amqp091-go v1.10.0/go.mod h1:Hy4jKW5kQART1u+JkDTF9YYOQUHXqMuhrgxOEeS7G4o=
 github.com/reversersed/LitGO-backend-pkg v0.0.0-20250513205645-2cf26f383754 h1:mJQja8ryllabd0iUPmqqsujZzv9Obahw1BIBrzUrPEk=
 github.com/reversersed/LitGO-backend-pkg v0.0.0-20250513205645-2cf26f383754/go.mod h1:Eelim47aNcUzLNQ34py15syya036DQeX5tvpznwR14E=
-github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250513200809-794a766c1706 h1:7KpYo8JhXMgCsEiMpI4PRhC8sggGa4/0EgGdz7jBaAI=
-github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250513200809-794a766c1706/go.mod h1:41K7my4g2E4T3DnzL0rElpmPN4ZIYjy5/vMVT5RjAic=
+github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250601192251-591949099398 h1:0RJ9GcEpPMsLjbMWjCu+ZdByVi/4/24OyELBUp6kZUE=
+github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250601192251-591949099398/go.mod h1:41K7my4g2E4T3DnzL0rElpmPN4ZIYjy5/vMVT5RjAic=
 github.com/rogpeppe/go-internal v1.14.1 h1:UQB4HGPB6osV0SQTLymcB4TgvyWu6ZyliaW0tI/otEQ=
 github.com/rogpeppe/go-internal v1.14.1/go.mod h1:MaRKkUm5W0goXpeCfT7UZI6fk/L7L7so1lCWt35ZSgc=
 github.com/sirupsen/logrus v1.9.3 h1:dueUQJ1C2q9oE3F7wvmSGAaVtTmUizReu6fjN8uqzbQ=

@@ -195,3 +195,26 @@ func (d *db) ChangeBookRating(ctx context.Context, bookId primitive.ObjectID, ra
 	}
 	return nil
 }
+func (d *db) GetBookByAuthor(ctx context.Context, authorId primitive.ObjectID, page int, limit int) ([]*Book, error) {
+	options := options.Find()
+
+	filter := bson.M{"authors": authorId}
+
+	options.SetSkip(int64(page * limit))
+	options.SetLimit(int64(limit))
+
+	response, err := d.collection.Find(ctx, filter, options)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	defer response.Close(ctx)
+
+	var book []*Book = make([]*Book, 0)
+	if err := response.All(ctx, &book); err != nil {
+		return nil, status.Error(codes.Internal, "error decoding response: "+err.Error())
+	}
+	if len(book) == 0 {
+		return nil, status.Error(codes.NotFound, "books not found")
+	}
+	return book, nil
+}

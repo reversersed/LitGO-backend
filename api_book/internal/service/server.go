@@ -30,6 +30,7 @@ type storage interface {
 	GetBook(context.Context, string) (*model.Book, error)
 	GetBookByGenre(context.Context, []primitive.ObjectID, model.SortType, bool, int, int) ([]*model.Book, error)
 	GetBookList(context.Context, []primitive.ObjectID, []string) ([]*model.Book, error)
+	GetBookByAuthor(ctx context.Context, authorId primitive.ObjectID, page int, limit int) ([]*model.Book, error)
 }
 
 type cache interface {

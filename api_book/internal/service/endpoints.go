@@ -192,3 +192,34 @@ func (s *bookServer) GetBookList(ctx context.Context, req *books_pb.GetBookListR
 	}
 	return &books_pb.GetBookListResponse{Books: data}, nil
 }
+func (s *bookServer) GetBookByAuthor(ctx context.Context, req *books_pb.GetBookByAuthorRequest) (*books_pb.GetBookByAuthorResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 500*time.Millisecond)
+	defer cancel()
+
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "received nil request")
+	}
+	if err := s.validator.StructValidation(req); err != nil {
+		return nil, err
+	}
+
+	author, err := primitive.ObjectIDFromHex(req.GetAuthorId())
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
+	response, err := s.storage.GetBookByAuthor(ctx, author, int(req.GetLimit()), int(req.GetPage()))
+	if err != nil {
+		return nil, err
+	}
+
+	data := make([]*books_pb.BookModel, len(response))
+	for i, v := range response {
+		model, err := s.bookMapper(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		data[i] = model
+	}
+	return &books_pb.GetBookByAuthorResponse{Books: data}, nil
+}

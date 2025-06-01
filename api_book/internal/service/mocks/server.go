@@ -249,6 +249,21 @@ func (mr *MockstorageMockRecorder) GetBook(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBook", reflect.TypeOf((*Mockstorage)(nil).GetBook), arg0, arg1)
 }
 
+// GetBookByAuthor mocks base method.
+func (m *Mockstorage) GetBookByAuthor(ctx context.Context, authorId primitive.ObjectID, page, limit int) ([]*storage.Book, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBookByAuthor", ctx, authorId, page, limit)
+	ret0, _ := ret[0].([]*storage.Book)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBookByAuthor indicates an expected call of GetBookByAuthor.
+func (mr *MockstorageMockRecorder) GetBookByAuthor(ctx, authorId, page, limit any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBookByAuthor", reflect.TypeOf((*Mockstorage)(nil).GetBookByAuthor), ctx, authorId, page, limit)
+}
+
 // GetBookByGenre mocks base method.
 func (m *Mockstorage) GetBookByGenre(arg0 context.Context, arg1 []primitive.ObjectID, arg2 storage.SortType, arg3 bool, arg4, arg5 int) ([]*storage.Book, error) {
 	m.ctrl.T.Helper()

@@ -5,7 +5,7 @@ go 1.24.1
 require (
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/reversersed/LitGO-backend-pkg v0.0.0-20250513205645-2cf26f383754
-	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250513200809-794a766c1706
+	github.com/reversersed/LitGO-proto/gen/go v0.0.0-20250601192251-591949099398
 	github.com/testcontainers/testcontainers-go v0.34.0
 	go.mongodb.org/mongo-driver v1.17.3
 	go.uber.org/mock v0.5.0
